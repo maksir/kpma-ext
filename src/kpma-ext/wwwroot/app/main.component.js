@@ -10,6 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 //import {RouteConfig, ROUTER_DIRECTIVES, RouterLink, ROUTER_PROVIDERS} from '@angular/router-deprecated';
+var login_view_1 = require('./views/users/login.view');
+var user_service_1 = require('./services/user.service');
 var MainAppComponent = (function () {
     function MainAppComponent() {
     }
@@ -17,7 +19,9 @@ var MainAppComponent = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'main-app',
-            template: "<h3>Asp Net Core + Angular2 App</h3>",
+            template: "<h3>Asp Net Core + Angular2 App</h3>\n\t\t<user-login></user-login>\n\t",
+            directives: [login_view_1.Login],
+            providers: [user_service_1.UserService]
         }), 
         __metadata('design:paramtypes', [])
     ], MainAppComponent);

@@ -12,24 +12,42 @@ var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
 require('rxjs/add/operator/map');
 var UserService = (function () {
-    function UserService(_http) {
-        this._http = _http;
-        this._loggetIn = false;
+    function UserService(http) {
+        this.http = http;
+        this.loggetIn = false;
     }
-    UserService.prototype.signup = function (model) {
+    UserService.prototype.sign = function (model) {
+        var body = JSON.stringify(model);
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.http.post('/api/user/sign', body, { headers: headers });
     };
     UserService.prototype.login = function (model) {
+        var _this = this;
+        var body = JSON.stringify(model);
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.http.post('/api/user/login', body, { headers: headers })
+            .map(function (res) {
+            if (res.status >= 200 && res.status < 300) {
+                _this.loggetIn = true;
+            }
+            return _this.loggetIn;
+        });
     };
     UserService.prototype.logout = function () {
     };
     UserService.prototype.currentUser = function () {
     };
     UserService.prototype.getUser = function (id) {
+        return undefined;
     };
     UserService.prototype.list = function () {
     };
     UserService.prototype.isLoggetIn = function () {
-        return this._loggetIn;
+        return this.loggetIn;
     };
     UserService = __decorate([
         core_1.Injectable(), 
@@ -46,6 +64,7 @@ var UserSignModel = (function () {
 exports.UserSignModel = UserSignModel;
 var UserLoginModel = (function () {
     function UserLoginModel() {
+        this.rememeberMe = false;
     }
     return UserLoginModel;
 }());

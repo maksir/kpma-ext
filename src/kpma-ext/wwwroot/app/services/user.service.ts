@@ -6,14 +6,37 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class UserService {
 
-	private _loggetIn = false;
+	private loggetIn = false;
 
-	constructor(private _http: Http) { }
+	constructor(private http: Http) { }
 
-	signup(model: UserSignModel) {
+	sign(model: UserSignModel) {
+
+		let body = JSON.stringify(model);
+		let headers = new Headers({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post('/api/user/sign', body, { headers: headers });
+		
 	}
 
-	login(model: UserLoginModel) {
+	login(model: UserLoginModel): Observable<boolean> {
+
+		let body = JSON.stringify(model);
+		let headers = new Headers({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post('/api/user/login', body, { headers: headers })
+			.map(res => {
+
+				if (res.status >= 200 && res.status < 300) {
+					this.loggetIn = true;
+				}
+
+				return this.loggetIn;
+			});
 	}
 
 	logout() {
@@ -23,20 +46,28 @@ export class UserService {
 	}
 
 	getUser(id: number): UserModel {
+		return undefined;
 	}
 
 	list() {
 	}
 
 	isLoggetIn() {
-		return this._loggetIn;
+		return this.loggetIn;
 	}
 }
 
 export class UserSignModel {
+	name: string;
+	email: string;
+	password: string;
+	confirmPassword: string;
 }
 
 export class UserLoginModel {
+	email: string;
+	password: string;
+	rememeberMe: boolean = false;
 }
 
 export class UserModel {
