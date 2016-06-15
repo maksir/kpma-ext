@@ -9,24 +9,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-//import {RouteConfig, ROUTER_DIRECTIVES, RouterLink, ROUTER_PROVIDERS} from '@angular/router-deprecated';
-var sandbox_view_1 = require('./views/sandbox/sandbox.view');
-var select_service_1 = require('./services/select.service');
-var user_service_1 = require('./services/user.service');
-var MainAppComponent = (function () {
-    function MainAppComponent() {
+var SearchPipe = (function () {
+    function SearchPipe() {
     }
-    MainAppComponent = __decorate([
-        core_1.Component({
-            moduleId: module.id,
-            selector: 'main-app',
-            template: "<h3>Asp Net Core + Angular2 App</h3>\n\t\t<sandbox></sandbox>\n\t",
-            directives: [sandbox_view_1.SandBox],
-            providers: [user_service_1.UserService, select_service_1.SelectService]
+    SearchPipe.prototype.transform = function (value, sterm) {
+        if (!value) {
+            return value;
+        }
+        return value.filter(function (item) { return item.text.toLowerCase().indexOf(sterm.toLowerCase()) >= 0; });
+    };
+    SearchPipe = __decorate([
+        core_1.Pipe({
+            name: "search"
         }), 
         __metadata('design:paramtypes', [])
-    ], MainAppComponent);
-    return MainAppComponent;
+    ], SearchPipe);
+    return SearchPipe;
 }());
-exports.MainAppComponent = MainAppComponent;
-//# sourceMappingURL=main.component.js.map
+exports.SearchPipe = SearchPipe;
+//# sourceMappingURL=search.pipe.js.map

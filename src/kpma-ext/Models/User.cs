@@ -9,5 +9,7 @@ namespace kpma_ext.Models
     public class User : IdentityUser<int>
 	{
 		public string Name { get; set; }
+		public string DisplayName { get; set; }
+
 	}
 }

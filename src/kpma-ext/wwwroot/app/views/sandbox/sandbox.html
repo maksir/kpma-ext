@@ -1,0 +1,16 @@
+﻿<tabs>
+	<tab [title]="'1'">
+		<div class="panel panel-info">
+			<div class="panel-heading">Проверка shadowbox</div>
+			<div class="panel-body">
+				<shadowbox [show]="true"></shadowbox>
+				<h1>Это все должно быть скрыто за тенью</h1>
+			</div>
+		</div>
+	</tab>
+	<tab [title]="'2'">
+		<div class="col-sm-4">
+			<dropdown [ItemType]="'User'" [allowClear]="true" class="form-control"></dropdown>
+		</div>
+	</tab>
+</tabs>

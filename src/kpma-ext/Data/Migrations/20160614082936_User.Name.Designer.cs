@@ -8,54 +8,14 @@ using kpma_ext.Data;
 namespace kpmaext.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160614082936_User.Name")]
+    partial class UserName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("kpma_ext.Models.MetaObject", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Comment");
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("DispalyName")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasComputedColumnSql("[Name]");
-
-                    b.Property<string>("LastUpdatedBy");
-
-                    b.Property<DateTime>("LastUpdatedDate")
-                        .IsConcurrencyToken();
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.Property<int?>("ParentId");
-
-                    b.Property<int>("TypeId");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParentId");
-
-                    b.HasIndex("TypeId");
-
-                    b.HasIndex("Name", "ParentId")
-                        .IsUnique();
-
-                    b.ToTable("MetaObject","meta");
-                });
 
             modelBuilder.Entity("kpma_ext.Models.Role", b =>
                 {
@@ -88,10 +48,6 @@ namespace kpmaext.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("DisplayName")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasComputedColumnSql("[Name] ([Email])");
 
                     b.Property<string>("Email")
                         .HasAnnotation("MaxLength", 256);
@@ -215,18 +171,6 @@ namespace kpmaext.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserToken","auth");
-                });
-
-            modelBuilder.Entity("kpma_ext.Models.MetaObject", b =>
-                {
-                    b.HasOne("kpma_ext.Models.MetaObject")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
-
-                    b.HasOne("kpma_ext.Models.MetaObject")
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<int>", b =>

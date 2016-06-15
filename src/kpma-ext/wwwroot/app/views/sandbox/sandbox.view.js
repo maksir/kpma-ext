@@ -9,24 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-//import {RouteConfig, ROUTER_DIRECTIVES, RouterLink, ROUTER_PROVIDERS} from '@angular/router-deprecated';
-var sandbox_view_1 = require('./views/sandbox/sandbox.view');
-var select_service_1 = require('./services/select.service');
-var user_service_1 = require('./services/user.service');
-var MainAppComponent = (function () {
-    function MainAppComponent() {
+var common_1 = require('@angular/common');
+var tabs_control_1 = require('../../controls/tabs.control');
+var shadowbox_control_1 = require('../../controls/shadowbox.control');
+var dropdown_control_1 = require('../../controls/dropdown/dropdown.control');
+var SandBox = (function () {
+    function SandBox() {
     }
-    MainAppComponent = __decorate([
+    SandBox = __decorate([
         core_1.Component({
             moduleId: module.id,
-            selector: 'main-app',
-            template: "<h3>Asp Net Core + Angular2 App</h3>\n\t\t<sandbox></sandbox>\n\t",
-            directives: [sandbox_view_1.SandBox],
-            providers: [user_service_1.UserService, select_service_1.SelectService]
+            selector: 'sandbox',
+            templateUrl: 'sandbox.html',
+            styles: ['.panel-body { position: relative; }'],
+            directives: [common_1.FORM_DIRECTIVES, tabs_control_1.Tab, tabs_control_1.Tabs, shadowbox_control_1.ShadowBox, dropdown_control_1.DropDown]
         }), 
         __metadata('design:paramtypes', [])
-    ], MainAppComponent);
-    return MainAppComponent;
+    ], SandBox);
+    return SandBox;
 }());
-exports.MainAppComponent = MainAppComponent;
-//# sourceMappingURL=main.component.js.map
+exports.SandBox = SandBox;
+//# sourceMappingURL=sandbox.view.js.map

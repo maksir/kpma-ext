@@ -17,10 +17,10 @@ namespace kpma_ext.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-		private readonly UserManager<User> _userManager;
-		private readonly SignInManager<User> _signInManager;
-		private readonly ILogger _logger;
-		private readonly AppDbContext _context;
+		private readonly UserManager<User> userManager;
+		private readonly SignInManager<User> signInManager;
+		private readonly ILogger logger;
+		private readonly AppDbContext context;
 
 		public UserController(
 			UserManager<User> userManager,
@@ -28,10 +28,10 @@ namespace kpma_ext.Controllers
 			ILoggerFactory loggerFactory,
 			AppDbContext context)
 		{
-			_userManager = userManager;
-			_signInManager = signInManager;
-			_logger = loggerFactory.CreateLogger<UserController>();
-			_context = context;
+			this.userManager = userManager;
+			this.signInManager = signInManager;
+			logger = loggerFactory.CreateLogger<UserController>();
+			this.context = context;
 		}
 
 		[HttpPost]
@@ -41,7 +41,7 @@ namespace kpma_ext.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+				var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
 				if (result.Succeeded)
 				{
 					return StatusCode(299);
@@ -49,7 +49,7 @@ namespace kpma_ext.Controllers
 				if (result.IsLockedOut)
 				{
 					ModelState.AddModelError("lock", "Пользователь заблокирован.");
-					_logger.LogWarning(2, "User account locked out.");
+					logger.LogWarning(2, "User account locked out.");
 				}
 				else
 				{
@@ -66,28 +66,35 @@ namespace kpma_ext.Controllers
 		[Route("sign")]
 		public async Task<IActionResult> Register([FromBody]UserSignModel model)
 		{
-			if (ModelState.IsValid)
+			try
 			{
-				var user = new User { UserName = model.Email, Email = model.Email };
-				var result = await _userManager.CreateAsync(user, model.Password);
-				if (result.Succeeded)
+				if (ModelState.IsValid)
 				{
-					// For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
-					// Send an email with this link
-					//var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-					//var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-					//await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
-					//    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
-					await _signInManager.SignInAsync(user, isPersistent: false);
-					_logger.LogInformation(3, "User created a new account with password.");
+					var user = new User { UserName = model.Email, Email = model.Email, Name = model.Name };
+					var result = await userManager.CreateAsync(user, model.Password);
+					if (result.Succeeded)
+					{
+						// For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
+						// Send an email with this link
+						//var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+						//var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+						//await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
+						//    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+						await signInManager.SignInAsync(user, isPersistent: false);
+						logger.LogInformation(3, "User created a new account with password.");
 
-					return StatusCode(200);
+						return StatusCode(200);
+					}
+
+					AddErrors(result);
+
 				}
 
-				AddErrors(result);
-
 			}
-
+			catch (Exception ex)
+			{
+				ModelState.AddModelError("exception", ex.Message);
+			}
 			return BadRequest(ModelState);
 		}
 

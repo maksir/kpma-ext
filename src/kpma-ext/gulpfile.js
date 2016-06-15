@@ -43,4 +43,5 @@ gulp.task('bootstrap', ['jquery'], function () {
 
 gulp.task("fontawesome", function () {
 	gulp.src(["lib/font-awesome/css/*"]).pipe(gulp.dest("wwwroot/lib/fontawesome"));
+	gulp.src(["lib/font-awesome/fonts/*"]).pipe(gulp.dest("wwwroot/lib/fonts"));
 });

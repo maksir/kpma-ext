@@ -11,6 +11,8 @@ namespace kpma_ext.Data
     public class AppDbContext : IdentityDbContext<User, Role, int>
 	{
 
+		public DbSet<MetaObject> MetaObjects { get; set; }
+
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.UseSqlServer(@"Data Source=SR-SQL\MSSQL2012;Initial Catalog=kpma-ext;Persist Security Info=True;User ID=ext-user;Password=!u$eR-ex7");
@@ -21,14 +23,21 @@ namespace kpma_ext.Data
 		{
 			base.OnModelCreating(builder);
 
-			//авторизация
+			// авторизация
 			builder.Entity<User>().ToTable("User", "auth"); //.Property(p => p.Id).HasColumnName("Id");
+			builder.Entity<User>().Property(p => p.DisplayName).HasComputedColumnSql("[Name] ([Email])");
+
+
 			builder.Entity<Role>().ToTable("Role", "auth");
 			builder.Entity<IdentityUserRole<int>>().ToTable("UserRole", "auth");
 			builder.Entity<IdentityUserLogin<int>>().ToTable("UserLogin", "auth");
 			builder.Entity<IdentityUserClaim<int>>().ToTable("UserClaim", "auth");
 			builder.Entity<IdentityUserToken<int>>().ToTable("UserToken", "auth");
 			builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaim", "auth");
+
+			// метаданные
+			builder.Entity<MetaObject>().HasIndex(p => new { p.Name, p.ParentId }).IsUnique();
+			builder.Entity<MetaObject>().Property(p => p.DispalyName).HasComputedColumnSql("[Name]");
 		}
 	}
 }
