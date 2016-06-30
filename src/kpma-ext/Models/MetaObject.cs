@@ -16,7 +16,7 @@ namespace kpma_ext.Models
 		public string Name { get; set; }
 
 		public int? ParentId { get; set; }
-		[Required]
+		
 		public int TypeId { get; set; }
 
 		public string Comment { get; set; }
@@ -35,13 +35,13 @@ namespace kpma_ext.Models
 		[ForeignKey("ParentId")]
 		public MetaObject Parent { get; set; }
 
-		[ForeignKey("TypeId")]
+		
 		public MetaObject Type { get; set; }
 
 		[InverseProperty("Parent")]
 		public List<MetaObject> Children { get; set; }
 
-		[InverseProperty("Type")]
+		
 		public List<MetaObject> TypeCollection { get; set; }
 	}
 }

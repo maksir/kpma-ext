@@ -10,12 +10,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
+var router_1 = require('@angular/router');
+var Rx_1 = require('rxjs/Rx');
 require('rxjs/add/operator/map');
 var UserService = (function () {
-    function UserService(http) {
+    function UserService(http, router) {
         this.http = http;
+        this.router = router;
         this.loggetIn = false;
+        this._currentUser = new Rx_1.Subject();
+        this.currentUser = this._currentUser.asObservable();
     }
+    UserService.prototype.canActivate = function (route, state) {
+        if (this.isLoggetIn()) {
+            return Rx_1.Observable.of(true);
+        }
+        else {
+            this.router.navigateByUrl('/login?returnUrl=' + state.url);
+            return Rx_1.Observable.of(false);
+        }
+    };
     UserService.prototype.sign = function (model) {
         var body = JSON.stringify(model);
         var headers = new http_1.Headers({
@@ -31,27 +45,80 @@ var UserService = (function () {
         });
         return this.http.post('/api/user/login', body, { headers: headers })
             .map(function (res) {
-            if (res.status >= 200 && res.status < 300) {
-                _this.loggetIn = true;
+            _this.loggetIn = res.status == 200;
+            if (_this.loggetIn) {
+                _this._currentUser.next(res.json());
             }
             return _this.loggetIn;
         });
     };
     UserService.prototype.logout = function () {
     };
-    UserService.prototype.currentUser = function () {
+    UserService.prototype.userGet = function (id) {
+        return this.http.get('/api/user/' + id).map(function (res) { return res.json(); });
     };
-    UserService.prototype.getUser = function (id) {
-        return undefined;
+    UserService.prototype.userPost = function (model) {
+        var body = JSON.stringify(model);
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.http.post('/api/user', body, { headers: headers })
+            .map(function (res) {
+            return res.status == 200;
+        });
     };
-    UserService.prototype.list = function () {
+    UserService.prototype.userList = function () {
+        return this.http.get('/api/user/list').map(function (res) { return res.json(); });
+    };
+    UserService.prototype.userRoles = function (userId) {
+        return this.http.get('/api/user/roles/' + userId).map(function (res) { return res.json(); });
+    };
+    UserService.prototype.userRoleAdd = function (userId, roleId) {
+        var model = new UserRoleViewModel();
+        model.roleId = roleId;
+        model.userId = userId;
+        model.userName = '';
+        model.roleName = '';
+        var body = JSON.stringify(model);
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.http.post('/api/user/roles', body, { headers: headers })
+            .map(function (res) {
+            return res.status == 200;
+        });
+    };
+    UserService.prototype.userRoleDel = function (model) {
+        return this.http.delete('/api/user/roles/' + model.userId + '/' + model.roleId)
+            .map(function (res) {
+            return res.status == 200;
+        });
+    };
+    UserService.prototype.roleGet = function (id) {
+        return this.http.get('/api/role/' + id).map(function (res) { return res.json(); });
+    };
+    UserService.prototype.rolePost = function (model) {
+        var body = JSON.stringify(model);
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.http.post('/api/role', body, { headers: headers })
+            .map(function (res) {
+            return res.status == 200;
+        });
+    };
+    UserService.prototype.roleList = function () {
+        return this.http.get('/api/role/list').map(function (res) { return res.json(); });
+    };
+    UserService.prototype.menuList = function () {
+        return this.http.get('/api/menu/list').map(function (res) { return res.json(); });
     };
     UserService.prototype.isLoggetIn = function () {
         return this.loggetIn;
     };
     UserService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [http_1.Http])
+        __metadata('design:paramtypes', [http_1.Http, router_1.Router])
     ], UserService);
     return UserService;
 }());
@@ -69,10 +136,28 @@ var UserLoginModel = (function () {
     return UserLoginModel;
 }());
 exports.UserLoginModel = UserLoginModel;
-var UserModel = (function () {
-    function UserModel() {
+var UserViewModel = (function () {
+    function UserViewModel() {
     }
-    return UserModel;
+    return UserViewModel;
 }());
-exports.UserModel = UserModel;
+exports.UserViewModel = UserViewModel;
+var RoleViewModel = (function () {
+    function RoleViewModel() {
+    }
+    return RoleViewModel;
+}());
+exports.RoleViewModel = RoleViewModel;
+var UserRoleViewModel = (function () {
+    function UserRoleViewModel() {
+    }
+    return UserRoleViewModel;
+}());
+exports.UserRoleViewModel = UserRoleViewModel;
+var MenuModel = (function () {
+    function MenuModel() {
+    }
+    return MenuModel;
+}());
+exports.MenuModel = MenuModel;
 //# sourceMappingURL=user.service.js.map

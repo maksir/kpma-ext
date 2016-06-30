@@ -1,23 +1,37 @@
 ﻿import {Component} from '@angular/core';
-//import {RouteConfig, ROUTER_DIRECTIVES, RouterLink, ROUTER_PROVIDERS} from '@angular/router-deprecated';
-
-import {SandBox} from './views/sandbox/sandbox.view';
-
-import {Login} from './views/users/login.view';
-import {Sign} from './views/users/sign.view';
+import {ROUTER_DIRECTIVES} from '@angular/router';
 
 import {SelectService} from './services/select.service';
-import {UserService} from './services/user.service';
+import {UserService, UserViewModel} from './services/user.service';
 
 @Component({
 	moduleId: module.id,
     selector: 'main-app',
-    template: `<h3>Asp Net Core + Angular2 App</h3>
-		<sandbox></sandbox>
+    template: `<h4>Asp Net Core + Angular2 App</h4>
+				<div>
+				<a [routerLink]="['/signup']">Регистрация</a>
+				<a [routerLink]="['/login']">Вход</a>
+				<a [routerLink]="['/user/list']">Список пользователей</a>
+				<a [routerLink]="['/role/list']">Список ролей</a>
+				{{currentUser.name}}
+				</div>
+				<router-outlet></router-outlet>
 	`,
-	directives: [SandBox],
-	providers: [UserService, SelectService]
+	directives: [ROUTER_DIRECTIVES],
+	providers: [SelectService]
 })
+
 export class MainAppComponent {
+
+	currentUser = new UserViewModel();
+
+	constructor(private userSrv: UserService) {
+
+		userSrv.currentUser.subscribe(
+			res => this.currentUser = res,
+			err => console.log(err),
+			() => console.log('done')
+		);
+	}
 
 }

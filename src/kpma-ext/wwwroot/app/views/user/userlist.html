@@ -1,0 +1,22 @@
+﻿<h4>Список пользователей системы</h4>
+
+<table class="table table-bordered table-hover table-striped">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Email</th>
+			<th>PhoneNumber</th>
+			<th>UserName</th>
+		</tr>
+	</thead>
+	<tr *ngFor="let user of userList">
+		<td><a [routerLink]="['../edit', user.id]"><i class="fa fa-pencil-square-o"></i></a></td>
+		<td>{{user.id}}</td>
+		<td>{{user.name}}</td>
+		<td>{{user.email}}</td>
+		<td>{{user.phoneNumber}}</td>
+		<td>{{user.userName}}</td>
+	</tr>
+</table>

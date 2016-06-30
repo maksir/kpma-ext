@@ -1,5 +1,6 @@
 ﻿import {Component, Pipe, PipeTransform, Input, Output, EventEmitter, OnChanges, SimpleChange, AfterViewInit, AfterViewChecked, ViewChild, ElementRef, Directive, Provider, forwardRef} from '@angular/core';
-import {CORE_DIRECTIVES, FORM_DIRECTIVES, Control, ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/common";
+import {CORE_DIRECTIVES} from '@angular/common';
+import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl, REACTIVE_FORM_DIRECTIVES} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
 
@@ -19,7 +20,7 @@ export class DropDownItem {
 	templateUrl: 'dropdown.html',
 	styleUrls: ['dropdown.css'],
 	pipes: [SearchPipe],
-	directives: [CORE_DIRECTIVES, FORM_DIRECTIVES],
+	directives: [CORE_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
 	host: {
 		"(document: click)": "trackEvent($event)",
 		"(document: keydown)": "onKeyDown($event)"
@@ -31,8 +32,9 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 	placeholder = 'Значение не выбрано...';
 	showDropDown = false;
 	searchValue = '';
-	termInput = new Control();
+	termInput = new FormControl();
 	doEmit = false;
+	hoverItem: DropDownItem;
 
 	LazyItems: Array<DropDownItem>;
 	LazyQuery: any;
@@ -227,10 +229,11 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 			this.LazyItems = [];
 		}
 	}
+
 	private hideForm() {
 		this.searchValue = '';
 		this.showDropDown = false;
-		
+		this.hoverItem = undefined;
 	}
 
 	private onSelectItem(i: DropDownItem) {
@@ -238,6 +241,10 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 		this.hideForm();
 		this.doEmit = true;
 		this.valueChange.emit(i.id);
+	}
+
+	private onHoverItem(i: DropDownItem) {
+		this.hoverItem = i;
 	}
 
 	private clearSelect() {
@@ -249,8 +256,59 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 
 	private onKeyDown(event: KeyboardEvent) {
 
-		if (this.showDropDown && event.keyCode == 27) {
-			this.hideForm();
+		if (this.showDropDown){
+		
+			switch (event.keyCode) {
+				case 13:
+					this.hoverSelect();
+					break;
+				case 27:
+					this.hideForm();
+					break;
+				case 38:
+					this.hoverUp();
+					break;
+				case 40:
+					this.hoverDown();
+					break;
+			}
+		}
+	}
+
+	private hoverUp() {
+
+		if (this.ItemType) {
+
+			if (!this.hoverItem) {
+				return;
+			}
+
+			let i = this.LazyItems.indexOf(this.hoverItem);
+			if (i > 0) {
+				this.hoverItem = this.LazyItems[i - 1];
+			}
+		}
+	}
+
+	private hoverDown() {
+
+		if (this.ItemType) {
+
+			if (!this.hoverItem) {
+				this.hoverItem = this.LazyItems[0];
+			}
+			else {
+				let i = this.LazyItems.indexOf(this.hoverItem);
+				if (i < this.LazyItems.length - 1) {
+					this.hoverItem = this.LazyItems[i + 1];
+				}
+			}
+		}
+	}
+
+	private hoverSelect() {
+		if (this.hoverItem && this.showDropDown) {
+			this.onSelectItem(this.hoverItem);
 		}
 	}
 

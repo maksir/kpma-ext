@@ -1,0 +1,45 @@
+﻿<div class="col-lg-4 col-lg-offset-4 col-xs-12">
+	<div class="panel panel-warning">
+		<div class="panel-heading">Регистрация</div>
+		<div class="panel-body">
+			<form [formGroup]="regForm" (ngSubmit)="onSubmit()" class="form-horizontal" role="form">
+
+				<div [class.has-error]="!regForm.controls['name'].valid && regForm.controls['name'].touched" class="form-group">
+					<label for="inpName" class="col-sm-3 control-label">Имя</label>
+					<div class="col-sm-9">
+						<input formControlName="name" type="text" class="form-control" id="inpName" placeholder="Введите свое имя (минимум 3 символа)">
+					</div>
+				</div>
+
+				<div [class.has-error]="!regForm.controls['email'].valid && regForm.controls['email'].touched" class="form-group">
+					<label for="inpEmail" class="col-sm-3 control-label">Email</label>
+					<div class="col-sm-9">
+						<input formControlName="email" type="text" class="form-control" id="inpEmail" placeholder="Введите email адрес">
+					</div>
+				</div>
+
+				<div [class.has-error]="!regForm.controls['password'].valid && regForm.controls['password'].touched" class="form-group">
+					<label for="inpPassword" class="col-sm-3 control-label">Пароль</label>
+					<div class="col-sm-9">
+						<input formControlName="password" type="password" class="form-control" id="inpPassword" placeholder="Введите пароль">
+					</div>
+				</div>
+
+				<div [class.has-error]="!regForm.controls['confirmPassword'].valid && regForm.controls['confirmPassword'].touched" class="form-group">
+					<label for="inpConfPassword" class="col-sm-3 control-label">Подтверждение</label>
+					<div class="col-sm-9">
+						<input formControlName="confirmPassword" type="password" class="form-control" id="inpConfPassword" placeholder="Подтвердите пароль">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-3 col-sm-9">
+						<button [disabled]="!regForm.valid" type="submit" class="btn btn-primary" id="btnSubmit">Зарегистрироваться</button>
+					</div>
+				</div>
+			</form>
+
+		</div>
+	</div>
+</div>
+

@@ -1,14 +1,30 @@
 ﻿import {Injectable} from '@angular/core';
 import {Http, Headers} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
+import {Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+import {Observable, Subject} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
+
 
 @Injectable()
 export class UserService {
 
 	private loggetIn = false;
 
-	constructor(private http: Http) { }
+	private _currentUser = new Subject<UserViewModel>();
+	public currentUser = this._currentUser.asObservable();
+
+	constructor(private http: Http, private router: Router) { }
+
+	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+
+		if (this.isLoggetIn()) {
+			return Observable.of(true);
+		}
+		else {
+			this.router.navigateByUrl('/login?returnUrl=' + state.url);
+			return Observable.of(false);
+		}
+	}
 
 	sign(model: UserSignModel) {
 
@@ -30,9 +46,9 @@ export class UserService {
 
 		return this.http.post('/api/user/login', body, { headers: headers })
 			.map(res => {
-
-				if (res.status >= 200 && res.status < 300) {
-					this.loggetIn = true;
+				this.loggetIn = res.status == 200;
+				if (this.loggetIn) {
+					this._currentUser.next(<UserViewModel>res.json());
 				}
 
 				return this.loggetIn;
@@ -42,14 +58,84 @@ export class UserService {
 	logout() {
 	}
 
-	currentUser() {
+	userGet(id: number): Observable<UserViewModel> {
+		return this.http.get('/api/user/' + id).map(res => res.json());
 	}
 
-	getUser(id: number): UserModel {
-		return undefined;
+	userPost(model: UserViewModel): Observable<boolean> {
+
+		let body = JSON.stringify(model);
+		let headers = new Headers({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post('/api/user', body, { headers: headers })
+			.map(res => {
+				return res.status == 200;
+			});
 	}
 
-	list() {
+	userList(): Observable<UserViewModel[]> {
+		return this.http.get('/api/user/list').map(res => res.json());
+	}
+
+	userRoles(userId: number): Observable<UserRoleViewModel[]> {
+		return this.http.get('/api/user/roles/' + userId).map(res => res.json());
+	}
+
+	userRoleAdd(userId: number, roleId: number) {
+
+		let model = new UserRoleViewModel();
+		model.roleId = roleId;
+		model.userId = userId;
+		model.userName = '';
+		model.roleName = '';
+
+		let body = JSON.stringify(model);
+		let headers = new Headers({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post('/api/user/roles', body, { headers: headers })
+			.map(res => {
+				return res.status == 200;
+			});
+
+	}
+
+	userRoleDel(model: UserRoleViewModel) {
+
+		return this.http.delete('/api/user/roles/' + model.userId + '/' + model.roleId)
+			.map(res => {
+				return res.status == 200;
+			});
+	}
+
+	roleGet(id: number): Observable<RoleViewModel> {
+		return this.http.get('/api/role/' + id).map(res => res.json());
+	}
+
+	rolePost(model: RoleViewModel): Observable<boolean> {
+
+		let body = JSON.stringify(model);
+		let headers = new Headers({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post('/api/role', body, { headers: headers })
+			.map(res => {
+				return res.status == 200;
+			});
+
+	}
+
+	roleList(): Observable<RoleViewModel[]> {
+		return this.http.get('/api/role/list').map(res => res.json());
+	}
+
+	menuList(): Observable<MenuModel[]> {
+
+		return this.http.get('/api/menu/list').map(res => res.json());
 	}
 
 	isLoggetIn() {
@@ -70,5 +156,32 @@ export class UserLoginModel {
 	rememeberMe: boolean = false;
 }
 
-export class UserModel {
+export class UserViewModel {
+	public id: number;
+	public name: string;
+	public email: string;
+	public phoneNumber: string;
+	public userName: string;
+	public concurencyStamp: string; 
+}
+
+export class RoleViewModel{
+
+	public id: number;
+	public name: string;
+	public concurencyStamp: string;
+}
+
+export class UserRoleViewModel {
+	public userId: number;
+	public userName: string;
+	public roleId: number;
+	public roleName: string;
+}
+
+export class MenuModel {
+	id: number;
+	name: string;
+	url: string;
+	children: MenuModel[];
 }

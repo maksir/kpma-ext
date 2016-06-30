@@ -12,6 +12,8 @@ namespace kpma_ext.Data
 	{
 
 		public DbSet<MetaObject> MetaObjects { get; set; }
+		public DbSet<Menu> Menus { get; set; }
+		public DbSet<RoleMenu> RoleMenus { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -25,7 +27,7 @@ namespace kpma_ext.Data
 
 			// авторизация
 			builder.Entity<User>().ToTable("User", "auth"); //.Property(p => p.Id).HasColumnName("Id");
-			builder.Entity<User>().Property(p => p.DisplayName).HasComputedColumnSql("[Name] ([Email])");
+			builder.Entity<User>().Property(p => p.DisplayName).HasComputedColumnSql("([Name] + ' (' + [Email] + ')')");
 
 
 			builder.Entity<Role>().ToTable("Role", "auth");
@@ -36,8 +38,15 @@ namespace kpma_ext.Data
 			builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaim", "auth");
 
 			// метаданные
+			builder.Entity<MetaObject>().HasOne(o => o.Type).WithMany(m => m.TypeCollection).HasForeignKey(f => f.TypeId).IsRequired().OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
+
 			builder.Entity<MetaObject>().HasIndex(p => new { p.Name, p.ParentId }).IsUnique();
 			builder.Entity<MetaObject>().Property(p => p.DispalyName).HasComputedColumnSql("[Name]");
+
+			//menu
+			builder.Entity<Menu>().ToTable("Menu", "meta");
+			builder.Entity<RoleMenu>().ToTable("RoleMenu", "meta");
+
 		}
 	}
 }

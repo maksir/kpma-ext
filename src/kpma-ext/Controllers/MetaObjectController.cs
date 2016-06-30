@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace kpma_ext.Controllers
 {
@@ -18,7 +16,7 @@ namespace kpma_ext.Controllers
 		public MetaObjectController(ILoggerFactory loggerFactory,
 			AppDbContext context)
 		{
-			this.logger = loggerFactory.CreateLogger<MetaObjectController>(); ;
+			this.logger = loggerFactory.CreateLogger<MetaObjectController>();
 			this.context = context;
 		}
 
@@ -31,8 +29,9 @@ namespace kpma_ext.Controllers
 			{
 				var list = context.MetaObjects.Where(m => m.ParentId == parentId).AsQueryable();
 
-				return Json(list.Select(s => 
-						new MetaObjectViewModel {
+				return Json(list.Select(s =>
+						new MetaObjectViewModel
+						{
 							Id = s.Id,
 							Name = s.Name,
 							Comment = s.Comment,
@@ -41,7 +40,12 @@ namespace kpma_ext.Controllers
 							ParentId = s.ParentId,
 							ParentName = (s.ParentId.HasValue ? s.Parent.Name : ""),
 							TypeId = s.TypeId,
-							TypeName = s.Type.Name }));
+							TypeName = s.Type.Name,
+							CreatedBy = s.CreatedBy,
+							CreatedDate = s.CreatedDate,
+							LastUpdatedBy = s.LastUpdatedBy,
+							LastUpdatedDate = s.LastUpdatedDate
+						}));
 			}
 			catch (Exception ex)
 			{
@@ -78,5 +82,10 @@ namespace kpma_ext.Controllers
 		public string Comment { get; set; }
 		public string Value { get; set; }
 		public string DisplayName { get; set; }
+		public string CreatedBy { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string LastUpdatedBy { get; set; }
+		public DateTime LastUpdatedDate { get; set; }
+
 	}
 }

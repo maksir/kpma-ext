@@ -23,10 +23,11 @@ namespace kpma_ext
 			services.AddIdentity<User, Role>(
 				config =>
 				{
-					config.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
+					config.Cookies.ApplicationCookie.LoginPath = "/user/login";
 				})
 				.AddEntityFrameworkStores<AppDbContext, int>()
 				.AddDefaultTokenProviders();
+
 
 			services.AddMvc().AddJsonOptions(options =>
 			{

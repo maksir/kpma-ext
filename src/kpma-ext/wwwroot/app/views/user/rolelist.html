@@ -1,0 +1,36 @@
+﻿<h4>Список ролей системы</h4>
+<table class="table table-hover table-bordered table-condensed">
+	<thead>
+		<tr>
+			<th><a (click)="onUpdaleList()" class="btn btn-xs btn-primary" title="Обновить список"><i class="fa fa-refresh fa-fw"></i></a></th>
+			<th>Id</th>
+			<th>Наименование</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let r of roleList">
+			<template [ngIf]="editRole != r">
+				<td>
+					<a (click)="onClickEdit(r)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-edit fa-fw"></i></a>
+				</td>
+				<td>{{r.id}}</td>
+				<td>{{r.name}}</td>
+			</template>
+			<template [ngIf]="editRole == r">
+				<td>
+					<a (click)="onClickSave()" class="btn btn-xs btn-primary" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
+					<a (click)="onClickCancel()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
+				</td>
+				<td>{{r.id}}</td>
+				<td><input type="text" [(ngModel)]="editRole.name" name="name" class="form-control" /></td>
+			</template>
+		</tr>
+		<tr class="success">
+			<td colspan="3">Добавление новой роли</td>
+		</tr>
+		<tr class="success">
+			<td colspan="2"><a (click)="onClickAdd()" [class.disabled]="!insertRole.name" class="btn btn-xs btn-primary" title="Сохранить"><i class="fa fa-save fa-fw"></i></a></td>
+			<td><input type="text" [(ngModel)]="insertRole.name" name="name" class="form-control" /></td>
+		</tr>
+	</tbody>
+</table>

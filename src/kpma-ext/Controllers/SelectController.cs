@@ -33,7 +33,7 @@ namespace kpma_ext.Controllers
 				case "User":
 
 					var userlist = context.Users.AsQueryable();
-					if (string.IsNullOrWhiteSpace(term))
+					if (!string.IsNullOrWhiteSpace(term))
 					{
 						userlist = userlist.Where(u => u.Name.Contains(term) || u.Email.Contains(term));
 					}
@@ -42,7 +42,7 @@ namespace kpma_ext.Controllers
 				case "Role":
 
 					var rolelist = context.Roles.AsQueryable();
-					if (string.IsNullOrWhiteSpace(term))
+					if (!string.IsNullOrWhiteSpace(term))
 					{
 						rolelist = rolelist.Where(u => u.Name.Contains(term));
 					}

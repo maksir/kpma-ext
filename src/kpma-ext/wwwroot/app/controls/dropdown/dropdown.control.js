@@ -9,7 +9,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var common_1 = require("@angular/common");
+var common_1 = require('@angular/common');
+var forms_1 = require('@angular/forms');
 require('rxjs/Rx');
 var select_service_1 = require('../../services/select.service');
 var search_pipe_1 = require('../../pipes/search.pipe');
@@ -28,7 +29,7 @@ var DropDown = (function () {
         this.placeholder = 'Значение не выбрано...';
         this.showDropDown = false;
         this.searchValue = '';
-        this.termInput = new common_1.Control();
+        this.termInput = new forms_1.FormControl();
         this.doEmit = false;
         this.MinTerm = 3;
         this.disabled = false;
@@ -174,12 +175,16 @@ var DropDown = (function () {
     DropDown.prototype.hideForm = function () {
         this.searchValue = '';
         this.showDropDown = false;
+        this.hoverItem = undefined;
     };
     DropDown.prototype.onSelectItem = function (i) {
         this.selectedItem = i;
         this.hideForm();
         this.doEmit = true;
         this.valueChange.emit(i.id);
+    };
+    DropDown.prototype.onHoverItem = function (i) {
+        this.hoverItem = i;
     };
     DropDown.prototype.clearSelect = function () {
         this.selectedItem = null;
@@ -188,8 +193,50 @@ var DropDown = (function () {
         this.valueChange.emit(null);
     };
     DropDown.prototype.onKeyDown = function (event) {
-        if (this.showDropDown && event.keyCode == 27) {
-            this.hideForm();
+        if (this.showDropDown) {
+            switch (event.keyCode) {
+                case 13:
+                    this.hoverSelect();
+                    break;
+                case 27:
+                    this.hideForm();
+                    break;
+                case 38:
+                    this.hoverUp();
+                    break;
+                case 40:
+                    this.hoverDown();
+                    break;
+            }
+        }
+    };
+    DropDown.prototype.hoverUp = function () {
+        if (this.ItemType) {
+            if (!this.hoverItem) {
+                return;
+            }
+            var i = this.LazyItems.indexOf(this.hoverItem);
+            if (i > 0) {
+                this.hoverItem = this.LazyItems[i - 1];
+            }
+        }
+    };
+    DropDown.prototype.hoverDown = function () {
+        if (this.ItemType) {
+            if (!this.hoverItem) {
+                this.hoverItem = this.LazyItems[0];
+            }
+            else {
+                var i = this.LazyItems.indexOf(this.hoverItem);
+                if (i < this.LazyItems.length - 1) {
+                    this.hoverItem = this.LazyItems[i + 1];
+                }
+            }
+        }
+    };
+    DropDown.prototype.hoverSelect = function () {
+        if (this.hoverItem && this.showDropDown) {
+            this.onSelectItem(this.hoverItem);
         }
     };
     DropDown.prototype.trackEvent = function ($event) {
@@ -258,7 +305,7 @@ var DropDown = (function () {
             templateUrl: 'dropdown.html',
             styleUrls: ['dropdown.css'],
             pipes: [search_pipe_1.SearchPipe],
-            directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES],
+            directives: [common_1.CORE_DIRECTIVES, forms_1.REACTIVE_FORM_DIRECTIVES],
             host: {
                 "(document: click)": "trackEvent($event)",
                 "(document: keydown)": "onKeyDown($event)"
@@ -269,7 +316,7 @@ var DropDown = (function () {
     return DropDown;
 }());
 exports.DropDown = DropDown;
-var CUSTOM_VALUE_ACCESSOR = new core_1.Provider(common_1.NG_VALUE_ACCESSOR, { useExisting: core_1.forwardRef(function () { return DropdownValueAccessor; }), multi: true });
+var CUSTOM_VALUE_ACCESSOR = new core_1.Provider(forms_1.NG_VALUE_ACCESSOR, { useExisting: core_1.forwardRef(function () { return DropdownValueAccessor; }), multi: true });
 var DropdownValueAccessor = (function () {
     function DropdownValueAccessor(host) {
         this.host = host;

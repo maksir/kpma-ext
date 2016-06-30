@@ -91,7 +91,7 @@ namespace kpmaext.Data.Migrations
 
                     b.Property<string>("DisplayName")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasComputedColumnSql("[Name] ([Email])");
+                        .HasComputedColumnSql("([Name] + ' (' + [Email] + ')')");
 
                     b.Property<string>("Email")
                         .HasAnnotation("MaxLength", 256);
@@ -225,8 +225,7 @@ namespace kpmaext.Data.Migrations
 
                     b.HasOne("kpma_ext.Models.MetaObject")
                         .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TypeId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<int>", b =>

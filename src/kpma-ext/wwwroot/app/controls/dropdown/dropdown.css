@@ -75,6 +75,6 @@
 	display: list-item;
     list-style: outside none none;
 }
-.item:hover {
+.item.hover {
 	background-color: #d9edf7;
 }

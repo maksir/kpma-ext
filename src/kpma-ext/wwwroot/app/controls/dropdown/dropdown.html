@@ -5,9 +5,9 @@
 		<span *ngIf="!showDropDown && !disabled" (click)="showHide()" class="buttondown"><i class="fa fa-chevron-down"></i></span>
 		<span *ngIf="showDropDown && !disabled" (click)="showHide()" class="buttondown"><i class="fa fa-chevron-up"></i></span>
 	</div>
-	<div *ngIf="showDropDown && !disabled" class="dropdownform" (keydown)="onKeyDown($event)">
+	<div *ngIf="showDropDown && !disabled" class="dropdownform">
 		<div class="dropdownsearch">
-			<input #input type="text" [(ngModel)]="searchValue" [ngFormControl]="termInput" class="searchinput" (keydown)="onKeyDown($event)" />
+			<input #input type="text" [(ngModel)]="searchValue" name="searchValue" [formControl]="termInput" class="searchinput" (keyup)="onKeyDown($event)" />
 		</div>
 		<div class="dropdownitems">
 			<span *ngIf="showHelpText()">Введите минимум {{MinTerm}} символа(ов)</span>
@@ -17,7 +17,7 @@
 			</ul>
 
 			<ul *ngIf="termFilter(searchValue)" class="itemslist">
-				<li *ngFor="let i of LazyItems" class="item" (click)="onSelectItem(i)" [innerHTML]="getItemText(i)"></li>
+				<li *ngFor="let i of LazyItems" class="item" [class.hover]="i == hoverItem" (click)="onSelectItem(i)" (mouseover)="onHoverItem(i)" [innerHTML]="getItemText(i)"></li>
 			</ul>
 			<span *ngIf="ItemType && LazyItems && LazyItems.length == 0 && !showHelpText()">Поиск не дал результатов...</span>
 		</div>
