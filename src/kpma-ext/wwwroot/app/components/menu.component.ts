@@ -1,12 +1,14 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
+import {ROUTER_DIRECTIVES} from '@angular/router';
 
 import {UserService} from '../services/user.service';
 
 @Component({
+	moduleId: module.id,
 	selector: 'main-menu',
-	template: ``,
-	directives: [CORE_DIRECTIVES]
+	templateUrl: 'menu.html',
+	directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES]
 })
 export class Menu implements OnInit {
 

@@ -26,27 +26,27 @@ namespace kpma_ext.Controllers
 		}
 
 
-		[HttpGet]
-		[Authorize]
-		[Route("list")]
-		public async IActionResult List()
-		{
-			try
-			{
-				var user = await userManager.GetUserAsync(User);
+		//[HttpGet]
+		//[Authorize]
+		//[Route("list")]
+		//public async IActionResult List()
+		//{
+		//	try
+		//	{
+		//		var user = await userManager.GetUserAsync(User);
 
-				var retList = new List<MenuModel>();
+		//		var retList = new List<MenuModel>();
 
-				var list = db.RoleMenus.Where(r => user.Roles.Select(s=>s.RoleId).Contains(r.RoleId));
+		//		var list = db.RoleMenus.Where(r => user.Roles.Select(s=>s.RoleId).Contains(r.RoleId));
 
 
 
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		return BadRequest(ex.Message);
+		//	}
+		//}
     }
 
 

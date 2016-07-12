@@ -3,27 +3,27 @@ import {ROUTER_DIRECTIVES} from '@angular/router';
 
 import {SelectService} from './services/select.service';
 import {UserService, UserViewModel} from './services/user.service';
+import {MetaObjectService} from './services/metaobject.service';
+
+import {ShadowBoxDirective} from './directives/shadowbox.directive';
+
+import {Menu} from './components/menu.component';
+
+
 
 @Component({
 	moduleId: module.id,
     selector: 'main-app',
-    template: `<h4>Asp Net Core + Angular2 App</h4>
-				<div>
-				<a [routerLink]="['/signup']">Регистрация</a>
-				<a [routerLink]="['/login']">Вход</a>
-				<a [routerLink]="['/user/list']">Список пользователей</a>
-				<a [routerLink]="['/role/list']">Список ролей</a>
-				{{currentUser.name}}
-				</div>
-				<router-outlet></router-outlet>
-	`,
-	directives: [ROUTER_DIRECTIVES],
+    template: `<main-menu></main-menu><router-outlet></router-outlet>`,
+	directives: [ROUTER_DIRECTIVES, ShadowBoxDirective, Menu],
 	providers: [SelectService]
 })
 
 export class MainAppComponent {
 
 	currentUser = new UserViewModel();
+
+	freeze = false;
 
 	constructor(private userSrv: UserService) {
 
@@ -32,6 +32,12 @@ export class MainAppComponent {
 			err => console.log(err),
 			() => console.log('done')
 		);
+	}
+
+	onChange() {
+
+		this.freeze = !this.freeze;
+		return false;
 	}
 
 }

@@ -1,12 +1,12 @@
 ﻿import {Injectable} from '@angular/core';
 import {Http, Headers} from '@angular/http';
-import {Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+import {Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate} from '@angular/router';
 import {Observable, Subject} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
 
 @Injectable()
-export class UserService {
+export class UserService implements CanActivate {
 
 	private loggetIn = false;
 
@@ -21,8 +21,22 @@ export class UserService {
 			return Observable.of(true);
 		}
 		else {
+
 			this.router.navigateByUrl('/login?returnUrl=' + state.url);
-			return Observable.of(false);
+			return Observable.of(false); 
+
+			//.flatMap();
+			//return this.http.get('/api/user/current').subscribe(
+			//	res => {
+			//		this._currentUser.next(res.json());
+			//		this.loggetIn = true;
+			//		return true;
+			//	},
+			//	err => {
+			//		this.router.navigateByUrl('/login?returnUrl=' + state.url);
+			//		return false;
+			//	}
+			//);
 		}
 	}
 
@@ -55,7 +69,9 @@ export class UserService {
 			});
 	}
 
-	logout() {
+	logout(): boolean {
+		
+		return true;
 	}
 
 	userGet(id: number): Observable<UserViewModel> {
@@ -153,7 +169,7 @@ export class UserSignModel {
 export class UserLoginModel {
 	email: string;
 	password: string;
-	rememeberMe: boolean = false;
+	rememberMe: boolean = false;
 }
 
 export class UserViewModel {

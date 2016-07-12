@@ -1,5 +1,6 @@
 {
-	"authors": ['Smeh'],
+	"authors": [ "Smeh" ],
+	"version": "1.0.0-alpha-01",
 
 	"dependencies": {
 		"Microsoft.NETCore.App": {

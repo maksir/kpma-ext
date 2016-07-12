@@ -23,6 +23,9 @@ namespace kpma_ext.Models
 
 		public string Value { get; set; }
 
+		public string TableName { get; set; }
+		public string SchemaName { get; set; }
+
 		public string CreatedBy { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public string LastUpdatedBy { get; set; }
@@ -34,14 +37,9 @@ namespace kpma_ext.Models
 
 		[ForeignKey("ParentId")]
 		public MetaObject Parent { get; set; }
-
-		
 		public MetaObject Type { get; set; }
-
 		[InverseProperty("Parent")]
 		public List<MetaObject> Children { get; set; }
-
-		
 		public List<MetaObject> TypeCollection { get; set; }
 	}
 }

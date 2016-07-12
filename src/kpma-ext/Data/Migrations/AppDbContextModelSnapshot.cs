@@ -13,8 +13,72 @@ namespace kpmaext.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
+                .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("kpma_ext.Models.Contractor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("DisplayName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasComputedColumnSql("[Name]");
+
+                    b.Property<string>("FullName");
+
+                    b.Property<string>("LastUpdatedBy");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contractor","contr");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.Menu", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Icon");
+
+                    b.Property<bool>("IsGroup");
+
+                    b.Property<string>("LastUpdatedBy");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<bool>("OnRight");
+
+                    b.Property<int?>("ParentId");
+
+                    b.Property<int>("SortOrder");
+
+                    b.Property<string>("Url");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Menu","meta");
+                });
 
             modelBuilder.Entity("kpma_ext.Models.MetaObject", b =>
                 {
@@ -79,6 +143,21 @@ namespace kpmaext.Data.Migrations
                     b.ToTable("Role","auth");
                 });
 
+            modelBuilder.Entity("kpma_ext.Models.RoleMenu", b =>
+                {
+                    b.Property<int>("RoleId");
+
+                    b.Property<int>("MenuId");
+
+                    b.HasKey("RoleId", "MenuId");
+
+                    b.HasIndex("MenuId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RoleMenu","meta");
+                });
+
             modelBuilder.Entity("kpma_ext.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -129,6 +208,7 @@ namespace kpmaext.Data.Migrations
                         .HasName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
+                        .IsUnique()
                         .HasName("UserNameIndex");
 
                     b.ToTable("User","auth");
@@ -217,21 +297,41 @@ namespace kpmaext.Data.Migrations
                     b.ToTable("UserToken","auth");
                 });
 
+            modelBuilder.Entity("kpma_ext.Models.Menu", b =>
+                {
+                    b.HasOne("kpma_ext.Models.Menu", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId");
+                });
+
             modelBuilder.Entity("kpma_ext.Models.MetaObject", b =>
                 {
-                    b.HasOne("kpma_ext.Models.MetaObject")
-                        .WithMany()
+                    b.HasOne("kpma_ext.Models.MetaObject", "Parent")
+                        .WithMany("Children")
                         .HasForeignKey("ParentId");
 
-                    b.HasOne("kpma_ext.Models.MetaObject")
-                        .WithMany()
+                    b.HasOne("kpma_ext.Models.MetaObject", "Type")
+                        .WithMany("TypeCollection")
                         .HasForeignKey("TypeId");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.RoleMenu", b =>
+                {
+                    b.HasOne("kpma_ext.Models.Menu", "Menu")
+                        .WithMany()
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("kpma_ext.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("kpma_ext.Models.Role")
-                        .WithMany()
+                        .WithMany("Claims")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -239,7 +339,7 @@ namespace kpmaext.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<int>", b =>
                 {
                     b.HasOne("kpma_ext.Models.User")
-                        .WithMany()
+                        .WithMany("Claims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -247,7 +347,7 @@ namespace kpmaext.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<int>", b =>
                 {
                     b.HasOne("kpma_ext.Models.User")
-                        .WithMany()
+                        .WithMany("Logins")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -255,12 +355,12 @@ namespace kpmaext.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserRole<int>", b =>
                 {
                     b.HasOne("kpma_ext.Models.Role")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("kpma_ext.Models.User")
-                        .WithMany()
+                        .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

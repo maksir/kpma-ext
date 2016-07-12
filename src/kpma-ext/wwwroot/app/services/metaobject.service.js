@@ -16,10 +16,10 @@ var MetaObjectService = (function () {
         this.http = http;
     }
     MetaObjectService.prototype.getList = function (parentId) {
-        return this.http.get('/api/metaobject/list?parentId=' + parentId.toString()).map(function (res) { return res.json(); });
+        return this.http.get('/api/metaobject/list?parentId=' + parentId).map(function (res) { return res.json(); });
     };
-    MetaObjectService.prototype.getOne = function (id) {
-        return this.http.get('/api/metaobject/' + id.toString()).map(function (res) { return res.json(); });
+    MetaObjectService.prototype.getMetaObject = function (id) {
+        return this.http.get('/api/metaobject/' + id).map(function (res) { return res.json(); });
     };
     MetaObjectService = __decorate([
         core_1.Injectable(), 

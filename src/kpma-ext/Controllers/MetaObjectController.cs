@@ -8,6 +8,7 @@ using System.Linq;
 namespace kpma_ext.Controllers
 {
 	[Route("api/[controller]")]
+	[Authorize(Roles = "Programmer, Admin")]
 	public class MetaObjectController : Controller
 	{
 		private readonly ILogger logger;
@@ -21,7 +22,6 @@ namespace kpma_ext.Controllers
 		}
 
 		[HttpGet]
-		[Authorize]
 		[Route("list/{parentId:int?}")]
 		public IActionResult List(int? parentId)
 		{
@@ -54,7 +54,6 @@ namespace kpma_ext.Controllers
 		}
 
 		[HttpGet]
-		[Authorize]
 		[Route("{id:int}")]
 		public IActionResult Get(int id)
 		{

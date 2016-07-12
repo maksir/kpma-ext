@@ -52,7 +52,8 @@ namespace kpma_ext.Controllers
 					var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
 					if (result.Succeeded)
 					{
-						var user = await userManager.GetUserAsync(User);
+
+						var user = db.Users.FirstOrDefault(u => u.UserName == model.Email); //await userManager.GetUserAsync(User);
 
 						return Json(new UserViewModel {
 							Id = user.Id,

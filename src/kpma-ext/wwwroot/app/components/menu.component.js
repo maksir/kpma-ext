@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
+var router_1 = require('@angular/router');
 var user_service_1 = require('../services/user.service');
 var Menu = (function () {
     function Menu(userSrv) {
@@ -29,9 +30,10 @@ var Menu = (function () {
     };
     Menu = __decorate([
         core_1.Component({
+            moduleId: module.id,
             selector: 'main-menu',
-            template: "",
-            directives: [common_1.CORE_DIRECTIVES]
+            templateUrl: 'menu.html',
+            directives: [common_1.CORE_DIRECTIVES, router_1.ROUTER_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [user_service_1.UserService])
     ], Menu);

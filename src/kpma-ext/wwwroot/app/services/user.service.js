@@ -53,6 +53,7 @@ var UserService = (function () {
         });
     };
     UserService.prototype.logout = function () {
+        return true;
     };
     UserService.prototype.userGet = function (id) {
         return this.http.get('/api/user/' + id).map(function (res) { return res.json(); });
@@ -131,7 +132,7 @@ var UserSignModel = (function () {
 exports.UserSignModel = UserSignModel;
 var UserLoginModel = (function () {
     function UserLoginModel() {
-        this.rememeberMe = false;
+        this.rememberMe = false;
     }
     return UserLoginModel;
 }());

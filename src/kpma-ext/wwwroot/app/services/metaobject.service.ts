@@ -11,12 +11,12 @@ export class MetaObjectService {
 
 	getList(parentId: number): Observable<MetaObjectViewModel[]> {
 
-		return this.http.get('/api/metaobject/list?parentId=' + parentId.toString()).map(res => res.json());
+		return this.http.get('/api/metaobject/list?parentId=' + parentId).map(res => res.json());
 	}
 
-	getOne(id: number): Observable<MetaObjectViewModel> {
+	getMetaObject(id: number): Observable<MetaObjectDataModel> {
 
-		return this.http.get('/api/metaobject/' + id.toString()).map(res => res.json());
+		return this.http.get('/api/metaobject/' + id).map(res => res.json());
 
 	}
 }
