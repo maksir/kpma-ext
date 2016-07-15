@@ -80,12 +80,12 @@ var DocTypeService = (function () {
     return DocTypeService;
 }());
 exports.DocTypeService = DocTypeService;
-var DocuTypeModel = (function () {
-    function DocuTypeModel() {
+var DocTypeModel = (function () {
+    function DocTypeModel() {
     }
-    return DocuTypeModel;
+    return DocTypeModel;
 }());
-exports.DocuTypeModel = DocuTypeModel;
+exports.DocTypeModel = DocTypeModel;
 var DocGroupModel = (function () {
     function DocGroupModel() {
     }

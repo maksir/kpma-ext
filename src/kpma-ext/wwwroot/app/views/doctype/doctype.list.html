@@ -1,16 +1,80 @@
 ﻿<div class="col-sm-4">
 	<div class="panel panel-default">
-		<div class="panel-heading">Группы документов</div>
+		<div class="panel-heading">Группы документов <a (click)="updateGroupList()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить</i></a></div>
 		<div class="panel-body">
-			
+			<table class="table table-bordered table-condensed table-hover">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Наименование</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let g of groupList" (click)="onSelectGroup(g)" [ngClass]="{'info': selectGroupModel == g, 'warning': editGroupModel == g}">
+						<template [ngIf]="g != editGroupModel">
+							<td style="min-width:60px;">
+								<a (click)="onEditGroup(g)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-pencil-square-o fa-fw"></i></a>
+								<a (click)="onDeleteGroup(g)" class="btn btn-xs btn-danger" title="Удалить"><i class="fa fa-trash fa-fw"></i></a>
+							</td>
+							<td>{{g.name}}</td>
+						</template>
+						<template [ngIf]="g == editGroupModel">
+							<td style="min-width:60px;">
+								<a (click)="onCancelGroup()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
+								<a (click)="onUpdateGroup()" class="btn btn-xs btn-success" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
+							</td>
+							<td><input [(ngModel)]="editGroupModel.name" class="form-control" /></td>
+						</template>
+					</tr>
+					<tr class="success">
+						<td colspan="2">Добавление новой группы</td>
+					</tr>
+					<tr class="success">
+						<td><a (click)="onAddGroup()" [class.disabled]="!addGroupModel.name" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a></td>
+						<td><input [(ngModel)]="addGroupModel.name" class="form-control" /></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>
 <div class="col-sm-8">
 	<div class="panel panel-default">
-		<div class="panel-heading">Типы документов</div>
+		<div class="panel-heading">Типы документов <a (click)="updateTypeList()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить</i></a></div>
 		<div class="panel-body">
-			
+			<table class="table table-bordered table-condensed table-hover">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Наименование</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let t of typeList" [class.warning]="t == editTypeModel">
+						<template [ngIf]="t != editTypeModel">
+							<td style="min-width:60px;">
+								<a (click)="onEditType(t)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-pencil-square-o fa-fw"></i></a>
+								<a (click)="onDeleteType(t)" class="btn btn-xs btn-danger" title="Удалить"><i class="fa fa-trash fa-fw"></i></a>
+							</td>
+							<td>{{t.name}}</td>
+						</template>
+						<template [ngIf]="t == editTypeModel">
+							<td style="min-width:60px;">
+								<a (click)="onCancelType()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
+								<a (click)="onUpdateType()" class="btn btn-xs btn-success" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
+							</td>
+							<td><input [(ngModel)]="editTypeModel.name" class="form-control" /></td>
+						</template>
+					</tr>
+					<tr class="success">
+						<td colspan="2">Добавление нового типа</td>
+					</tr>
+					<tr class="success">
+						<td><a (click)="onAddType()" [class.disabled]="!addTypeModel.name || !selectGroupModel" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a></td>
+						<td><input [(ngModel)]="addTypeModel.name" [disabled]="!selectGroupModel" class="form-control" /></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>

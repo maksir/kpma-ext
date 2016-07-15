@@ -11,6 +11,7 @@
 export class Tab {
 	@Input('title') title: string;
 	@Input() active = false;
+	@Input() disabled: boolean = false;
 } 
 
 
@@ -46,6 +47,11 @@ export class Tabs {
 	}
 
 	selectTab(tab: Tab) {
+
+		if (tab.disabled) {
+			return;
+		}
+
 		// deactivate all tabs
 		this.tabs.toArray().forEach(tab => tab.active = false);
 

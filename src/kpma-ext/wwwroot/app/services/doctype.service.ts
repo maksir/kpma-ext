@@ -50,17 +50,17 @@ export class DocTypeService {
 	}
 
 
-	getTypeList(groupId: number): Observable<DocuTypeModel[]> {
+	getTypeList(groupId: number): Observable<DocTypeModel[]> {
 
 		return this.http.get('/api/doctype/type/list?groupId=' + groupId).map(res => res.json());
 
 	}
 
-	getTypeModel(id: number): Observable<DocuTypeModel> {
+	getTypeModel(id: number): Observable<DocTypeModel> {
 		return this.http.get('/api/doctype/type/' + id).map(res => res.json());
 	}
 
-	saveTypeModel(model: DocuTypeModel): Observable<DocuTypeModel> {
+	saveTypeModel(model: DocTypeModel): Observable<DocTypeModel> {
 
 		if (!model) {
 			return Observable.of(model);
@@ -95,8 +95,22 @@ export class DocTypeService {
 }
 
 
-export class DocuTypeModel {
+export class DocTypeModel {
+	public id: number;
+	public name: string;
+	public documentGroupId: number;
+	public documentGroup: DocGroupModel;
+	public createdBy: string;
+	public createdDate: Date;
+	public lastUpdatedBy: string;
+	public lastUpdatedDate: Date;
 }
 
 export class DocGroupModel {
+	public id: number;
+	public name: string;
+	public createdBy: string;
+	public createdDate: Date;
+	public lastUpdatedBy: string;
+	public lastUpdatedDate: Date;
 }

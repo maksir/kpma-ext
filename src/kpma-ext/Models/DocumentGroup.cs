@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,6 +22,7 @@ namespace kpma_ext.Models
 
 
 		[InverseProperty("DocumentGroup")]
+		[JsonIgnore]
 		public List<DocumentType> Types { get; set; }
 	}
 }

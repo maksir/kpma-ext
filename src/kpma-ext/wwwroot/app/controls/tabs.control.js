@@ -12,6 +12,7 @@ var core_1 = require('@angular/core');
 var Tab = (function () {
     function Tab() {
         this.active = false;
+        this.disabled = false;
     }
     __decorate([
         core_1.Input('title'), 
@@ -21,6 +22,10 @@ var Tab = (function () {
         core_1.Input(), 
         __metadata('design:type', Object)
     ], Tab.prototype, "active", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Boolean)
+    ], Tab.prototype, "disabled", void 0);
     Tab = __decorate([
         core_1.Component({
             selector: 'tab',
@@ -43,6 +48,9 @@ var Tabs = (function () {
         }
     };
     Tabs.prototype.selectTab = function (tab) {
+        if (tab.disabled) {
+            return;
+        }
         // deactivate all tabs
         this.tabs.toArray().forEach(function (tab) { return tab.active = false; });
         // activate the tab the user has clicked on.

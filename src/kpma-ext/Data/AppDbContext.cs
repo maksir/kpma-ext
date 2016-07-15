@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace kpma_ext.Data
 {
-    public class AppDbContext : IdentityDbContext<User, Role, int>
+	public class AppDbContext : IdentityDbContext<User, Role, int>
 	{
 
 		public User CurrentUser { get; set; }
@@ -32,45 +32,52 @@ namespace kpma_ext.Data
 
 		public override int SaveChanges()
 		{
-			if (CurrentUser != null)
+			foreach (var entry in this.ChangeTracker.Entries())
 			{
-				foreach (var entry in this.ChangeTracker.Entries())
+				switch (entry.State)
 				{
-					switch (entry.State)
-					{
-						case EntityState.Detached:
-							break;
-						case EntityState.Unchanged:
-							break;
-						case EntityState.Deleted:
-							break;
-						case EntityState.Modified:
+					case EntityState.Detached:
+						break;
+					case EntityState.Unchanged:
+						break;
+					case EntityState.Deleted:
+						break;
+					case EntityState.Modified:
+						{
+							if (CurrentUser == null)
 							{
-								var model = entry.Entity as ILogModel;
-								if (model != null)
-								{
-									model.LastUpdatedBy = CurrentUser.UserName;
-									model.LastUpdatedDate = DateTime.Now;
-								}
+								throw new Exception("В контексте не указан текущий пользователь! Сохранение не возможно!");
 							}
-							break;
-						case EntityState.Added:
-							{
-								var model = entry.Entity as ILogModel;
-								if (model != null)
-								{
-									model.CreatedBy = CurrentUser.UserName;
-									model.CreatedDate = DateTime.Now;
-									model.LastUpdatedBy = CurrentUser.UserName;
-									model.LastUpdatedDate = DateTime.Now;
-								}
-							}
-							break;
-						default:
-							break;
-					}
 
+							var model = entry.Entity as ILogModel;
+							if (model != null)
+							{
+								model.LastUpdatedBy = CurrentUser.UserName;
+								model.LastUpdatedDate = DateTime.Now;
+							}
+						}
+						break;
+					case EntityState.Added:
+						{
+							if (CurrentUser == null)
+							{
+								throw new Exception("В контексте не указан текущий пользователь! Сохранение не возможно!");
+							}
+
+							var model = entry.Entity as ILogModel;
+							if (model != null)
+							{
+								model.CreatedBy = CurrentUser.UserName;
+								model.CreatedDate = DateTime.Now;
+								model.LastUpdatedBy = CurrentUser.UserName;
+								model.LastUpdatedDate = DateTime.Now;
+							}
+						}
+						break;
+					default:
+						break;
 				}
+
 			}
 			return base.SaveChanges();
 		}
@@ -97,11 +104,9 @@ namespace kpma_ext.Data
 			builder.Entity<MetaObject>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<MetaObject>().Property(p => p.CreatedDate).HasDefaultValueSql("getdate()");
 
-
 			// группы и типы документов
 			builder.Entity<DocumentGroup>().ToTable("DocumentGroup", "core");
 			builder.Entity<DocumentType>().ToTable("DocumentType", "core");
-
 
 			//menu
 			builder.Entity<Menu>().ToTable("Menu", "meta");

@@ -71,6 +71,8 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
 				EntityEntry<DocumentGroup> ret;
 				if (model.Id == 0)
 				{
@@ -95,6 +97,8 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
 				var model = db.DocumentGroups.FirstOrDefault(m => m.Id == id);
 				if (model != null)
 				{
@@ -166,6 +170,8 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
 				EntityEntry<DocumentType> ret;
 				if (model.Id == 0)
 				{
@@ -190,6 +196,8 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
 				var model = db.DocumentTypes.FirstOrDefault(m => m.Id == id);
 				if (model != null)
 				{
