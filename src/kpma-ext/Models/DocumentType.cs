@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace kpma_ext.Models
 {
-    public class DocumentType
-    {
+    public class DocumentType: ILogModel
+	{
 		[Key]
 		public int Id { get; set; }
 		[Required]
@@ -17,12 +17,11 @@ namespace kpma_ext.Models
 		public int DocumentGroupId { get; set; }
 
 		[ForeignKey("DocumentGroupId")]
-		public DocumentGroup DocumenyGroup { get; set; }
+		public DocumentGroup DocumentGroup { get; set; }
 
 		public string CreatedBy { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public string LastUpdatedBy { get; set; }
-		[ConcurrencyCheck]
 		public DateTime LastUpdatedDate { get; set; }
 	}
 }

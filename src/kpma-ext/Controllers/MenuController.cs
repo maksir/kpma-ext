@@ -1,5 +1,6 @@
 ﻿using kpma_ext.Data;
 using kpma_ext.Models;
+using kpma_ext.Tools;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,42 +21,64 @@ namespace kpma_ext.Controllers
 
 		public MenuController(ILoggerFactory lf, AppDbContext context, UserManager<User> userManager)
 		{
-			logger = lf.CreateLogger<SelectController>();
+			logger = lf.CreateLogger<MenuController>();
 			this.userManager = userManager;
 			this.db = context;
 		}
 
 
-		//[HttpGet]
-		//[Authorize]
-		//[Route("list")]
-		//public async IActionResult List()
-		//{
-		//	try
-		//	{
-		//		var user = await userManager.GetUserAsync(User);
+		[HttpGet]
+		[Route("list/{parentId:int?}")]
+		public IActionResult List(int? parentId)
+		{
+			try
+			{
+				var list = db.Menus.Where(m => m.ParentId == parentId).OrderBy(m => m.SortOrder).ToList();
 
-		//		var retList = new List<MenuModel>();
+				return Json(list);
 
-		//		var list = db.RoleMenus.Where(r => user.Roles.Select(s=>s.RoleId).Contains(r.RoleId));
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
 
+		[HttpPost]
+		[Route("save")]
+		public IActionResult Save([FromBody]Menu model)
+		{
+			try
+			{
+				if (ModelState.IsValid)
+				{
+					db.CurrentUser = userManager.GetUserAsync(User).Result;
 
+					if (model.Id == 0)
+					{
+						var newModel = db.Menus.Add(model);
+						db.SaveChanges();
+						return Json(newModel.Entity);
+					}
+					else
+					{
 
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		return BadRequest(ex.Message);
-		//	}
-		//}
-    }
-
-
-	public class MenuModel
-	{
-		public int Id { get; set; }
-		public string Name { get; set; }
-		public string Url { get; set; }
-		public bool IsGroup { get; set; }
-		public IList<MenuModel> Children { get; set; }
+						var state = db.Menus.Update(model);
+						db.SaveChanges();
+						return Json(state.Entity);
+					}
+				}
+				else
+				{
+					return BadRequest(ModelState);
+				}
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
 	}
+
+
 }

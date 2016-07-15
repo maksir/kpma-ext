@@ -18,7 +18,7 @@ var UserProfile = (function () {
             moduleId: module.id,
             selector: 'user-profile',
             templateUrl: 'user.profile.html',
-            directives: [dropdown_control_1.DropDown, dropdown_control_1.DropdownValueAccessor]
+            directives: [dropdown_control_1.DropDown, dropdown_control_1.DropDownVA]
         }), 
         __metadata('design:paramtypes', [])
     ], UserProfile);

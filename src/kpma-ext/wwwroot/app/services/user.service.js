@@ -20,14 +20,34 @@ var UserService = (function () {
         this.loggetIn = false;
         this._currentUser = new Rx_1.Subject();
         this.currentUser = this._currentUser.asObservable();
+        this.retSubj = new Rx_1.Subject();
     }
     UserService.prototype.canActivate = function (route, state) {
+        var _this = this;
         if (this.isLoggetIn()) {
             return Rx_1.Observable.of(true);
         }
         else {
-            this.router.navigateByUrl('/login?returnUrl=' + state.url);
-            return Rx_1.Observable.of(false);
+            return Rx_1.Observable.create(function (observer) {
+                _this.http.get('/api/user/current').subscribe(function (res) {
+                    if (res.status == 200) {
+                        _this.loggetIn = true;
+                        _this._currentUser.next(res.json());
+                        observer.next(true);
+                    }
+                    else {
+                        _this.loggetIn = false;
+                        _this.router.navigateByUrl('/login?returnUrl=' + state.url);
+                        observer.next(false);
+                    }
+                }, function (err) {
+                    _this.loggetIn = false;
+                    _this.router.navigateByUrl('/login?returnUrl=' + state.url);
+                    observer.next(false);
+                }, function () {
+                    observer.complete();
+                });
+            });
         }
     };
     UserService.prototype.sign = function (model) {
@@ -111,8 +131,17 @@ var UserService = (function () {
     UserService.prototype.roleList = function () {
         return this.http.get('/api/role/list').map(function (res) { return res.json(); });
     };
-    UserService.prototype.menuList = function () {
-        return this.http.get('/api/menu/list').map(function (res) { return res.json(); });
+    UserService.prototype.roleMenuList = function (roleId) {
+        return this.http.get('/api/role/menu/' + roleId).map(function (res) { return res.json(); });
+    };
+    UserService.prototype.menuItemList = function (roleId) {
+        return this.http.get('/api/role/menu/items/' + roleId).map(function (res) { return res.json(); });
+    };
+    UserService.prototype.roleMenuAdd = function (roleId, menuId) {
+        return this.http.post('/api/role/menu/' + roleId + "/" + menuId, '').map(function (res) { return res.ok; });
+    };
+    UserService.prototype.roleMenuDelete = function (model) {
+        return this.http.delete('/api/role/menu/' + model.roleId + '/' + model.menuId).map(function (res) { return res.ok; });
     };
     UserService.prototype.isLoggetIn = function () {
         return this.loggetIn;
@@ -155,10 +184,10 @@ var UserRoleViewModel = (function () {
     return UserRoleViewModel;
 }());
 exports.UserRoleViewModel = UserRoleViewModel;
-var MenuModel = (function () {
-    function MenuModel() {
+var RoleMenuViewModel = (function () {
+    function RoleMenuViewModel() {
     }
-    return MenuModel;
+    return RoleMenuViewModel;
 }());
-exports.MenuModel = MenuModel;
+exports.RoleMenuViewModel = RoleMenuViewModel;
 //# sourceMappingURL=user.service.js.map

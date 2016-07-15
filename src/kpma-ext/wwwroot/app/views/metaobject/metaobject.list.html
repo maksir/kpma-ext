@@ -1,31 +1,42 @@
 ﻿<h4>Список объектов системы</h4>
 
-<div class="panel panel-default">
-	<div class="panel-heading">Дерево объектов</div>
-	<div class="panel-body">
-		
+<div class="col-lg-4">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Дерево объектов <button (click)="onTreeRefresh()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить дерево</i></button>
+		</div>
+		<div class="panel-body">
+			<tree-view [Nodes]="root" [SelectedNode]="selectedNode" [CanExpand]="true" [isRoot]="true" (onSelectedChanged)="onSelectNode($event)" (onRequestNodes)="onRequestNodes($event)"></tree-view>
+		</div>
 	</div>
 </div>
+<div class="col-lg-8">
+	<div class="panel panel-default">
+		<div class="panel-heading">Список объектов <a [routerLink]="['../edit', 0, 'new', parentId]" class="btn btn-xs btn-primary pull-right">Добавить</a></div>
+		<div class="panel-body">
+			<table class="table table-bordered table-hover table-striped">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Id</th>
+						<th>Name</th>
+						<th>Parent</th>
+						<th>Type</th>
+						<th>Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let mo of moList">
+						<td><a [routerLink]="['../edit', mo.id]" class="btn btn-xs btn-success"><i class="fa fa-edit"></i></a></td>
+						<td>{{mo.id}}</td>
+						<td>{{mo.name}}</td>
+						<td>{{mo.parentName}}</td>
+						<td>{{mo.typeName}}</td>
+						<td>{{mo.value}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
-<table class="table table-bordered table-hover table-striped">
-	<thead>
-		<tr>
-			<th></th>
-			<th>Id</th>
-			<th>Name</th>
-			<th>Parent</th>
-			<th>Type</th>
-			<th>Value</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr *ngFor="let mo of moList">
-			<td></td>
-			<td>{{mo.Id}}</td>
-			<td>{{mo.Name}}</td>
-			<td>{{mo.ParentName}}</td>
-			<td>{{mo.TypeName}}</td>
-			<td>{{mo.Value}}</td>
-		</tr>
-	</tbody>
-</table>
+</div>

@@ -3,7 +3,8 @@ var router_1 = require('@angular/router');
 var contractor_routes_1 = require('./views/contractor/contractor.routes');
 var metaobject_routes_1 = require('./views/metaobject/metaobject.routes');
 var user_routes_1 = require('./views/user/user.routes');
-var routes = user_routes_1.UserRoutes.concat(contractor_routes_1.ContractorRoutes, metaobject_routes_1.MetaObjectRoutes, [
+var menu_routes_1 = require('./views/menu/menu.routes');
+var routes = user_routes_1.UserRoutes.concat(contractor_routes_1.ContractorRoutes, metaobject_routes_1.MetaObjectRoutes, menu_routes_1.MenuRoutes, [
     { path: '', redirectTo: '/login', terminal: true }
 ]);
 exports.APP_ROUTER_PROVIDERS = [

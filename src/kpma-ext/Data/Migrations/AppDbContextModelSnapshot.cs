@@ -31,6 +31,34 @@ namespace kpmaext.Data.Migrations
 
                     b.Property<string>("FullName");
 
+                    b.Property<string>("INN");
+
+                    b.Property<string>("KPP");
+
+                    b.Property<string>("LastUpdatedBy");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("OGRN");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contractor","contr");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.DocumentGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
                     b.Property<string>("LastUpdatedBy");
 
                     b.Property<DateTime>("LastUpdatedDate")
@@ -41,13 +69,41 @@ namespace kpmaext.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contractor","contr");
+                    b.ToTable("DocumentGroup","core");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.DocumentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<int>("DocumentGroupId");
+
+                    b.Property<string>("LastUpdatedBy");
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentGroupId");
+
+                    b.ToTable("DocumentType","core");
                 });
 
             modelBuilder.Entity("kpma_ext.Models.Menu", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Command");
 
                     b.Property<string>("CreatedBy");
 
@@ -105,7 +161,11 @@ namespace kpmaext.Data.Migrations
 
                     b.Property<int?>("ParentId");
 
-                    b.Property<int>("TypeId");
+                    b.Property<string>("SchemaName");
+
+                    b.Property<string>("TableName");
+
+                    b.Property<int?>("TypeId");
 
                     b.Property<string>("Value");
 
@@ -168,6 +228,8 @@ namespace kpmaext.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<int?>("ContractorId");
+
                     b.Property<string>("DisplayName")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasComputedColumnSql("([Name] + ' (' + [Email] + ')')");
@@ -203,6 +265,8 @@ namespace kpmaext.Data.Migrations
                         .HasAnnotation("MaxLength", 256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContractorId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -297,6 +361,14 @@ namespace kpmaext.Data.Migrations
                     b.ToTable("UserToken","auth");
                 });
 
+            modelBuilder.Entity("kpma_ext.Models.DocumentType", b =>
+                {
+                    b.HasOne("kpma_ext.Models.DocumentGroup", "DocumentGroup")
+                        .WithMany("Types")
+                        .HasForeignKey("DocumentGroupId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("kpma_ext.Models.Menu", b =>
                 {
                     b.HasOne("kpma_ext.Models.Menu", "Parent")
@@ -326,6 +398,13 @@ namespace kpmaext.Data.Migrations
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.User", b =>
+                {
+                    b.HasOne("kpma_ext.Models.Contractor", "Contractor")
+                        .WithMany()
+                        .HasForeignKey("ContractorId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<int>", b =>

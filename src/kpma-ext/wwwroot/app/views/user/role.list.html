@@ -1,36 +1,76 @@
-﻿<h4>Список ролей системы</h4>
-<table class="table table-hover table-bordered table-condensed">
-	<thead>
-		<tr>
-			<th><a (click)="onUpdaleList()" class="btn btn-xs btn-primary" title="Обновить список"><i class="fa fa-refresh fa-fw"></i></a></th>
-			<th>Id</th>
-			<th>Наименование</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr *ngFor="let r of roleList">
-			<template [ngIf]="editRole != r">
-				<td>
-					<a (click)="onClickEdit(r)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-edit fa-fw"></i></a>
-				</td>
-				<td>{{r.id}}</td>
-				<td>{{r.name}}</td>
-			</template>
-			<template [ngIf]="editRole == r">
-				<td>
-					<a (click)="onClickSave()" class="btn btn-xs btn-primary" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
-					<a (click)="onClickCancel()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
-				</td>
-				<td>{{r.id}}</td>
-				<td><input type="text" [(ngModel)]="editRole.name" name="name" class="form-control" /></td>
-			</template>
-		</tr>
-		<tr class="success">
-			<td colspan="3">Добавление новой роли</td>
-		</tr>
-		<tr class="success">
-			<td colspan="2"><a (click)="onClickAdd()" [class.disabled]="!insertRole.name" class="btn btn-xs btn-primary" title="Сохранить"><i class="fa fa-save fa-fw"></i></a></td>
-			<td><input type="text" [(ngModel)]="insertRole.name" name="name" class="form-control" /></td>
-		</tr>
-	</tbody>
-</table>
+﻿<div class="col-sm-4">
+	<div class="panel panel-default">
+		<div class="panel-heading">Список ролей</div>
+		<div class="panel-body">
+			<table class="table table-hover table-bordered table-condensed table-striped">
+				<thead>
+					<tr>
+						<th><a (click)="onUpdaleRoleList()" class="btn btn-xs btn-primary" title="Обновить список"><i class="fa fa-refresh fa-fw"></i></a></th>
+						<th>Id</th>
+						<th>Наименование</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let r of roleList" (click)="onSelectRole(r)" [ngClass]="{'info': r == selectedRole, 'warning': r == editRole}">
+						<template [ngIf]="editRole != r">
+							<td>
+								<a (click)="onEditRole(r)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-edit fa-fw"></i></a>
+							</td>
+							<td>{{r.id}}</td>
+							<td>{{r.name}}</td>
+						</template>
+						<template [ngIf]="editRole == r">
+							<td>
+								<a (click)="onSaveRole()" class="btn btn-xs btn-primary" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
+								<a (click)="onCancelRole()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
+							</td>
+							<td>{{r.id}}</td>
+							<td><input type="text" [(ngModel)]="editRole.name" name="name" class="form-control input-sm" /></td>
+						</template>
+					</tr>
+					<tr class="success">
+						<td colspan="3">Добавление новой роли</td>
+					</tr>
+					<tr class="success">
+						<td colspan="2"><a (click)="onAddRole()" [class.disabled]="!insertRole.name" class="btn btn-xs btn-primary" title="Сохранить"><i class="fa fa-save fa-fw"></i></a></td>
+						<td><input type="text" [(ngModel)]="insertRole.name" name="name" class="form-control input-sm" /></td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+</div>
+<div class="col-sm-8">
+	<div class="panel panel-default">
+		<div class="panel-heading">Доступные пункты меню</div>
+		<div class="panel-body">
+	
+			<table class="table table-hover table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Пункт меню</th>
+						<th>Группа меню</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let menu of menuList">
+						<td><a (click)="onDeleteMenu(menu)" class="btn btn-xs btn-danger" title="Удалить"><i class="fa fa-trash fa-fw"></i></a></td>
+						<td>{{menu.menuName}}</td>
+						<td>{{menu.menuParentName}}</td>
+					</tr>
+					<tr class="success">
+						<td colspan="3">Добавление пункта меню</td>
+					</tr>
+					<tr class="success">
+						<td><a (click)="onAddMenu()" [class.disabled]="!addMenuId" class="btn btn-xs btn-primary" title="Сохранить"><i class="fa fa-save fa-fw"></i></a></td>
+						<td colspan="2">
+							<dropdown [Items]="menuItems" [(ngModel)]="addMenuId" class="form-control"></dropdown>
+						</td>
+					</tr>
+				</tbody>
+			</table>		
+		</div>
+	</div>
+</div>

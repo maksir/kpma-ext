@@ -1,5 +1,6 @@
 ﻿using kpma_ext.Data;
 using kpma_ext.Models;
+using kpma_ext.Tools;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -15,8 +16,8 @@ using System.Threading.Tasks;
 
 namespace kpma_ext.Controllers
 {
-    public class UserController : Controller
-    {
+	public class UserController : Controller
+	{
 		private readonly UserManager<User> userManager;
 		private readonly SignInManager<User> signInManager;
 		private readonly RoleManager<Role> roleManager;
@@ -40,6 +41,35 @@ namespace kpma_ext.Controllers
 
 		#region User
 
+		[HttpGet]
+		[Route("api/[controller]/current")]
+		public async Task<IActionResult> Current()
+		{
+			try
+			{
+				var user = await userManager.GetUserAsync(User);
+				if (user == null)
+				{
+					return BadRequest("Пользователь не авторизован");
+				}
+				db.CurrentUser = user;
+
+				return Json(new UserViewModel
+				{
+					Id = user.Id,
+					Name = user.Name,
+					Email = user.Email,
+					PhoneNumber = user.PhoneNumber,
+					ConcurencyStamp = user.ConcurrencyStamp,
+					UserName = user.UserName
+				});
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
 		[HttpPost]
 		[AllowAnonymous]
 		[Route("api/[controller]/login")]
@@ -55,7 +85,9 @@ namespace kpma_ext.Controllers
 
 						var user = db.Users.FirstOrDefault(u => u.UserName == model.Email); //await userManager.GetUserAsync(User);
 
-						return Json(new UserViewModel {
+
+						return Json(new UserViewModel
+						{
 							Id = user.Id,
 							Name = user.Name,
 							Email = user.Email,
@@ -73,14 +105,18 @@ namespace kpma_ext.Controllers
 					{
 						ModelState.AddModelError("wrong", "Неправильный email или пароль.");
 					}
+					return BadRequest(ModelState);
+				}
+				else
+				{
+					return BadRequest(ModelState);
 				}
 			}
 			catch (Exception ex)
 			{
-				ModelState.AddModelError("exception", ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 
-			return BadRequest(ModelState);
 		}
 
 
@@ -93,6 +129,9 @@ namespace kpma_ext.Controllers
 			{
 				if (ModelState.IsValid)
 				{
+
+					//db.CurrentUser = userManager.GetUserAsync(User).Result;
+
 					var user = new User { UserName = model.Email, Email = model.Email, Name = model.Name };
 					var result = await userManager.CreateAsync(user, model.Password);
 					if (result.Succeeded)
@@ -113,12 +152,15 @@ namespace kpma_ext.Controllers
 
 				}
 
+				return BadRequest(ModelState);
+
+
 			}
 			catch (Exception ex)
 			{
-				ModelState.AddModelError("exception", ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
-			return BadRequest(ModelState);
+			//return BadRequest(ModelState);
 		}
 
 		[HttpGet]
@@ -128,7 +170,7 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
-				var ret = db.Users.OrderBy(m => m.Name).Select(m=> new UserViewModel
+				var ret = db.Users.OrderBy(m => m.Name).Select(m => new UserViewModel
 				{
 					Id = m.Id,
 					Name = m.Name,
@@ -141,7 +183,7 @@ namespace kpma_ext.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 
@@ -152,16 +194,17 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
-				return Json(db.UserRoles.Where(m => m.UserId == userId).Select(m=> new {
+				return Json(db.UserRoles.Where(m => m.UserId == userId).Select(m => new
+				{
 					userId = m.UserId,
 					roleId = m.RoleId,
-					roleName = db.Roles.FirstOrDefault(r=>r.Id == m.RoleId).Name
+					roleName = db.Roles.FirstOrDefault(r => r.Id == m.RoleId).Name
 				}));
 
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 
@@ -172,7 +215,10 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
-				var entity = new IdentityUserRole<int>{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
+				var entity = new IdentityUserRole<int>
+				{
 					UserId = model.UserId,
 					RoleId = model.RoleId
 				};
@@ -183,7 +229,7 @@ namespace kpma_ext.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 
@@ -194,6 +240,8 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
 				var ur = db.UserRoles.FirstOrDefault(m => m.UserId == userId && m.RoleId == roleId);
 				if (ur != null)
 				{
@@ -204,7 +252,7 @@ namespace kpma_ext.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 
@@ -222,7 +270,8 @@ namespace kpma_ext.Controllers
 					return BadRequest(string.Format("Пользователь не найден ({0})", userId));
 				}
 
-				return Json(new UserViewModel {
+				return Json(new UserViewModel
+				{
 					Id = user.Id,
 					Name = user.Name,
 					UserName = user.UserName,
@@ -234,7 +283,7 @@ namespace kpma_ext.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 
@@ -245,6 +294,8 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
 				var user = db.Users.FirstOrDefault(m => m.Id == model.Id);
 
 				if (user == null)
@@ -269,7 +320,7 @@ namespace kpma_ext.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 
@@ -285,7 +336,8 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
-				var list = db.Roles.Select(m=> new RoleViewModel {
+				var list = db.Roles.Select(m => new RoleViewModel
+				{
 					Id = m.Id,
 					Name = m.Name,
 					ConcurencyStamp = m.ConcurrencyStamp
@@ -295,7 +347,7 @@ namespace kpma_ext.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 
@@ -313,7 +365,8 @@ namespace kpma_ext.Controllers
 					return BadRequest(string.Format("Роль не найдена ({0})", roleId));
 				}
 
-				return Json(new RoleViewModel {
+				return Json(new RoleViewModel
+				{
 					Id = role.Id,
 					Name = role.Name,
 					ConcurencyStamp = role.ConcurrencyStamp
@@ -321,7 +374,7 @@ namespace kpma_ext.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 
@@ -332,11 +385,14 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
 				var role = db.Roles.FirstOrDefault(m => m.Id == model.Id);
 
 				if (role == null)
 				{
-					var newRole = new Role {
+					var newRole = new Role
+					{
 						Name = model.Name,
 						NormalizedName = model.Name.ToUpper()
 					};
@@ -351,7 +407,7 @@ namespace kpma_ext.Controllers
 					return BadRequest(ModelState);
 
 				}
-				else 
+				else
 				{
 					if (role.ConcurrencyStamp != model.ConcurencyStamp)
 					{
@@ -360,7 +416,7 @@ namespace kpma_ext.Controllers
 
 					role.Name = model.Name;
 				}
-				
+
 				db.SaveChanges();
 
 				return StatusCode(200);
@@ -368,12 +424,113 @@ namespace kpma_ext.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 
 		#endregion
 
+
+		#region RoleMenu
+		[HttpGet]
+		[Authorize]
+		[Route("api/role/menu/{roleId}")]
+		public IActionResult RoleMenuList(int roleId)
+		{
+			try
+			{
+				var list = db.RoleMenus.Where(rm => rm.RoleId == roleId).Select(rm => new
+				{
+					roleId = rm.RoleId,
+					menuId = rm.MenuId,
+					roleName = rm.Role.Name,
+					menuName = rm.Menu.Name,
+					menuParentName = rm.Menu.Parent.Name
+				}).ToList();
+
+				return Json(list);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
+		[HttpGet]
+		[Authorize]
+		[Route("api/role/menu/items/{roleId:int}")]
+		public IActionResult RoleMenuItemList(int roleId)
+		{
+			try
+			{
+				var existsMenu = db.RoleMenus.Where(rm => rm.RoleId == roleId).Select(m => m.MenuId);
+
+				var list = db.Menus.Where(m => !m.IsGroup && !existsMenu.Contains(m.Id)).Select(m => new
+				{
+					id = m.Id,
+					text = m.Name
+				});
+
+				return Json(list);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
+		[HttpPost]
+		[Authorize]
+		[Route("api/role/menu/{roleId:int}/{menuId:int}")]
+		public IActionResult RoleMenuAdd(int roleId, int menuId)
+		{
+			try
+			{
+				var nrm = new RoleMenu()
+				{
+					RoleId = roleId,
+					MenuId = menuId
+				};
+
+				db.RoleMenus.Add(nrm);
+				db.SaveChanges();
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
+
+		[HttpDelete]
+		[Authorize]
+		[Route("api/role/menu/{roleId:int}/{menuId:int}")]
+		public IActionResult RoleMenuDelete(int roleId, int menuId)
+		{
+			try
+			{
+				var model = db.RoleMenus.FirstOrDefault(m => m.RoleId == roleId && m.MenuId == menuId);
+
+				if (model != null)
+				{
+					db.RoleMenus.Remove(model);
+					db.SaveChanges();
+					return Ok();
+				}
+
+				return BadRequest("Связь не найдена.");
+
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
+
+		#endregion
 
 		private void AddErrors(IdentityResult result)
 		{

@@ -58,7 +58,7 @@ var UserEdit = (function () {
             moduleId: module.id,
             selector: 'user-edit',
             templateUrl: 'user.edit.html',
-            directives: [dropdown_control_1.DropDown, dropdown_control_1.DropdownValueAccessor]
+            directives: [dropdown_control_1.DropDown, dropdown_control_1.DropDownVA]
         }), 
         __metadata('design:paramtypes', [user_service_1.UserService, router_1.Router, router_1.ActivatedRoute])
     ], UserEdit);

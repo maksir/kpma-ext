@@ -1,0 +1,103 @@
+﻿<h4>Настройка меню системы</h4>
+
+<div class="col-lg-4">
+	<div class="panel panel-default">
+		<div class="panel-heading">Дерево меню <button (click)="onTreeRefresh()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить дерево</i></button></div>
+		<div class="panel-body">
+			<tree-view 
+					   [Nodes]="root" 
+					   [SelectedNode]="selectedNode" 
+					   [CanExpand]="true" 
+					   [isRoot]="true" 
+					   (onSelectedChanged)="onSelectNode($event)" 
+					   (onRequestNodes)="onRequestNodes($event)">
+			</tree-view>
+		</div>
+	</div>
+
+	</div>
+<div class="col-lg-8">
+	<div class="panel panel-default">
+		<div class="panel-heading">Список вложенного меню</div>
+		<div class="panel-body">
+			<table class="table table-bordered table-hover table-striped table-condensed">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Ид</th>
+						<th>Наименование</th>
+						<th>Url</th>
+						<th>Иконка</th>
+						<th>Сортировка</th>
+						<th>Команда</th>
+						<th>Это группа</th>
+						<th>Вправо</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let item of menuList" [class.warning]="item == editModel">
+
+						<template [ngIf]="item != editModel">
+							<td style="min-width:60px;">
+								<a (click)="onEdit(item)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-pencil-square-o fa-fw"></i></a>
+								<a (click)="onDelete(item)" class="btn btn-xs btn-danger" title="Удалить"><i class="fa fa-trash fa-fw"></i></a>
+							</td>
+							<td>{{item.id}}</td>
+							<td>{{item.name}}</td>
+							<td>{{item.url}}</td>
+							<td>{{item.icon}} <i *ngIf="item.icon" class="{{item.icon}}"></i></td>
+							<td>{{item.sortOrder}}</td>
+							<td>{{item.command}}</td>
+							<td class="text-success text-center"><i class="fa {{item.isGroup ? 'fa fa-check fa-fw' : ''}}"></i></td>
+							<td class="text-success text-center"><i class="fa {{item.onRight ? 'fa fa-check fa-fw' : ''}}"></i></td>
+						</template>
+						<template [ngIf]="item == editModel">
+							<td>
+								<a (click)="onCancel()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
+								<a (click)="onSave()" class="btn btn-xs btn-success" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
+							</td>
+							<td>{{item.id}}</td>
+							<td><input [(ngModel)]="editModel.name" class="form-control input-sm" /></td>
+							<td><input [(ngModel)]="editModel.url" class="form-control input-sm" /></td>
+							<td><input [(ngModel)]="editModel.icon" class="form-control input-sm" /> <i *ngIf="editModel.icon" class="{{editModel.icon}}"></i></td>
+							<td><input [(ngModel)]="editModel.sortOrder" class="form-control input-sm" /></td>
+							<td><input [(ngModel)]="addModel.command" class="form-control input-sm" /></td>
+							<td><input [(ngModel)]="addModel.isGroup" type="checkbox" /></td>
+							<td><input [(ngModel)]="addModel.onRight" type="checkbox" /></td>
+						</template>
+					</tr>
+					<tr class="success">
+						<td colspan="9"> Добавление нового пункта меню</td>
+					</tr>
+					<tr class="success">
+						<td colspan="2"><a (click)="onAdd()" [class.disabled]="!addModel.name" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a></td>
+						<td>
+							<input [(ngModel)]="addModel.name" class="form-control input-sm" />
+						</td>
+						<td>
+							<input [(ngModel)]="addModel.url" class="form-control input-sm" />
+						</td>
+						<td class="form-horizontal">
+							<div class="form-group-sm">
+								<span class="control-label"><i class="{{addModel.icon}}"></i></span>
+								<input [(ngModel)]="addModel.icon" class="form-control" />
+							</div>
+						</td>
+						<td>
+							<input [(ngModel)]="addModel.sortOrder" class="form-control input-sm" />
+						</td>
+						<td>
+							<input [(ngModel)]="addModel.command" class="form-control input-sm" />
+						</td>
+						<td>
+							<input [(ngModel)]="addModel.isGroup" type="checkbox" />
+						</td>
+						<td>
+							<input [(ngModel)]="addModel.onRight" type="checkbox" />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

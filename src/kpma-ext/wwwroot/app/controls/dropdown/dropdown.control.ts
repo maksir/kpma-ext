@@ -341,7 +341,7 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 }
 
 const CUSTOM_VALUE_ACCESSOR = new Provider(
-    NG_VALUE_ACCESSOR, { useExisting: forwardRef(() => DropdownValueAccessor), multi: true });
+    NG_VALUE_ACCESSOR, { useExisting: forwardRef(() => DropDownVA), multi: true });
 
 
 @Directive({
@@ -349,7 +349,7 @@ const CUSTOM_VALUE_ACCESSOR = new Provider(
 	host: { '(valueChange)': 'onChange($event)' },
 	providers: [CUSTOM_VALUE_ACCESSOR]
 })
-export class DropdownValueAccessor implements ControlValueAccessor {
+export class DropDownVA implements ControlValueAccessor {
 
 	onChange = (_) => { };
 	onTouched = () => { };

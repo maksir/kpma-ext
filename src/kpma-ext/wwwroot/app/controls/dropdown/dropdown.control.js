@@ -316,27 +316,27 @@ var DropDown = (function () {
     return DropDown;
 }());
 exports.DropDown = DropDown;
-var CUSTOM_VALUE_ACCESSOR = new core_1.Provider(forms_1.NG_VALUE_ACCESSOR, { useExisting: core_1.forwardRef(function () { return DropdownValueAccessor; }), multi: true });
-var DropdownValueAccessor = (function () {
-    function DropdownValueAccessor(host) {
+var CUSTOM_VALUE_ACCESSOR = new core_1.Provider(forms_1.NG_VALUE_ACCESSOR, { useExisting: core_1.forwardRef(function () { return DropDownVA; }), multi: true });
+var DropDownVA = (function () {
+    function DropDownVA(host) {
         this.host = host;
         this.onChange = function (_) { };
         this.onTouched = function () { };
     }
-    DropdownValueAccessor.prototype.writeValue = function (value) {
+    DropDownVA.prototype.writeValue = function (value) {
         this.host.writeValue(value);
     };
-    DropdownValueAccessor.prototype.registerOnChange = function (fn) { this.onChange = fn; };
-    DropdownValueAccessor.prototype.registerOnTouched = function (fn) { this.onTouched = fn; };
-    DropdownValueAccessor = __decorate([
+    DropDownVA.prototype.registerOnChange = function (fn) { this.onChange = fn; };
+    DropDownVA.prototype.registerOnTouched = function (fn) { this.onTouched = fn; };
+    DropDownVA = __decorate([
         core_1.Directive({
             selector: 'dropdown',
             host: { '(valueChange)': 'onChange($event)' },
             providers: [CUSTOM_VALUE_ACCESSOR]
         }), 
         __metadata('design:paramtypes', [DropDown])
-    ], DropdownValueAccessor);
-    return DropdownValueAccessor;
+    ], DropDownVA);
+    return DropDownVA;
 }());
-exports.DropdownValueAccessor = DropdownValueAccessor;
+exports.DropDownVA = DropDownVA;
 //# sourceMappingURL=dropdown.control.js.map

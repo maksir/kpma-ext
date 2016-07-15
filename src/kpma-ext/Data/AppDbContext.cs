@@ -11,6 +11,8 @@ namespace kpma_ext.Data
     public class AppDbContext : IdentityDbContext<User, Role, int>
 	{
 
+		public User CurrentUser { get; set; }
+
 		public DbSet<MetaObject> MetaObjects { get; set; }
 		public DbSet<Menu> Menus { get; set; }
 		public DbSet<RoleMenu> RoleMenus { get; set; }
@@ -28,6 +30,51 @@ namespace kpma_ext.Data
 		}
 
 
+		public override int SaveChanges()
+		{
+			if (CurrentUser != null)
+			{
+				foreach (var entry in this.ChangeTracker.Entries())
+				{
+					switch (entry.State)
+					{
+						case EntityState.Detached:
+							break;
+						case EntityState.Unchanged:
+							break;
+						case EntityState.Deleted:
+							break;
+						case EntityState.Modified:
+							{
+								var model = entry.Entity as ILogModel;
+								if (model != null)
+								{
+									model.LastUpdatedBy = CurrentUser.UserName;
+									model.LastUpdatedDate = DateTime.Now;
+								}
+							}
+							break;
+						case EntityState.Added:
+							{
+								var model = entry.Entity as ILogModel;
+								if (model != null)
+								{
+									model.CreatedBy = CurrentUser.UserName;
+									model.CreatedDate = DateTime.Now;
+									model.LastUpdatedBy = CurrentUser.UserName;
+									model.LastUpdatedDate = DateTime.Now;
+								}
+							}
+							break;
+						default:
+							break;
+					}
+
+				}
+			}
+			return base.SaveChanges();
+		}
+
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);
@@ -44,9 +91,12 @@ namespace kpma_ext.Data
 			builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaim", "auth");
 
 			// метаданные
-			builder.Entity<MetaObject>().HasOne(o => o.Type).WithMany(m => m.TypeCollection).HasForeignKey(f => f.TypeId).IsRequired().OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
+			builder.Entity<MetaObject>().HasOne(o => o.Type).WithMany(m => m.TypeCollection).HasForeignKey(f => f.TypeId).OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
 			builder.Entity<MetaObject>().HasIndex(p => new { p.Name, p.ParentId }).IsUnique();
 			builder.Entity<MetaObject>().Property(p => p.DispalyName).HasComputedColumnSql("[Name]");
+			builder.Entity<MetaObject>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<MetaObject>().Property(p => p.CreatedDate).HasDefaultValueSql("getdate()");
+
 
 			// группы и типы документов
 			builder.Entity<DocumentGroup>().ToTable("DocumentGroup", "core");

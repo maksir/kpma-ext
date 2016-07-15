@@ -5,7 +5,7 @@ import {UserService} from './services/user.service';
 import {ContractorRoutes} from './views/contractor/contractor.routes';
 import {MetaObjectRoutes} from './views/metaobject/metaobject.routes';
 import {UserRoutes} from './views/user/user.routes';
-
+import {MenuRoutes} from './views/menu/menu.routes';
 
 
 import {SandBox} from './views/sandbox/sandbox.view';
@@ -15,6 +15,7 @@ const routes: RouterConfig = [
 	...UserRoutes,
 	...ContractorRoutes,
 	...MetaObjectRoutes,
+	...MenuRoutes,
 	{ path: '', redirectTo: '/login', terminal: true }
 	
 ];

@@ -1,5 +1,7 @@
 ﻿using kpma_ext.Data;
+using kpma_ext.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,13 +14,17 @@ namespace kpma_ext.Controllers
 	public class MetaObjectController : Controller
 	{
 		private readonly ILogger logger;
-		private readonly AppDbContext context;
+		private readonly AppDbContext db;
+		private readonly UserManager<User> userManager;
 
-		public MetaObjectController(ILoggerFactory loggerFactory,
-			AppDbContext context)
+		public MetaObjectController(
+			ILoggerFactory loggerFactory,
+			AppDbContext context, 
+			UserManager<User> userManager)
 		{
-			this.logger = loggerFactory.CreateLogger<MetaObjectController>();
-			this.context = context;
+			logger = loggerFactory.CreateLogger<MetaObjectController>();
+			db = context;
+			this.userManager = userManager;
 		}
 
 		[HttpGet]
@@ -27,7 +33,7 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
-				var list = context.MetaObjects.Where(m => m.ParentId == parentId).AsQueryable();
+				var list = db.MetaObjects.Where(m => m.ParentId == parentId).AsQueryable();
 
 				return Json(list.Select(s =>
 						new MetaObjectViewModel
@@ -59,8 +65,41 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
-				var mo = context.MetaObjects.FirstOrDefault(m => m.Id == id);
+				var mo = db.MetaObjects.FirstOrDefault(m => m.Id == id);
 				return Json(mo);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPost]
+		[Route("save")]
+		public IActionResult Save([FromBody]MetaObject model)
+		{
+			try
+			{
+				if (model == null)
+				{
+					return BadRequest("Ошибка парсинга модели.");
+				}
+
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
+				if (model.Id == 0)
+				{
+					var newModel = db.MetaObjects.Add(model);
+					db.SaveChanges();
+					return Json(newModel.Entity);
+				}
+				else
+				{
+					
+					var state = db.MetaObjects.Update(model);
+					db.SaveChanges();
+					return Json(state.Entity);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -74,7 +113,7 @@ namespace kpma_ext.Controllers
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public int TypeId { get; set; }
+		public int? TypeId { get; set; }
 		public string TypeName { get; set; }
 		public int? ParentId { get; set; }
 		public string ParentName { get; set; }

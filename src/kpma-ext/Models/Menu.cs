@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace kpma_ext.Models
 {
 	//[Table("Menu", Schema = "meta")]
-	public class Menu
-    {
+	public class Menu: ILogModel
+	{
 		[Key]
 		public int Id { get; set; }
 
@@ -33,7 +33,6 @@ namespace kpma_ext.Models
 		public string CreatedBy { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public string LastUpdatedBy { get; set; }
-		[ConcurrencyCheck]
 		public DateTime LastUpdatedDate { get; set; }
 
 		[ForeignKey("ParentId")]

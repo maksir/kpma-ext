@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace kpma_ext.Models
 {
 	[Table("MetaObject", Schema ="meta")]
-    public class MetaObject
-    {
+    public class MetaObject: ILogModel
+	{
 		[Key]
 		public int Id { get; set; }
 		[Required]
@@ -17,7 +17,7 @@ namespace kpma_ext.Models
 
 		public int? ParentId { get; set; }
 		
-		public int TypeId { get; set; }
+		public int? TypeId { get; set; }
 
 		public string Comment { get; set; }
 
@@ -29,7 +29,6 @@ namespace kpma_ext.Models
 		public string CreatedBy { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public string LastUpdatedBy { get; set; }
-		[ConcurrencyCheck]
 		public DateTime LastUpdatedDate { get; set; }
 
 		public string DispalyName { get; set; }
@@ -38,6 +37,7 @@ namespace kpma_ext.Models
 		[ForeignKey("ParentId")]
 		public MetaObject Parent { get; set; }
 		public MetaObject Type { get; set; }
+
 		[InverseProperty("Parent")]
 		public List<MetaObject> Children { get; set; }
 		public List<MetaObject> TypeCollection { get; set; }

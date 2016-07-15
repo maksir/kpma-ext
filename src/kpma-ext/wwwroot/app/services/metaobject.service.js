@@ -21,6 +21,20 @@ var MetaObjectService = (function () {
     MetaObjectService.prototype.getMetaObject = function (id) {
         return this.http.get('/api/metaobject/' + id).map(function (res) { return res.json(); });
     };
+    MetaObjectService.prototype.saveMetaObject = function (model) {
+        var body = JSON.stringify(model);
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.http.post('/api/metaobject/save', body, { headers: headers }).map(function (res) {
+            if (res.status == 200) {
+                return res.json();
+            }
+            else {
+                return false;
+            }
+        });
+    };
     MetaObjectService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])

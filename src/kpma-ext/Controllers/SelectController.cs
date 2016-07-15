@@ -28,25 +28,51 @@ namespace kpma_ext.Controllers
 		//[Authorize]
 		public IActionResult List(string type, int? parentId, string term)
 		{
+			var EnumName = "";
+			if (type.Contains("Enum-"))
+			{
+				EnumName = type.Replace("Enum-", "");
+				type = "Enum";
+			}
+
 			switch (type)
 			{
 				case "User":
-
-					var userlist = context.Users.AsQueryable();
-					if (!string.IsNullOrWhiteSpace(term))
 					{
-						userlist = userlist.Where(u => u.Name.Contains(term) || u.Email.Contains(term));
+						var list = context.Users.AsQueryable();
+						if (!string.IsNullOrWhiteSpace(term))
+						{
+							list = list.Where(u => u.Name.Contains(term) || u.Email.Contains(term));
+						}
+						return Json(list.Select(u => new { id = u.Id, text = string.Format("{0} ({1})", u.Name, u.Email) }).ToList());
 					}
-					return Json(userlist.Select(u => new { id = u.Id, text = string.Format("{0} ({1})", u.Name, u.Email) }).ToList());
-
 				case "Role":
-
-					var rolelist = context.Roles.AsQueryable();
-					if (!string.IsNullOrWhiteSpace(term))
 					{
-						rolelist = rolelist.Where(u => u.Name.Contains(term));
+						var list = context.Roles.AsQueryable();
+						if (!string.IsNullOrWhiteSpace(term))
+						{
+							list = list.Where(u => u.Name.Contains(term));
+						}
+						return Json(list.Select(u => new { id = u.Id, text = u.Name }).ToList());
 					}
-					return Json(rolelist.Select(u => new { id = u.Id, text = u.Name }).ToList());
+				case "MetaObjectTypes":
+					{
+						var list = context.MetaObjects.Where(m => !m.TypeId.HasValue && m.ParentId.Value != 33); //.OrderBy(m => m.Id);
+						if (!string.IsNullOrWhiteSpace(term))
+						{
+							list = list.Where(u => u.Name.Contains(term));
+						}
+						return Json(list.Select(u => new { id = u.Id, text = u.Name }).ToList());
+					}
+				case "MetaObject":
+					{
+						var list = context.MetaObjects.Where(m=> m.ParentId.Value != 33); //.OrderBy(m => m.Id);
+						if (!string.IsNullOrWhiteSpace(term))
+						{
+							list = list.Where(u => u.Name.Contains(term));
+						}
+						return Json(list.Select(u => new { id = u.Id, text = u.Name }).ToList());
+					}
 
 				default:
 					break;
@@ -60,12 +86,17 @@ namespace kpma_ext.Controllers
 		//[Authorize]
 		public IActionResult Get(string type, int id)
 		{
+			if (type.Contains("Enum-"))
+			{
+				type = "Enum";
+			}
+
 			switch (type)
 			{
 				case "User":
 					if (context.Users.Any(u => u.Id == id))
 					{
-						return Json(context.Users.Where(u => u.Id == id).Select(u => new { id = u.Id, name = u.Name }));
+						return Json(context.Users.Where(u => u.Id == id).Select(u => new { id = u.Id, text = u.Name }));
 					}
 					else
 					{
@@ -74,7 +105,18 @@ namespace kpma_ext.Controllers
 				case "Role":
 					if (context.Roles.Any(u => u.Id == id))
 					{
-						return Json(context.Roles.Where(r => r.Id == id).Select(r => new { id = r.Id, name = r.Name }));
+						return Json(context.Roles.Where(r => r.Id == id).Select(r => new { id = r.Id, text = r.Name }));
+					}
+					else
+					{
+						return null;
+					}
+				case "MetaObjectTypes":
+				case "MetaObject":
+				case "Enum":
+					if (context.MetaObjects.Any(u => u.Id == id))
+					{
+						return Json(context.MetaObjects.Where(r => r.Id == id).Select(r => new { id = r.Id, text = r.Name }));
 					}
 					else
 					{

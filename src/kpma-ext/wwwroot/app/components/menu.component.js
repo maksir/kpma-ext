@@ -24,9 +24,6 @@ var Menu = (function () {
         }, function (err) { return console.log(err); });
     };
     Menu.prototype.updateMenu = function () {
-        if (this.userSrv.isLoggetIn()) {
-            this.userSrv.menuList();
-        }
     };
     Menu = __decorate([
         core_1.Component({

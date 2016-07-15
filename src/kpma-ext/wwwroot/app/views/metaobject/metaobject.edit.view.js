@@ -11,36 +11,56 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var router_1 = require('@angular/router');
+var forms_1 = require('@angular/forms');
 var metaobject_service_1 = require('../../services/metaobject.service');
+var dropdown_control_1 = require('../../controls/dropdown/dropdown.control');
 var MetaObjectEdit = (function () {
-    function MetaObjectEdit(moServ, route) {
+    function MetaObjectEdit(moServ, route, router) {
         this.moServ = moServ;
         this.route = route;
+        this.router = router;
+        // редактируемая модель
+        this.model = new metaobject_service_1.MetaObjectDataModel();
         this.isViewOnly = false;
+        this.id = +this.route.snapshot.params["id"];
+        this.mode = this.route.snapshot.params["mode"];
+        if (this.mode) {
+            this.mode = this.mode.toLowerCase();
+        }
+        this.parentId = +this.route.snapshot.params["parentId"];
+        this.editForm = new forms_1.FormGroup({
+            id: new forms_1.FormControl(),
+            name: new forms_1.FormControl('', [forms_1.Validators.required, forms_1.Validators.minLength(3)]),
+            parentId: new forms_1.FormControl(),
+            typeId: new forms_1.FormControl(),
+            comment: new forms_1.FormControl(),
+            value: new forms_1.FormControl(),
+            tableName: new forms_1.FormControl(),
+            schemaName: new forms_1.FormControl()
+        });
     }
     MetaObjectEdit.prototype.ngOnInit = function () {
         var _this = this;
-        this.id = +this.route.snapshot.params["id"];
-        this.mode = this.route.snapshot.params["mode"];
-        this.parentId = +this.route.snapshot.params["parentId"];
         if (this.id && !this.mode) {
-            this.moServ.getMetaObject(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+            this.moServ.getMetaObject(this.id).subscribe(function (res) {
+                _this.model = res;
+            }, function (err) { return console.log(err); });
         }
         else {
             switch (this.mode) {
                 case 'new':
                     this.model = new metaobject_service_1.MetaObjectDataModel();
                     if (this.parentId) {
-                        this.model.ParentId = this.parentId;
+                        this.model.parentId = this.parentId;
                     }
                     break;
                 case 'copy':
                     this.moServ.getMetaObject(this.id).subscribe(function (res) {
                         _this.model = res;
-                        _this.model.Comment = '';
-                        _this.model.Value = '';
-                        _this.model.Name = _this.model.Name + ' КОПИЯ';
-                        _this.model.Id = 0;
+                        _this.model.comment = '';
+                        _this.model.value = '';
+                        _this.model.name = _this.model.name + ' КОПИЯ';
+                        _this.model.id = 0;
                     }, function (err) { return console.log(err); });
                     break;
                 case 'viewonly':
@@ -50,14 +70,34 @@ var MetaObjectEdit = (function () {
             }
         }
     };
+    MetaObjectEdit.prototype.onRefresh = function () {
+        var _this = this;
+        this.moServ.getMetaObject(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+        return false;
+    };
+    MetaObjectEdit.prototype.onSubmit = function () {
+        var _this = this;
+        if (this.editForm.valid) {
+            this.moServ.saveMetaObject(this.model).subscribe(function (res) {
+                if (!_this.model.id) {
+                    _this.router.navigateByUrl('/metaobject/edit/' + res.id);
+                }
+            }, function (err) { return console.log(err); });
+        }
+    };
+    MetaObjectEdit.prototype.onCancel = function () {
+        window.history.back();
+        return false;
+    };
     MetaObjectEdit = __decorate([
         core_1.Component({
             moduleId: module.id,
             selector: 'metaobject-edit',
             templateUrl: 'metaobject.edit.html',
-            directives: [common_1.CORE_DIRECTIVES]
+            directives: [common_1.CORE_DIRECTIVES, forms_1.REACTIVE_FORM_DIRECTIVES, dropdown_control_1.DropDown, dropdown_control_1.DropDownVA],
+            providers: [metaobject_service_1.MetaObjectService]
         }), 
-        __metadata('design:paramtypes', [metaobject_service_1.MetaObjectService, router_1.ActivatedRoute])
+        __metadata('design:paramtypes', [metaobject_service_1.MetaObjectService, router_1.ActivatedRoute, router_1.Router])
     ], MetaObjectEdit);
     return MetaObjectEdit;
 }());

@@ -19,34 +19,57 @@ export class MetaObjectService {
 		return this.http.get('/api/metaobject/' + id).map(res => res.json());
 
 	}
+
+	saveMetaObject(model: MetaObjectDataModel): Observable<MetaObjectDataModel> {
+
+		let body = JSON.stringify(model);
+		let headers = new Headers({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post('/api/metaobject/save', body, { headers: headers }).map(
+			res => {
+				if (res.status == 200) {
+					return res.json();
+				}
+				else {
+					return false;
+				}
+			}
+		);
+	}
 }
 
 export class MetaObjectViewModel {
-	public Id: number;
-	public Name: string;
-	public TypeId: number;
-	public TypeName: string;
-	public ParentId: number;
-	public ParentName: string;
-	public Comment: string;
-	public Value: string;
-	public DisplayName: string;
-	public CreatedBy: string;
-	public CreatedDate: string;
-	public LastUpdatedBy: string;
-	public LastUpdatedDate: string;
+	public id: number;
+	public name: string;
+	public typeId: number;
+	public typeName: string;
+	public parentId: number;
+	public parentName: string;
+	public comment: string;
+	public value: string;
+	public displayName: string;
+	public tableName: string;
+	public schemaName: string;
+	public createdBy: string;
+	public createdDate: string;
+	public lastUpdatedBy: string;
+	public lastUpdatedDate: string;
 }
 
 export class MetaObjectDataModel {
-	public Id: number;
-	public Name: string;
-	public ParentId: number;
-	public TypeId: number;
-	public Comment: string;
-	public Value: string;
-	public CreatedBy: string;
-	public CreatedDate: string;
-	public LastUpdatedBy: string;
-	public LastUpdatedDate: string;
-	public DispalyName: string;
+	public id: number;
+	public name: string;
+	public parentId: number;
+	public typeId: number;
+	public comment: string;
+	public value: string;
+	public createdBy: string;
+	public createdDate: string;
+	public lastUpdatedBy: string;
+	public lastUpdatedDate: string;
+	public dispalyName: string;
+	public tableName: string;
+	public schemaName: string;
 }

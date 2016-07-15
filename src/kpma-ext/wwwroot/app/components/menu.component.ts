@@ -31,9 +31,7 @@ export class Menu implements OnInit {
 
 	updateMenu() {
 
-		if (this.userSrv.isLoggetIn()) {
-			this.userSrv.menuList()
-		}
+	
 	}
 
 }

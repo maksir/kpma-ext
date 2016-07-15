@@ -48,9 +48,9 @@ export interface ITreeNode {
 		'.nodetext {color: #31708f; padding-left: 3px; padding-right: 3px; cursor: pointer;}',
 		'.nodetext.noderoot {font-size: 16px; font-weight: bold;}'
 	],
-	directives: [TreeViewComponent]
+	directives: [TreeView]
 })
-export class TreeViewComponent {
+export class TreeView {
 
 	@Input() Nodes: Array<ITreeNode>;
 	@Input() SelectedNode: ITreeNode;
@@ -70,7 +70,7 @@ export class TreeViewComponent {
 
 		node.isExpanded = !node.isExpanded;
 
-		if (node.isExpanded && node.children.length == 0) {
+		if (node.isExpanded && (!node.children || node.children.length == 0)) {
 			this.onRequestNodes.emit(node);
 		}
 	}

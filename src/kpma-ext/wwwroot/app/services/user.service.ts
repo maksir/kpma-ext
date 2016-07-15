@@ -13,6 +13,8 @@ export class UserService implements CanActivate {
 	private _currentUser = new Subject<UserViewModel>();
 	public currentUser = this._currentUser.asObservable();
 
+	private retSubj = new Subject<boolean>();
+
 	constructor(private http: Http, private router: Router) { }
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -22,21 +24,47 @@ export class UserService implements CanActivate {
 		}
 		else {
 
-			this.router.navigateByUrl('/login?returnUrl=' + state.url);
-			return Observable.of(false); 
+			return Observable.create(observer => {
+				this.http.get('/api/user/current').subscribe(
 
-			//.flatMap();
-			//return this.http.get('/api/user/current').subscribe(
-			//	res => {
-			//		this._currentUser.next(res.json());
-			//		this.loggetIn = true;
-			//		return true;
-			//	},
-			//	err => {
-			//		this.router.navigateByUrl('/login?returnUrl=' + state.url);
-			//		return false;
-			//	}
-			//);
+					res => {
+						if (res.status == 200) {
+							this.loggetIn = true;
+							this._currentUser.next(res.json());
+							observer.next(true);
+						}
+						else {
+							this.loggetIn = false;
+							this.router.navigateByUrl('/login?returnUrl=' + state.url);
+							observer.next(false);
+						}
+					},
+					err => {
+						this.loggetIn = false;
+						this.router.navigateByUrl('/login?returnUrl=' + state.url);
+						observer.next(false);
+					},
+					() => {
+						observer.complete();
+					}
+				);
+			});
+
+			
+			//return this.http.get('/api/user/current')
+			//	.map(
+			//		res => {
+			//			if (res.status == 200) {
+			//				this.loggetIn = true;
+			//				this._currentUser.next(res.json());
+			//				return true;
+			//			}
+			//			else {
+			//				this.loggetIn = false;
+			//				this.router.navigateByUrl('/login?returnUrl=' + state.url);
+			//				return false;
+			//			}
+			//	});
 		}
 	}
 
@@ -48,7 +76,7 @@ export class UserService implements CanActivate {
 		});
 
 		return this.http.post('/api/user/sign', body, { headers: headers });
-		
+
 	}
 
 	login(model: UserLoginModel): Observable<boolean> {
@@ -70,7 +98,7 @@ export class UserService implements CanActivate {
 	}
 
 	logout(): boolean {
-		
+
 		return true;
 	}
 
@@ -149,9 +177,24 @@ export class UserService implements CanActivate {
 		return this.http.get('/api/role/list').map(res => res.json());
 	}
 
-	menuList(): Observable<MenuModel[]> {
+	roleMenuList(roleId: number): Observable<RoleMenuViewModel[]> {
 
-		return this.http.get('/api/menu/list').map(res => res.json());
+		return this.http.get('/api/role/menu/' + roleId).map(res => res.json());
+	}
+
+	menuItemList(roleId: number) {
+		return this.http.get('/api/role/menu/items/' + roleId).map(res => res.json());
+	}
+
+	roleMenuAdd(roleId: number, menuId: number): Observable<boolean> {
+
+		return this.http.post('/api/role/menu/' + roleId + "/" + menuId, '').map(res => res.ok);
+
+	}
+
+	roleMenuDelete(model: RoleMenuViewModel): Observable<boolean> {
+
+		return this.http.delete('/api/role/menu/' + model.roleId + '/' + model.menuId).map(res => res.ok);
 	}
 
 	isLoggetIn() {
@@ -178,10 +221,10 @@ export class UserViewModel {
 	public email: string;
 	public phoneNumber: string;
 	public userName: string;
-	public concurencyStamp: string; 
+	public concurencyStamp: string;
 }
 
-export class RoleViewModel{
+export class RoleViewModel {
 
 	public id: number;
 	public name: string;
@@ -195,9 +238,12 @@ export class UserRoleViewModel {
 	public roleName: string;
 }
 
-export class MenuModel {
-	id: number;
-	name: string;
-	url: string;
-	children: MenuModel[];
+export class RoleMenuViewModel {
+
+	roleId: number;
+	menuId: number;
+	roleName: string;
+	menuName: string;
+	menuParentName: string;
+
 }

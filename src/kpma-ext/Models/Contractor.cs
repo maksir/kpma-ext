@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace kpma_ext.Models
 {
-    public class Contractor
-    {
+    public class Contractor: ILogModel
+	{
 		[Key]
 		public int Id { get; set; }
 
@@ -28,7 +28,6 @@ namespace kpma_ext.Models
 		public string CreatedBy { get; set; }
 		public DateTime CreatedDate { get; set; }
 		public string LastUpdatedBy { get; set; }
-		[ConcurrencyCheck]
 		public DateTime LastUpdatedDate { get; set; }
 	}
 }
