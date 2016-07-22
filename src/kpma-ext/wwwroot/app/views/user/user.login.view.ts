@@ -45,6 +45,9 @@ export class UserLogin {
 				if (result && this.returnUrl && this.returnUrl.length > 0) {
 					this.router.navigateByUrl(this.returnUrl);
 				}
+				else {
+					this.router.navigateByUrl('/dashboard');
+				}
 			},
 			err => {
 				alert(err);

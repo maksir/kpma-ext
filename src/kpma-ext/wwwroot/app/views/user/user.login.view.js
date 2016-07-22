@@ -37,6 +37,9 @@ var UserLogin = (function () {
             if (result && _this.returnUrl && _this.returnUrl.length > 0) {
                 _this.router.navigateByUrl(_this.returnUrl);
             }
+            else {
+                _this.router.navigateByUrl('/dashboard');
+            }
         }, function (err) {
             alert(err);
         });

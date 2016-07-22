@@ -11,7 +11,7 @@ import {ServiceRoutes} from './views/service/service.routes';
 import {DocCardRoutes} from './views/doccard/doccard.routes';
 
 
-
+import {Dashboard} from './views/dashboard/dashboard.view';
 import {SandBox} from './views/sandbox/sandbox.view';
 
 
@@ -23,6 +23,7 @@ const routes: RouterConfig = [
 	...DocTypeRoutes,
 	...ServiceRoutes,
 	...DocCardRoutes,
+	{ path: 'dashboard', component: Dashboard},
 	{ path: 'sandbox', component: SandBox },
 	{ path: '', redirectTo: '/login', terminal: true }
 	
