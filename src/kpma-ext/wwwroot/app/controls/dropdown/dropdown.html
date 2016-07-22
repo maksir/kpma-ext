@@ -16,10 +16,10 @@
 				<li *ngFor="let i of (Items | search:searchValue)" class="item" (click)="onSelectItem(i)" [innerHTML]="getItemText(i)"></li>
 			</ul>
 
-			<ul *ngIf="termFilter(searchValue)" class="itemslist">
+			<ul *ngIf="MinTerm === 0 || termFilter(searchValue)" class="itemslist">
 				<li *ngFor="let i of LazyItems" class="item" [class.hover]="i == hoverItem" (click)="onSelectItem(i)" (mouseover)="onHoverItem(i)" [innerHTML]="getItemText(i)"></li>
 			</ul>
-			<span *ngIf="ItemType && LazyItems && LazyItems.length == 0 && !showHelpText()">Поиск не дал результатов...</span>
+			<span *ngIf="ItemType && LazyItems && LazyItems.length == 0 && MinTerm > 0 && !showHelpText()">Поиск не дал результатов...</span>
 		</div>
 	</div>
 </div>

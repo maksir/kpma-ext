@@ -533,6 +533,89 @@ namespace kpma_ext.Controllers
 
 		#endregion
 
+		#region методы работы с UserDepartment
+
+		[HttpGet("api/user/dep/{userId:int}")]
+		[Authorize]
+		public IActionResult UserDepList(int userId)
+		{
+			try
+			{
+
+				var list = db.UserDepartments.Where(m => m.UserId == userId).Select(m => new UserDepartmentViewModel
+				{
+					UserId = m.UserId,
+					DepartmentId = m.DepartmentId,
+					UserName = m.User.DisplayName,
+					DepartmentName = m.Department.DisplayName,
+					CreatedBy = m.CreatedBy,
+					CreatedDate = m.CreatedDate,
+					LastUpdatedBy = m.LastUpdatedBy,
+					LastUpdatedDate = m.LastUpdatedDate
+				})
+				.OrderBy(o => o.DepartmentName);
+
+				return Json(list);
+
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
+		[HttpPost("api/user/dep/{userId:int}/{departmentId:int}")]
+		[Authorize]
+		public IActionResult UserDepSave(int userId, int departmentId)
+		{
+			try
+			{
+				if (db.UserDepartments.FirstOrDefault(f => f.UserId == userId && f.DepartmentId == departmentId) == null)
+				{
+					db.CurrentUser = userManager.GetUserAsync(User).Result;
+					var model = new UserDepartment
+					{
+						UserId = userId,
+						DepartmentId = departmentId
+					};
+
+					db.UserDepartments.Add(model);
+					db.SaveChanges();
+				}
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
+		[HttpDelete("api/user/dep/{userId:int}/{departmentId:int}")]
+		[Authorize]
+		public IActionResult UserDepDelete(int userId, int departmentId)
+		{
+			try
+			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
+				var model = db.UserDepartments.FirstOrDefault(f => f.UserId == userId && f.DepartmentId == departmentId);
+				if (model != null)
+				{
+					db.UserDepartments.Remove(model);
+					db.SaveChanges();
+				}
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
+		#endregion
+
 		private void AddErrors(IdentityResult result)
 		{
 			foreach (var error in result.Errors)
@@ -591,5 +674,11 @@ namespace kpma_ext.Controllers
 		public string UserName { get; set; }
 		public int RoleId { get; set; }
 		public string RoleName { get; set; }
+	}
+
+	public class UserDepartmentViewModel : UserDepartment
+	{
+		public string UserName { get; set; }
+		public string DepartmentName { get; set; }
 	}
 }

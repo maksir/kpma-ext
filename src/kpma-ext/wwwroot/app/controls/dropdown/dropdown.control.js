@@ -89,7 +89,7 @@ var DropDown = (function () {
         if (this.ItemType == 'Enum') {
             return true;
         }
-        return (!this.Items) && (this.ItemType) && (this.MinTerm) && term.length >= this.MinTerm;
+        return (!this.Items) && (this.ItemType) && (this.MinTerm > 0) && term.length >= this.MinTerm;
     };
     DropDown.prototype.writeValue = function (val) {
         this.value = val;
@@ -160,7 +160,7 @@ var DropDown = (function () {
         if (this.Items) {
             return false;
         }
-        if (this.ItemType && this.ItemType != 'Enum' && this.searchValue.length < this.MinTerm) {
+        if (this.ItemType && this.ItemType != 'Enum' && this.MinTerm > 0 && this.searchValue.length < this.MinTerm) {
             return this.showDropDown;
         }
         return false;
@@ -169,7 +169,9 @@ var DropDown = (function () {
         this.showDropDown = !this.showDropDown;
         if (!this.showDropDown) {
             this.searchValue = '';
-            this.LazyItems = [];
+            if (this.MinTerm > 0) {
+                this.LazyItems = [];
+            }
         }
     };
     DropDown.prototype.hideForm = function () {

@@ -95,11 +95,7 @@ namespace kpma_ext.Controllers
 					model = new DocCard();
 					model.AuthorId = CurrentUser.Id;
 					model.DocDate = DateTime.Now;
-
-					if (CurrentUser.ContractorId.HasValue)
-					{
-						model.ContractorFromId = CurrentUser.ContractorId.Value;
-					}
+					model.ContractorFromId = CurrentUser.ContractorId;
 
 				}
 				else

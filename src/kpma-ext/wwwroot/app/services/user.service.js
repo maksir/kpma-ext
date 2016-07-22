@@ -1,4 +1,9 @@
 "use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -146,6 +151,19 @@ var UserService = (function () {
     UserService.prototype.isLoggetIn = function () {
         return this.loggetIn;
     };
+    // UserDepartment
+    UserService.prototype.getUserDepList = function (userId) {
+        return this.http.get('/api/user/dep/' + userId).map(function (res) { return res.json(); });
+    };
+    UserService.prototype.saveUserDep = function (userId, depId) {
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.http.post('/api/user/dep/' + userId + '/' + depId, '', { headers: headers }).map(function (res) { return res.ok; });
+    };
+    UserService.prototype.deleteUserDep = function (userId, depId) {
+        return this.http.delete('/api/user/dep/' + userId + '/' + depId).map(function (res) { return res.ok; });
+    };
     UserService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http, router_1.Router])
@@ -190,4 +208,18 @@ var RoleMenuViewModel = (function () {
     return RoleMenuViewModel;
 }());
 exports.RoleMenuViewModel = RoleMenuViewModel;
+var UserDepDataModel = (function () {
+    function UserDepDataModel() {
+    }
+    return UserDepDataModel;
+}());
+exports.UserDepDataModel = UserDepDataModel;
+var UserDepViewModel = (function (_super) {
+    __extends(UserDepViewModel, _super);
+    function UserDepViewModel() {
+        _super.apply(this, arguments);
+    }
+    return UserDepViewModel;
+}(UserDepDataModel));
+exports.UserDepViewModel = UserDepViewModel;
 //# sourceMappingURL=user.service.js.map

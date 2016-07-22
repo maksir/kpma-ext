@@ -11,7 +11,7 @@ export class UserService implements CanActivate {
 	private loggetIn = false;
 
 	private _currentUser = new Subject<UserViewModel>();
-	public currentUser = this._currentUser.asObservable();
+	currentUser = this._currentUser.asObservable();
 
 	private retSubj = new Subject<boolean>();
 
@@ -200,6 +200,26 @@ export class UserService implements CanActivate {
 	isLoggetIn() {
 		return this.loggetIn;
 	}
+
+	// UserDepartment
+
+	getUserDepList(userId: number) {
+		return this.http.get('/api/user/dep/' + userId).map(res => res.json());
+	}
+
+	saveUserDep(userId: number, depId: number) {
+
+		let headers = new Headers({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post('/api/user/dep/' + userId + '/' + depId, '', { headers: headers }).map(res => res.ok);
+	}
+
+	deleteUserDep(userId: number, depId: number) {
+
+		return this.http.delete('/api/user/dep/' + userId + '/' + depId).map(res => res.ok);
+	}
 }
 
 export class UserSignModel {
@@ -216,26 +236,26 @@ export class UserLoginModel {
 }
 
 export class UserViewModel {
-	public id: number;
-	public name: string;
-	public email: string;
-	public phoneNumber: string;
-	public userName: string;
-	public concurencyStamp: string;
+	id: number;
+	name: string;
+	email: string;
+	phoneNumber: string;
+	userName: string;
+	concurencyStamp: string;
 }
 
 export class RoleViewModel {
 
-	public id: number;
-	public name: string;
-	public concurencyStamp: string;
+	id: number;
+	name: string;
+	concurencyStamp: string;
 }
 
 export class UserRoleViewModel {
-	public userId: number;
-	public userName: string;
-	public roleId: number;
-	public roleName: string;
+	userId: number;
+	userName: string;
+	roleId: number;
+	roleName: string;
 }
 
 export class RoleMenuViewModel {
@@ -246,4 +266,18 @@ export class RoleMenuViewModel {
 	menuName: string;
 	menuParentName: string;
 
+}
+
+export class UserDepDataModel {
+	userId: number;
+	departmentId: number;
+	createdBy: string;
+	createdDate: Date;
+	lastUpdatedBy: string;
+	lastUpdatedDate: Date;
+}
+
+export class UserDepViewModel extends UserDepDataModel {
+	userName: string;
+	departmentName: string;
 }

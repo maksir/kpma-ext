@@ -12,6 +12,7 @@ var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var user_service_1 = require('../../services/user.service');
 var dropdown_control_1 = require('../../controls/dropdown/dropdown.control');
+var tabs_control_1 = require('../../controls/tabs.control');
 var UserEdit = (function () {
     function UserEdit(userSrv, router, route) {
         this.userSrv = userSrv;
@@ -19,16 +20,19 @@ var UserEdit = (function () {
         this.route = route;
         this.model = new user_service_1.UserViewModel();
         this.addRole = new user_service_1.UserRoleViewModel();
+        this.depList = [];
+        this.addDep = new user_service_1.UserDepDataModel();
         this.userId = +this.route.snapshot.params['id'];
     }
     UserEdit.prototype.ngOnInit = function () {
         var _this = this;
         this.userSrv.userGet(this.userId).subscribe(function (res) {
             _this.model = res;
-            _this.updateRoleList();
+            _this.refreshRoleList();
+            _this.refreshDepList();
         }, function (err) { return console.log(err); });
     };
-    UserEdit.prototype.updateRoleList = function () {
+    UserEdit.prototype.refreshRoleList = function () {
         var _this = this;
         this.userSrv.userRoles(this.userId).subscribe(function (res) { return _this.roleList = res; });
     };
@@ -43,14 +47,35 @@ var UserEdit = (function () {
         if (this.addRole.roleId) {
             this.userSrv.userRoleAdd(this.userId, this.addRole.roleId).subscribe(function (res) {
                 _this.addRole.roleId = undefined;
-                _this.updateRoleList();
+                _this.refreshRoleList();
             }, function (err) { return console.log(err); });
         }
     };
     UserEdit.prototype.onClickDelRole = function (r) {
         var _this = this;
         this.userSrv.userRoleDel(r).subscribe(function (res) {
-            _this.updateRoleList();
+            _this.refreshRoleList();
+        }, function (err) { return console.log(err); });
+    };
+    // departments
+    UserEdit.prototype.refreshDepList = function () {
+        var _this = this;
+        this.userSrv.getUserDepList(this.userId).subscribe(function (res) { return _this.depList = res; }, function (err) { return console.log(err); });
+    };
+    UserEdit.prototype.onAddDep = function () {
+        var _this = this;
+        if (!this.addDep.departmentId) {
+            return;
+        }
+        this.userSrv.saveUserDep(this.userId, this.addDep.departmentId).subscribe(function (res) {
+            _this.addDep.departmentId = undefined;
+            _this.refreshDepList();
+        }, function (err) { return console.log(err); });
+    };
+    UserEdit.prototype.onDeleteDep = function (model) {
+        var _this = this;
+        this.userSrv.deleteUserDep(model.userId, model.departmentId).subscribe(function (res) {
+            _this.refreshDepList();
         }, function (err) { return console.log(err); });
     };
     UserEdit = __decorate([
@@ -58,7 +83,7 @@ var UserEdit = (function () {
             moduleId: module.id,
             selector: 'user-edit',
             templateUrl: 'user.edit.html',
-            directives: [dropdown_control_1.DropDown, dropdown_control_1.DropDownVA]
+            directives: [dropdown_control_1.DropDown, dropdown_control_1.DropDownVA, tabs_control_1.Tab, tabs_control_1.Tabs]
         }), 
         __metadata('design:paramtypes', [user_service_1.UserService, router_1.Router, router_1.ActivatedRoute])
     ], UserEdit);

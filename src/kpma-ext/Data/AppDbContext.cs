@@ -99,6 +99,7 @@ namespace kpma_ext.Data
 
 			// авторизация
 			builder.Entity<User>().ToTable("User", schema: "meta");
+			builder.Entity<User>().HasOne(o => o.Contractor).WithMany().HasForeignKey(f => f.ContractorId).OnDelete(DeleteBehavior.Restrict);
 			builder.Entity<User>().Property(p => p.DisplayName).HasComputedColumnSql("([Name] + ' (' + [Email] + ')')");
 			builder.Entity<User>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<User>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");
