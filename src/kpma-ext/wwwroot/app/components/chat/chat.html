@@ -1,0 +1,25 @@
+﻿<table class="table table-bordered table-condensed table-hover">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Сообщения</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let item of list" [class.success]="!item.readed">
+			<td>{{item.createdDate}}</td>
+			<td>{{item.messageText}}</td>
+		</tr>
+		<tr>
+			<td colspan="2"></td>
+		</tr>
+		<tr>
+			<td>
+				<a (click)="onAdd()" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a>
+			</td>
+			<td>
+				<input [(ngModel)]="addModel.messageText" class="form-control" />
+			</td>
+		</tr>
+	</tbody>
+</table>

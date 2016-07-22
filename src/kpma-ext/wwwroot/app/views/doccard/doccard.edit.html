@@ -101,16 +101,20 @@
 		</div>
 	</div>
 </div>
-<div *ngIf="id" class="col-sm-8">
+<div class="col-sm-8">
 	<div class="panel panel-default">
 		<div class="panel-heading">Дополнительная информация</div>
 		<div class="panel-body">
+
 			<tabs>
 				<tab title="Вложения">
 					<attachment-list [metaObjectId]="109" [objectId]="id"></attachment-list>
 				</tab>
-				<tab></tab>
+				<tab title="Переписка">
+					<chat [metaObjectId]="109" [objectId]="id" [departmentId]="model.departmentFromId"></chat>
+				</tab>
 			</tabs>
+
 		</div>
 	</div>
 </div>

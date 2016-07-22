@@ -10,12 +10,13 @@ import {DateTimePicker} from '../../controls/datetimepicker';
 import {DropDown, DropDownItem, DropDownVA} from '../../controls/dropdown/dropdown.control';
 
 import {AttachmentList} from '../attachment/attachment.list.view';
+import {Chat} from '../../components/chat/chat.component';
 
 @Component({
 	moduleId: module.id,
 	selector: 'doccard-edit',
 	templateUrl: 'doccard.edit.html',
-	directives: [CORE_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, DropDown, DropDownVA, AttachmentList, Tabs, Tab, DateTimePicker],
+	directives: [CORE_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, DropDown, DropDownVA, AttachmentList, Tabs, Tab, DateTimePicker, Chat],
 	providers: [DocCardService]
 
 })

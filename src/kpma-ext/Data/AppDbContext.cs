@@ -31,7 +31,8 @@ namespace kpma_ext.Data
 
 		public DbSet<Attachment> Attachments { get; set; }
 		public DbSet<DocCard> DocCards { get; set; }
-		
+		public DbSet<Chat> Chats { get; set; }
+
 
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -215,6 +216,12 @@ namespace kpma_ext.Data
 			builder.Entity<DocCard>().HasOne(f => f.DepartmentTo).WithMany().OnDelete(DeleteBehavior.Restrict);
 			builder.Entity<DocCard>().HasOne(f => f.DocumentStatus).WithMany().OnDelete(DeleteBehavior.Restrict);
 			builder.Entity<DocCard>().HasOne(f => f.DocumentType).WithMany().OnDelete(DeleteBehavior.Restrict);
+
+			// чат
+			builder.Entity<Chat>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<Chat>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");
+			builder.Entity<Chat>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<Chat>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
 
 
 		}

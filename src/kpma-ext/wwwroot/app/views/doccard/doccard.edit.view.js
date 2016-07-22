@@ -17,6 +17,7 @@ var tabs_control_1 = require('../../controls/tabs.control');
 var datetimepicker_1 = require('../../controls/datetimepicker');
 var dropdown_control_1 = require('../../controls/dropdown/dropdown.control');
 var attachment_list_view_1 = require('../attachment/attachment.list.view');
+var chat_component_1 = require('../../components/chat/chat.component');
 var DocCardEdit = (function () {
     function DocCardEdit(dcSrv, route, router) {
         this.dcSrv = dcSrv;
@@ -77,7 +78,7 @@ var DocCardEdit = (function () {
             moduleId: module.id,
             selector: 'doccard-edit',
             templateUrl: 'doccard.edit.html',
-            directives: [common_1.CORE_DIRECTIVES, forms_1.REACTIVE_FORM_DIRECTIVES, dropdown_control_1.DropDown, dropdown_control_1.DropDownVA, attachment_list_view_1.AttachmentList, tabs_control_1.Tabs, tabs_control_1.Tab, datetimepicker_1.DateTimePicker],
+            directives: [common_1.CORE_DIRECTIVES, forms_1.REACTIVE_FORM_DIRECTIVES, dropdown_control_1.DropDown, dropdown_control_1.DropDownVA, attachment_list_view_1.AttachmentList, tabs_control_1.Tabs, tabs_control_1.Tab, datetimepicker_1.DateTimePicker, chat_component_1.Chat],
             providers: [doccard_service_1.DocCardService]
         }), 
         __metadata('design:paramtypes', [doccard_service_1.DocCardService, router_1.ActivatedRoute, router_1.Router])
