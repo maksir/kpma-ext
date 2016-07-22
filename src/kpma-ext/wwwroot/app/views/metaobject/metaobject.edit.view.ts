@@ -55,7 +55,7 @@ export class MetaObjectEdit implements OnInit {
 
 		if (this.id && !this.mode) {
 
-			this.moServ.getMetaObject(this.id).subscribe(
+			this.moServ.getModel(this.id).subscribe(
 				res => {
 					this.model = res;
 				},
@@ -73,7 +73,7 @@ export class MetaObjectEdit implements OnInit {
 					}
 					break;
 				case 'copy':
-					this.moServ.getMetaObject(this.id).subscribe(
+					this.moServ.getModel(this.id).subscribe(
 						res => {
 							this.model = res;
 							this.model.comment = '';
@@ -87,7 +87,7 @@ export class MetaObjectEdit implements OnInit {
 					break;
 				case 'viewonly':
 					this.isViewOnly = true;
-					this.moServ.getMetaObject(this.id).subscribe(
+					this.moServ.getModel(this.id).subscribe(
 						res => this.model = res,
 						err => console.log(err)
 					);
@@ -100,7 +100,7 @@ export class MetaObjectEdit implements OnInit {
 	}
 
 	onRefresh() {
-		this.moServ.getMetaObject(this.id).subscribe(
+		this.moServ.getModel(this.id).subscribe(
 			res => this.model = res,
 			err => console.log(err)
 		);
@@ -110,7 +110,7 @@ export class MetaObjectEdit implements OnInit {
 	onSubmit() {
 
 		if (this.editForm.valid) {
-			this.moServ.saveMetaObject(this.model).subscribe(
+			this.moServ.saveModel(this.model).subscribe(
 				res => {
 					if (!this.model.id) {
 						this.router.navigateByUrl('/metaobject/edit/' + res.id);

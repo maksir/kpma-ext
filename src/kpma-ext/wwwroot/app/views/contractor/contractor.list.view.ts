@@ -1,5 +1,6 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
+import {ROUTER_DIRECTIVES} from '@angular/router';
 
 import {ContractorService, ContractorModel} from '../../services/contractor.service';
 
@@ -8,7 +9,7 @@ import {ContractorService, ContractorModel} from '../../services/contractor.serv
 	moduleId: module.id,
 	selector: 'contractor-list',
 	templateUrl: 'contractor.list.html',
-	directives: [CORE_DIRECTIVES],
+	directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES],
 	providers: [ContractorService]
 })
 export class ContractorList implements OnInit {
@@ -18,10 +19,14 @@ export class ContractorList implements OnInit {
 	constructor(private contrSrv: ContractorService) { }
 
 	ngOnInit() {
+		this.refreshList();
+	}
 
-		this.contrSrv.getList().subscribe(
+	refreshList() {
+		this.contrSrv.getContrList().subscribe(
 			result => this.list = result,
 			err => console.log(err)
 		);
 	}
+
 }

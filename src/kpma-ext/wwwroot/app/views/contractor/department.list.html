@@ -1,0 +1,38 @@
+﻿<table class="table table-bordered table-hover table-striped">
+	<thead>
+		<tr>
+			<th>
+				<a (click)="refreshList()" class="btn btn-xs btn-primary"><i class="fa fa-refresh"> Обновить</i></a>
+			</th>
+			<th>Наименование</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let dep of list">
+			<template [ngIf]="dep != editModel">
+				<td style="min-width:60px;">
+					<a (click)="onEdit(dep)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-pencil-square-o fa-fw"></i></a>
+					<a (click)="onDelete(dep)" class="btn btn-xs btn-danger" title="Удалить"><i class="fa fa-trash fa-fw"></i></a>
+				</td>
+				<td>
+					{{dep.name}}
+				</td>
+			</template>
+			<template [ngIf]="dep === editModel">
+				<td style="min-width:60px;">
+					<a (click)="onCancel()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
+					<a (click)="onUpdate()" class="btn btn-xs btn-success" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
+				</td>
+				<td><input [(ngModel)]="editModel.name" class="form-control" /></td>
+			</template>
+		</tr>
+		<tr class="success">
+			<td colspan="2">Добавление нового подразделения</td>
+		</tr>
+		<tr class="success">
+			<td><a (click)="onAdd()" [class.disabled]="!addModel.name || !contId" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a></td>
+			<td><input [(ngModel)]="addModel.name" [disabled]="!contId" class="form-control" /></td>
+		</tr>
+
+	</tbody>
+</table>

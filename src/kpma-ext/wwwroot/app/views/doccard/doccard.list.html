@@ -1,0 +1,30 @@
+﻿<div class="panel panel-default">
+	<div class="panel-heading">
+		Список документов
+		<div class="pull-right">
+			<a (click)="refreshList()" class="btn btn-xs btn-primary"><i class="fa fa-refresh"> Обновить</i></a>
+			<a [routerLink]="['../edit', 0, 'new']" class="btn btn-xs btn-primary"><i class="fa fa-plus-circle"> Новый</i></a>
+		</div>
+	</div>
+	<div class="panel-body">
+
+		<table class="table table-bordered table-hover table-striped table-condensed">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Номер</th>
+					<th>Тип</th>
+					<th>Статус</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let doc of list">
+					<td><a [routerLink]="['../edit', doc.id]" class="btn btn-xs btn-success"><i class="fa fa-edit"></i></a></td>
+					<td>{{doc.displayName}}</td>
+					<td>{{doc.documentTypeName}}</td>
+					<td>{{doc.documentStatusName}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

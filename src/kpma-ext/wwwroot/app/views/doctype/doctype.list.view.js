@@ -17,47 +17,64 @@ var DocTypeList = (function () {
         this.dtSrv = dtSrv;
         this.groupList = [];
         this.typeList = [];
+        this.statusList = [];
         this.addGroupModel = new doctype_service_1.DocGroupModel();
-        // модель добавления нового элемента
         this.addTypeModel = new doctype_service_1.DocTypeModel();
+        this.addStatusModel = new doctype_service_1.DocStatusModel();
     }
     Object.defineProperty(DocTypeList.prototype, "selectedGroup", {
+        get: function () {
+            return this._selectedGroup;
+        },
         set: function (value) {
-            this.selectGroupModel = value;
+            this._selectedGroup = value;
+            this.selectedType = undefined;
             if (value) {
                 this.addTypeModel.documentGroupId = value.id;
             }
             else {
                 this.addTypeModel.documentGroupId = undefined;
             }
-            this.updateTypeList();
+            this.refreshTypeList();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DocTypeList.prototype, "selectedType", {
+        get: function () {
+            return this._selectedType;
+        },
+        set: function (value) {
+            this._selectedType = value;
+            if (value) {
+                this.addStatusModel.documentTypeId = value.id;
+            }
+            else {
+                this.addStatusModel.documentTypeId = undefined;
+            }
+            this.refreshStatusList();
         },
         enumerable: true,
         configurable: true
     });
     DocTypeList.prototype.ngOnInit = function () {
-        this.updateGroupList();
+        this.refreshGroupList();
     };
-    DocTypeList.prototype.updateGroupList = function () {
+    // group
+    DocTypeList.prototype.refreshGroupList = function () {
         var _this = this;
         this.dtSrv.getGroupList().subscribe(function (res) {
             _this.groupList = res;
-            if (_this.selectGroupModel) {
-                var ll = _this.groupList.filter(function (g) { return g.id == _this.selectGroupModel.id; });
-                if (ll.length > 0) {
-                    _this.selectedGroup = ll[0];
+            if (_this.selectedGroup) {
+                var find = _this.groupList.filter(function (g) { return g.id == _this.selectedGroup.id; });
+                if (find.length > 0) {
+                    _this.selectedGroup = find[0];
+                }
+                else {
+                    _this.selectedGroup = undefined;
                 }
             }
         }, function (err) { return console.log(err); });
-    };
-    DocTypeList.prototype.updateTypeList = function () {
-        var _this = this;
-        if (!this.selectGroupModel) {
-            this.typeList = [];
-        }
-        else {
-            this.dtSrv.getTypeList(this.selectGroupModel.id).subscribe(function (res) { return _this.typeList = res; }, function (err) { return console.log(err); });
-        }
     };
     DocTypeList.prototype.onSelectGroup = function (g) {
         this.selectedGroup = g;
@@ -69,8 +86,8 @@ var DocTypeList = (function () {
         }
         this.dtSrv.saveGroupModel(this.addGroupModel).subscribe(function (res) {
             _this.addGroupModel = new doctype_service_1.DocGroupModel();
-            _this.selectGroupModel = res;
-            _this.updateGroupList();
+            _this._selectedGroup = res;
+            _this.refreshGroupList();
         }, function (err) { return console.log(err); });
     };
     DocTypeList.prototype.onEditGroup = function (g) {
@@ -84,8 +101,8 @@ var DocTypeList = (function () {
         }
         this.dtSrv.saveGroupModel(this.editGroupModel).subscribe(function (res) {
             _this.editGroupModel = undefined;
-            _this.selectGroupModel = res;
-            _this.updateGroupList();
+            _this._selectedGroup = res;
+            _this.refreshGroupList();
         }, function (err) { return console.log(err); });
     };
     DocTypeList.prototype.onCancelGroup = function () {
@@ -96,12 +113,37 @@ var DocTypeList = (function () {
         if (!g) {
             return;
         }
-        this.dtSrv.deleteGroupModel(g.id).subscribe(function (res) {
-            _this.selectGroupModel = undefined;
-            _this.editGroupModel = undefined;
-            _this.updateGroupList();
-            _this.updateTypeList();
-        }, function (err) { return console.log(err); });
+        if (confirm('Удалить группу "' + g.name + '" ?')) {
+            this.dtSrv.deleteGroupModel(g.id).subscribe(function (res) {
+                _this.selectedGroup = undefined;
+                _this.editGroupModel = undefined;
+                _this.refreshGroupList();
+            }, function (err) { return console.log(err); });
+        }
+    };
+    // type
+    DocTypeList.prototype.refreshTypeList = function () {
+        var _this = this;
+        if (!this._selectedGroup) {
+            this.typeList = [];
+        }
+        else {
+            this.dtSrv.getTypeList(this._selectedGroup.id).subscribe(function (res) {
+                _this.typeList = res;
+                if (_this.selectedType) {
+                    var find = _this.typeList.filter(function (g) { return g.id == _this.selectedType.id; });
+                    if (find.length > 0) {
+                        _this.selectedType = find[0];
+                    }
+                    else {
+                        _this.selectedType = undefined;
+                    }
+                }
+            }, function (err) { return console.log(err); });
+        }
+    };
+    DocTypeList.prototype.onSelectType = function (t) {
+        this.selectedType = t;
     };
     DocTypeList.prototype.onAddType = function () {
         var _this = this;
@@ -110,8 +152,8 @@ var DocTypeList = (function () {
         }
         this.dtSrv.saveTypeModel(this.addTypeModel).subscribe(function (res) {
             _this.addTypeModel = new doctype_service_1.DocTypeModel();
-            _this.addTypeModel.documentGroupId = _this.selectGroupModel.id;
-            _this.updateTypeList();
+            _this.addTypeModel.documentGroupId = _this._selectedGroup.id;
+            _this.refreshTypeList();
         }, function (err) { return console.log(err); });
     };
     DocTypeList.prototype.onEditType = function (t) {
@@ -124,7 +166,7 @@ var DocTypeList = (function () {
         }
         this.dtSrv.saveTypeModel(this.editTypeModel).subscribe(function (res) {
             _this.editTypeModel = undefined;
-            _this.updateTypeList();
+            _this.refreshTypeList();
         }, function (err) { return console.log(err); });
     };
     DocTypeList.prototype.onCancelType = function () {
@@ -135,9 +177,57 @@ var DocTypeList = (function () {
         if (!t) {
             return;
         }
-        this.dtSrv.deleteTypeModel(t.id).subscribe(function (res) {
-            _this.updateTypeList();
+        if (confirm('Удалить тип "' + t.name + '" ?')) {
+            this.dtSrv.deleteTypeModel(t.id).subscribe(function (res) {
+                _this.refreshTypeList();
+            }, function (err) { return console.log(err); });
+        }
+    };
+    // status
+    DocTypeList.prototype.refreshStatusList = function () {
+        var _this = this;
+        if (!this._selectedType) {
+            this.statusList = [];
+        }
+        else {
+            this.dtSrv.getStatusList(this._selectedType.id).subscribe(function (res) { return _this.statusList = res; }, function (err) { return console.log(err); });
+        }
+    };
+    DocTypeList.prototype.onAddStatus = function () {
+        var _this = this;
+        if (!this.addStatusModel.name || !this.addStatusModel.documentTypeId) {
+            return;
+        }
+        this.dtSrv.saveStatusModel(this.addStatusModel).subscribe(function (res) {
+            _this.addStatusModel = new doctype_service_1.DocStatusModel();
+            _this.addStatusModel.documentTypeId = _this._selectedType.id;
+            _this.refreshStatusList();
         }, function (err) { return console.log(err); });
+    };
+    DocTypeList.prototype.onEditStatus = function (s) {
+        this.editStatusModel = s;
+    };
+    DocTypeList.prototype.onUpdateStatus = function () {
+        var _this = this;
+        if (!this.editStatusModel) {
+            return;
+        }
+        this.dtSrv.saveStatusModel(this.editStatusModel).subscribe(function (res) {
+            _this.editStatusModel = undefined;
+            _this.refreshStatusList();
+        }, function (err) { return console.log(err); });
+    };
+    DocTypeList.prototype.onCancelStatus = function () {
+        this.editStatusModel = undefined;
+    };
+    DocTypeList.prototype.onDeleteStatus = function (s) {
+        var _this = this;
+        if (!s) {
+            return;
+        }
+        if (confirm('Удалить статус "' + s.name + '" ?')) {
+            this.dtSrv.deleteStatusModel(s.id).subscribe(function (res) { return _this.refreshStatusList(); }, function (err) { return console.log(err); });
+        }
     };
     DocTypeList = __decorate([
         core_1.Component({

@@ -41,7 +41,7 @@ namespace kpma_ext.Controllers
 							Id = s.Id,
 							Name = s.Name,
 							Comment = s.Comment,
-							DisplayName = s.DispalyName,
+							DisplayName = s.DisplayName,
 							Value = s.Value,
 							ParentId = s.ParentId,
 							ParentName = (s.ParentId.HasValue ? s.Parent.Name : ""),

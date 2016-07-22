@@ -1,30 +1,82 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
-import {ActivatedRoute} from '@angular/router'
+import {ActivatedRoute, Router} from '@angular/router';
+import {REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {ContractorService, ContractorModel} from '../../services/contractor.service';
+
+
+import {Tabs, Tab} from '../../controls/tabs.control';
+
+import {DepartmentList} from './department.list.view';
+import {AttachmentList} from '../attachment/attachment.list.view';
 
 
 @Component({
 	moduleId: module.id,
 	selector: 'contractor-edit',
 	templateUrl: 'contractor.edit.html',
-	directives: [CORE_DIRECTIVES],
+	directives: [CORE_DIRECTIVES, Tabs, Tab, REACTIVE_FORM_DIRECTIVES, DepartmentList, AttachmentList],
 	providers: [ContractorService]
 })
 export class ContractorEdit implements OnInit {
 
-	contractorId: number;
-	model: ContractorModel = new ContractorModel();
+	private id: number;
+	private mode: string;
+	private model: ContractorModel = new ContractorModel();
 
-	constructor(private contrSrv: ContractorService, private route: ActivatedRoute) { }
+	private editForm: FormGroup;
+
+	constructor(private contrSrv: ContractorService, private route: ActivatedRoute, private router: Router) {
+
+		this.id = +this.route.snapshot.params["id"];
+		this.mode = this.route.snapshot.params["mode"];
+		if (this.mode) {
+			this.mode = this.mode.toLowerCase();
+		}
+
+		this.editForm = new FormGroup({
+			id: new FormControl(),
+			name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+			fullName: new FormControl(),
+			inn: new FormControl(),
+			kpp: new FormControl(),
+			ogrn: new FormControl()
+		});
+
+	}
 
 	ngOnInit() {
+		this.onRefresh();
+	}
 
-		this.contractorId = this.route.snapshot.params["id"];
-		this.contrSrv.getContractor(this.contractorId).subscribe(
-			res => this.model = res,
-			err => console.log(err)
-		);
+	onRefresh() {
+
+		if (this.id) {
+			this.contrSrv.getContrModel(this.id).subscribe(
+				res => this.model = res,
+				err => console.log(err)
+			);
+		}
+		return false;
+
+	}
+
+	onCancel() {
+		window.history.back();
+		return false;
+	}
+
+	onSubmit() {
+		if (this.editForm.valid) {
+			this.contrSrv.saveContrModel(this.model).subscribe(
+				res => {
+					if (!this.model.id) {
+						this.router.navigateByUrl('/contractor/edit/' + res.id);
+					}
+				},
+				err => console.log(err)
+			);
+		}
 	}
 }

@@ -1,0 +1,40 @@
+﻿<div class="panel panel-default">
+	<div class="panel-heading">Список служб <a (click)="refreshList()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить</i></a></div>
+	<div class="panel-body">
+		<table class="table table-bordered table-condensed table-hover">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Наименование</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let s of list">
+					<template [ngIf]="s != editModel">
+						<td style="min-width:60px;">
+							<a (click)="onEdit(s)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-pencil-square-o fa-fw"></i></a>
+							<a (click)="onDelete(s)" class="btn btn-xs btn-danger" title="Удалить"><i class="fa fa-trash fa-fw"></i></a>
+						</td>
+						<td>
+							{{s.name}}
+						</td>
+					</template>
+					<template [ngIf]="s === editModel">
+						<td style="min-width:60px;">
+							<a (click)="onCancel()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
+							<a (click)="onUpdate()" class="btn btn-xs btn-success" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
+						</td>
+						<td><input [(ngModel)]="editModel.name" class="form-control" /></td>
+					</template>
+				</tr>
+				<tr class="success">
+					<td colspan="2">Добавление новой службы</td>
+				</tr>
+				<tr class="success">
+					<td><a (click)="onAdd()" [class.disabled]="!addModel.name" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a></td>
+					<td><input [(ngModel)]="addModel.name" class="form-control" /></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

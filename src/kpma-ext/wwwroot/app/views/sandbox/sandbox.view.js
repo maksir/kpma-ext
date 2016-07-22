@@ -9,22 +9,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var common_1 = require('@angular/common');
+var attachment_service_1 = require('../../services/attachment.service');
 var tabs_control_1 = require('../../controls/tabs.control');
 var shadowbox_control_1 = require('../../controls/shadowbox.control');
 var dropdown_control_1 = require('../../controls/dropdown/dropdown.control');
 var SandBox = (function () {
-    function SandBox() {
+    function SandBox(attSrv) {
+        this.attSrv = attSrv;
+        this.model = new attachment_service_1.AttachmentDataModel();
     }
+    SandBox.prototype.onSend = function (params) {
+        var _this = this;
+        if (!params.files) {
+            return;
+        }
+        this.model.file = params.files[0];
+        this.attSrv.upload(this.model).then(function (res) { return _this.c = 0; }).catch(function (err) { return console.log(err); });
+        return false;
+    };
     SandBox = __decorate([
         core_1.Component({
             moduleId: module.id,
             selector: 'sandbox',
             templateUrl: 'sandbox.html',
             styles: ['.panel-body { position: relative; }'],
-            directives: [common_1.FORM_DIRECTIVES, tabs_control_1.Tab, tabs_control_1.Tabs, shadowbox_control_1.ShadowBox, dropdown_control_1.DropDown]
+            directives: [tabs_control_1.Tab, tabs_control_1.Tabs, shadowbox_control_1.ShadowBox, dropdown_control_1.DropDown],
+            providers: [attachment_service_1.AttachmentService]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [attachment_service_1.AttachmentService])
     ], SandBox);
     return SandBox;
 }());

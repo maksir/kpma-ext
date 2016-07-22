@@ -42,7 +42,7 @@ var MetaObjectEdit = (function () {
     MetaObjectEdit.prototype.ngOnInit = function () {
         var _this = this;
         if (this.id && !this.mode) {
-            this.moServ.getMetaObject(this.id).subscribe(function (res) {
+            this.moServ.getModel(this.id).subscribe(function (res) {
                 _this.model = res;
             }, function (err) { return console.log(err); });
         }
@@ -55,7 +55,7 @@ var MetaObjectEdit = (function () {
                     }
                     break;
                 case 'copy':
-                    this.moServ.getMetaObject(this.id).subscribe(function (res) {
+                    this.moServ.getModel(this.id).subscribe(function (res) {
                         _this.model = res;
                         _this.model.comment = '';
                         _this.model.value = '';
@@ -65,20 +65,20 @@ var MetaObjectEdit = (function () {
                     break;
                 case 'viewonly':
                     this.isViewOnly = true;
-                    this.moServ.getMetaObject(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+                    this.moServ.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
                     break;
             }
         }
     };
     MetaObjectEdit.prototype.onRefresh = function () {
         var _this = this;
-        this.moServ.getMetaObject(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+        this.moServ.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
         return false;
     };
     MetaObjectEdit.prototype.onSubmit = function () {
         var _this = this;
         if (this.editForm.valid) {
-            this.moServ.saveMetaObject(this.model).subscribe(function (res) {
+            this.moServ.saveModel(this.model).subscribe(function (res) {
                 if (!_this.model.id) {
                     _this.router.navigateByUrl('/metaobject/edit/' + res.id);
                 }

@@ -35,6 +35,8 @@ namespace kpma_ext
 				options.SerializerSettings.ContractResolver =
 					new CamelCasePropertyNamesContractResolver();
 			});
+
+			services.AddSwaggerGen();
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +45,10 @@ namespace kpma_ext
 			app.UseIdentity();
 
 			app.UseMvc();
+
+			//app.UseSwaggerGen();
+			app.UseSwagger();
+			app.UseSwaggerUi();
 
 			app.UseDefaultFiles();
 

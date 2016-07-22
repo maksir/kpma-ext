@@ -14,13 +14,13 @@ export class MetaObjectService {
 		return this.http.get('/api/metaobject/list?parentId=' + parentId).map(res => res.json());
 	}
 
-	getMetaObject(id: number): Observable<MetaObjectDataModel> {
+	getModel(id: number): Observable<MetaObjectDataModel> {
 
 		return this.http.get('/api/metaobject/' + id).map(res => res.json());
 
 	}
 
-	saveMetaObject(model: MetaObjectDataModel): Observable<MetaObjectDataModel> {
+	saveModel(model: MetaObjectDataModel): Observable<MetaObjectDataModel> {
 
 		let body = JSON.stringify(model);
 		let headers = new Headers({
@@ -37,6 +37,14 @@ export class MetaObjectService {
 				}
 			}
 		);
+	}
+
+	deleteModel(id: number): Observable<boolean> {
+		if (!id) {
+			return Observable.of(false);
+		}
+
+		return this.http.delete('/api/metaobject/' + id).map(res => res.ok);		
 	}
 }
 

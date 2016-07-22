@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
+var Rx_1 = require('rxjs/Rx');
 require('rxjs/add/operator/map');
 var MetaObjectService = (function () {
     function MetaObjectService(http) {
@@ -18,10 +19,10 @@ var MetaObjectService = (function () {
     MetaObjectService.prototype.getList = function (parentId) {
         return this.http.get('/api/metaobject/list?parentId=' + parentId).map(function (res) { return res.json(); });
     };
-    MetaObjectService.prototype.getMetaObject = function (id) {
+    MetaObjectService.prototype.getModel = function (id) {
         return this.http.get('/api/metaobject/' + id).map(function (res) { return res.json(); });
     };
-    MetaObjectService.prototype.saveMetaObject = function (model) {
+    MetaObjectService.prototype.saveModel = function (model) {
         var body = JSON.stringify(model);
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
@@ -34,6 +35,12 @@ var MetaObjectService = (function () {
                 return false;
             }
         });
+    };
+    MetaObjectService.prototype.deleteModel = function (id) {
+        if (!id) {
+            return Rx_1.Observable.of(false);
+        }
+        return this.http.delete('/api/metaobject/' + id).map(function (res) { return res.ok; });
     };
     MetaObjectService = __decorate([
         core_1.Injectable(), 

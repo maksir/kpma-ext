@@ -16,38 +16,219 @@ namespace kpmaext.Data.Migrations
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("kpma_ext.Models.Attachment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 500);
+
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<byte[]>("File")
+                        .IsRequired();
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 500);
+
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<long>("Length");
+
+                    b.Property<int>("MetaObjectId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 200);
+
+                    b.Property<int>("ObjectId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MetaObjectId");
+
+                    b.ToTable("Attachment","core");
+                });
+
             modelBuilder.Entity("kpma_ext.Models.Contractor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CreatedBy");
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
 
                     b.Property<string>("DisplayName")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasComputedColumnSql("[Name]");
 
-                    b.Property<string>("FullName");
+                    b.Property<string>("FullName")
+                        .HasAnnotation("MaxLength", 500);
 
-                    b.Property<string>("INN");
+                    b.Property<string>("INN")
+                        .HasAnnotation("MaxLength", 12);
 
-                    b.Property<string>("KPP");
+                    b.Property<string>("KPP")
+                        .HasAnnotation("MaxLength", 9);
 
-                    b.Property<string>("LastUpdatedBy");
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
 
                     b.Property<DateTime>("LastUpdatedDate")
-                        .IsConcurrencyToken();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 200);
 
-                    b.Property<string>("OGRN");
+                    b.Property<string>("OGRN")
+                        .HasAnnotation("MaxLength", 15);
 
                     b.HasKey("Id");
 
                     b.ToTable("Contractor","contr");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ContractorId");
+
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("DisplayName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasComputedColumnSql("[Name]");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("Name")
+                        .HasAnnotation("MaxLength", 200);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractorId");
+
+                    b.ToTable("Department","contr");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.DocCard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AuthorId");
+
+                    b.Property<string>("Barcode")
+                        .HasAnnotation("MaxLength", 50);
+
+                    b.Property<string>("Content1");
+
+                    b.Property<string>("Content2");
+
+                    b.Property<string>("Content3");
+
+                    b.Property<string>("Content4");
+
+                    b.Property<string>("Content5");
+
+                    b.Property<int>("ContractorFromId");
+
+                    b.Property<int>("ContractorToId");
+
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<int>("DepartmentFromId");
+
+                    b.Property<int>("DepartmentToId");
+
+                    b.Property<string>("DisplayName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasComputedColumnSql("cast([DocNumber] as nvarchar) + ' от ' + convert(nvarchar(10), [DocDate], 104)");
+
+                    b.Property<DateTime>("DocDate");
+
+                    b.Property<int>("DocNumber");
+
+                    b.Property<int>("DocumentStatusId");
+
+                    b.Property<int>("DocumentTypeId");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("ContractorFromId");
+
+                    b.HasIndex("ContractorToId");
+
+                    b.HasIndex("DepartmentFromId");
+
+                    b.HasIndex("DepartmentToId");
+
+                    b.HasIndex("DocumentStatusId");
+
+                    b.HasIndex("DocumentTypeId");
+
+                    b.ToTable("DocCard","doc");
                 });
 
             modelBuilder.Entity("kpma_ext.Models.DocumentGroup", b =>
@@ -55,21 +236,86 @@ namespace kpmaext.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CreatedBy");
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
 
-                    b.Property<string>("LastUpdatedBy");
+                    b.Property<string>("DisplayName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasComputedColumnSql("[Name]");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
 
                     b.Property<DateTime>("LastUpdatedDate")
-                        .IsConcurrencyToken();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 200);
 
                     b.HasKey("Id");
 
                     b.ToTable("DocumentGroup","core");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.DocumentStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Color")
+                        .HasAnnotation("MaxLength", 50);
+
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("DisplayName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasComputedColumnSql("[Name]");
+
+                    b.Property<int>("DocumentTypeId");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 200);
+
+                    b.Property<int>("OrderNumber");
+
+                    b.Property<string>("Value")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentTypeId");
+
+                    b.HasIndex("Name", "DocumentTypeId")
+                        .IsUnique();
+
+                    b.ToTable("DocumentStatus","core");
                 });
 
             modelBuilder.Entity("kpma_ext.Models.DocumentType", b =>
@@ -77,23 +323,43 @@ namespace kpmaext.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CreatedBy");
+                    b.Property<string>("BarcodeTemplate")
+                        .HasAnnotation("MaxLength", 100);
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("DisplayName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasComputedColumnSql("[Name]");
 
                     b.Property<int>("DocumentGroupId");
 
-                    b.Property<string>("LastUpdatedBy");
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
 
                     b.Property<DateTime>("LastUpdatedDate")
-                        .IsConcurrencyToken();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 200);
 
                     b.HasKey("Id");
 
                     b.HasIndex("DocumentGroupId");
+
+                    b.HasIndex("Name", "DocumentGroupId")
+                        .IsUnique();
 
                     b.ToTable("DocumentType","core");
                 });
@@ -103,23 +369,39 @@ namespace kpmaext.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Command");
+                    b.Property<string>("Command")
+                        .HasAnnotation("MaxLength", 100);
 
-                    b.Property<string>("CreatedBy");
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
 
-                    b.Property<string>("Icon");
+                    b.Property<string>("DisplayName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasComputedColumnSql("[Name]");
+
+                    b.Property<string>("Icon")
+                        .HasAnnotation("MaxLength", 50);
 
                     b.Property<bool>("IsGroup");
 
-                    b.Property<string>("LastUpdatedBy");
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
 
                     b.Property<DateTime>("LastUpdatedDate")
-                        .IsConcurrencyToken();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 200);
 
                     b.Property<bool>("OnRight");
 
@@ -127,7 +409,8 @@ namespace kpmaext.Data.Migrations
 
                     b.Property<int>("SortOrder");
 
-                    b.Property<string>("Url");
+                    b.Property<string>("Url")
+                        .HasAnnotation("MaxLength", 200);
 
                     b.HasKey("Id");
 
@@ -141,37 +424,53 @@ namespace kpmaext.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Comment");
+                    b.Property<string>("Comment")
+                        .HasAnnotation("MaxLength", 500);
 
-                    b.Property<string>("CreatedBy");
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
 
-                    b.Property<string>("DispalyName")
+                    b.Property<string>("DisplayName")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasComputedColumnSql("[Name]");
 
-                    b.Property<string>("LastUpdatedBy");
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
 
                     b.Property<DateTime>("LastUpdatedDate")
-                        .IsConcurrencyToken();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 200);
 
                     b.Property<int?>("ParentId");
 
-                    b.Property<string>("SchemaName");
+                    b.Property<string>("SchemaName")
+                        .HasAnnotation("MaxLength", 10);
 
-                    b.Property<string>("TableName");
+                    b.Property<string>("TableName")
+                        .HasAnnotation("MaxLength", 50);
 
                     b.Property<int?>("TypeId");
 
-                    b.Property<string>("Value");
+                    b.Property<string>("Value")
+                        .HasAnnotation("MaxLength", 50);
 
                     b.HasKey("Id");
 
                     b.HasIndex("ParentId");
+
+                    b.HasIndex("TableName");
 
                     b.HasIndex("TypeId");
 
@@ -181,6 +480,43 @@ namespace kpmaext.Data.Migrations
                     b.ToTable("MetaObject","meta");
                 });
 
+            modelBuilder.Entity("kpma_ext.Models.ObjectIntegration", b =>
+                {
+                    b.Property<int>("MetaObjectId");
+
+                    b.Property<int>("ObjectId");
+
+                    b.Property<string>("SystemName")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("SystemValue")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.HasKey("MetaObjectId", "ObjectId", "SystemName");
+
+                    b.HasIndex("MetaObjectId");
+
+                    b.ToTable("ObjectIntegration","meta");
+                });
+
             modelBuilder.Entity("kpma_ext.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -188,6 +524,28 @@ namespace kpmaext.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("DisplayName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasComputedColumnSql("[Name]");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
 
                     b.Property<string>("Name")
                         .HasAnnotation("MaxLength", 256);
@@ -200,7 +558,7 @@ namespace kpmaext.Data.Migrations
                     b.HasIndex("NormalizedName")
                         .HasName("RoleNameIndex");
 
-                    b.ToTable("Role","auth");
+                    b.ToTable("Role","meta");
                 });
 
             modelBuilder.Entity("kpma_ext.Models.RoleMenu", b =>
@@ -209,6 +567,24 @@ namespace kpmaext.Data.Migrations
 
                     b.Property<int>("MenuId");
 
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
                     b.HasKey("RoleId", "MenuId");
 
                     b.HasIndex("MenuId");
@@ -216,6 +592,42 @@ namespace kpmaext.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("RoleMenu","meta");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.Service", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("DisplayName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasComputedColumnSql("[Name]");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 200);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Service","core");
                 });
 
             modelBuilder.Entity("kpma_ext.Models.User", b =>
@@ -230,6 +642,15 @@ namespace kpmaext.Data.Migrations
 
                     b.Property<int?>("ContractorId");
 
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
                     b.Property<string>("DisplayName")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasComputedColumnSql("([Name] + ' (' + [Email] + ')')");
@@ -239,11 +660,21 @@ namespace kpmaext.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasAnnotation("MaxLength", 200);
 
                     b.Property<string>("NormalizedEmail")
                         .HasAnnotation("MaxLength", 256);
@@ -275,7 +706,40 @@ namespace kpmaext.Data.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex");
 
-                    b.ToTable("User","auth");
+                    b.ToTable("User","meta");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.UserDepartment", b =>
+                {
+                    b.Property<int>("UserId");
+
+                    b.Property<int>("DepartmentId");
+
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.HasKey("UserId", "DepartmentId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserDepartment","contr");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<int>", b =>
@@ -293,7 +757,7 @@ namespace kpmaext.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleClaim","auth");
+                    b.ToTable("RoleClaim","meta");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<int>", b =>
@@ -311,7 +775,7 @@ namespace kpmaext.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserClaim","auth");
+                    b.ToTable("UserClaim","meta");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<int>", b =>
@@ -328,7 +792,7 @@ namespace kpmaext.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserLogin","auth");
+                    b.ToTable("UserLogin","meta");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserRole<int>", b =>
@@ -343,7 +807,7 @@ namespace kpmaext.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRole","auth");
+                    b.ToTable("UserRole","meta");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserToken<int>", b =>
@@ -358,7 +822,63 @@ namespace kpmaext.Data.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("UserToken","auth");
+                    b.ToTable("UserToken","meta");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.Attachment", b =>
+                {
+                    b.HasOne("kpma_ext.Models.MetaObject", "MetaObject")
+                        .WithMany()
+                        .HasForeignKey("MetaObjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.Department", b =>
+                {
+                    b.HasOne("kpma_ext.Models.Contractor", "Contractor")
+                        .WithMany()
+                        .HasForeignKey("ContractorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.DocCard", b =>
+                {
+                    b.HasOne("kpma_ext.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("kpma_ext.Models.Contractor", "ContractorFrom")
+                        .WithMany()
+                        .HasForeignKey("ContractorFromId");
+
+                    b.HasOne("kpma_ext.Models.Contractor", "ContractorTo")
+                        .WithMany()
+                        .HasForeignKey("ContractorToId");
+
+                    b.HasOne("kpma_ext.Models.Department", "DepartmentFrom")
+                        .WithMany()
+                        .HasForeignKey("DepartmentFromId");
+
+                    b.HasOne("kpma_ext.Models.Department", "DepartmentTo")
+                        .WithMany()
+                        .HasForeignKey("DepartmentToId");
+
+                    b.HasOne("kpma_ext.Models.DocumentStatus", "DocumentStatus")
+                        .WithMany()
+                        .HasForeignKey("DocumentStatusId");
+
+                    b.HasOne("kpma_ext.Models.DocumentType", "DocumentType")
+                        .WithMany()
+                        .HasForeignKey("DocumentTypeId");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.DocumentStatus", b =>
+                {
+                    b.HasOne("kpma_ext.Models.DocumentType", "DocumentType")
+                        .WithMany()
+                        .HasForeignKey("DocumentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("kpma_ext.Models.DocumentType", b =>
@@ -387,6 +907,14 @@ namespace kpmaext.Data.Migrations
                         .HasForeignKey("TypeId");
                 });
 
+            modelBuilder.Entity("kpma_ext.Models.ObjectIntegration", b =>
+                {
+                    b.HasOne("kpma_ext.Models.MetaObject", "MetaObject")
+                        .WithMany()
+                        .HasForeignKey("MetaObjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("kpma_ext.Models.RoleMenu", b =>
                 {
                     b.HasOne("kpma_ext.Models.Menu", "Menu")
@@ -405,6 +933,19 @@ namespace kpmaext.Data.Migrations
                     b.HasOne("kpma_ext.Models.Contractor", "Contractor")
                         .WithMany()
                         .HasForeignKey("ContractorId");
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.UserDepartment", b =>
+                {
+                    b.HasOne("kpma_ext.Models.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("kpma_ext.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<int>", b =>

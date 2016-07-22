@@ -1,7 +1,7 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
 
-import {DocTypeService, DocGroupModel, DocTypeModel} from '../../services/doctype.service';
+import {DocTypeService, DocGroupModel, DocTypeModel, DocStatusModel} from '../../services/doctype.service';
 
 import {ITreeNode, TreeView} from '../../controls/treeview';
 
@@ -17,66 +17,75 @@ export class DocTypeList implements OnInit {
 
 	private groupList: DocGroupModel[] = [];
 	private typeList: DocTypeModel[] = [];
-
-	private selectGroupModel: DocGroupModel;
+	private statusList: DocStatusModel[] = [];
+	
 	private addGroupModel = new DocGroupModel();
 	private editGroupModel: DocGroupModel;
-
+	private _selectedGroup: DocGroupModel;
 	private set selectedGroup(value: DocGroupModel) {
 
-		this.selectGroupModel = value;
+		this._selectedGroup = value;
+		this.selectedType = undefined;
 		if (value) {
 			this.addTypeModel.documentGroupId = value.id;
 		}
 		else {
 			this.addTypeModel.documentGroupId = undefined;
 		}
-		this.updateTypeList();
+		this.refreshTypeList();
+	}
+	private get selectedGroup() {
+		return this._selectedGroup;
+	}
+	
+	private addTypeModel = new DocTypeModel();
+	private editTypeModel: DocTypeModel;
+	private _selectedType: DocTypeModel;
+	private set selectedType(value: DocTypeModel) {
+		this._selectedType = value;
+		if (value) {
+			this.addStatusModel.documentTypeId = value.id;
+		}
+		else {
+			this.addStatusModel.documentTypeId = undefined;
+		}
+		this.refreshStatusList();
+	}
+	private get selectedType() {
+		return this._selectedType;
 	}
 
-
-	// модель добавления нового элемента
-	private addTypeModel = new DocTypeModel();
-	// редактируемая модель
-	private editTypeModel: DocTypeModel;
+	private addStatusModel: DocStatusModel = new DocStatusModel();
+	private editStatusModel: DocStatusModel;
 
 
 	constructor(private dtSrv: DocTypeService) {
 	}
 
 	ngOnInit() {
-		this.updateGroupList();
+		this.refreshGroupList();
 	}
 
-	updateGroupList() {
+	// group
+	refreshGroupList() {
 
 		this.dtSrv.getGroupList().subscribe(
 			res => {
 				this.groupList = res;
 
-				if (this.selectGroupModel) {
-					let ll = this.groupList.filter(g => g.id == this.selectGroupModel.id);
-					if (ll.length > 0) {
-						this.selectedGroup = ll[0];
+				if (this.selectedGroup) {
+					let find = this.groupList.filter(g => g.id == this.selectedGroup.id);
+					if (find.length > 0) {
+						this.selectedGroup = find[0];
+					}
+					else {
+						this.selectedGroup = undefined;
 					}
 				}
 			},
 			err => console.log(err)
 		);
 	}
-
-	updateTypeList() {
-		if (!this.selectGroupModel) {
-			this.typeList = [];
-		}
-		else {
-			this.dtSrv.getTypeList(this.selectGroupModel.id).subscribe(
-				res => this.typeList = res,
-				err => console.log(err)
-			);
-		}
-	}
-
 
 	onSelectGroup(g: DocGroupModel) {
 		this.selectedGroup = g;
@@ -91,8 +100,8 @@ export class DocTypeList implements OnInit {
 		this.dtSrv.saveGroupModel(this.addGroupModel).subscribe(
 			res => {
 				this.addGroupModel = new DocGroupModel();
-				this.selectGroupModel = res;
-				this.updateGroupList();
+				this._selectedGroup = res;
+				this.refreshGroupList();
 			},
 			err => console.log(err)
 		);
@@ -112,8 +121,8 @@ export class DocTypeList implements OnInit {
 		this.dtSrv.saveGroupModel(this.editGroupModel).subscribe(
 			res => {
 				this.editGroupModel = undefined;
-				this.selectGroupModel = res;
-				this.updateGroupList();
+				this._selectedGroup = res;
+				this.refreshGroupList();
 			},
 			err => console.log(err)
 		);
@@ -130,15 +139,46 @@ export class DocTypeList implements OnInit {
 			return;
 		}
 
-		this.dtSrv.deleteGroupModel(g.id).subscribe(
-			res => {
-				this.selectGroupModel = undefined;
-				this.editGroupModel = undefined;
-				this.updateGroupList();
-				this.updateTypeList();
-			},
-			err => console.log(err)
-		);
+		if (confirm('Удалить группу "' + g.name + '" ?')) {
+			this.dtSrv.deleteGroupModel(g.id).subscribe(
+				res => {
+					this.selectedGroup = undefined;
+					this.editGroupModel = undefined;
+					this.refreshGroupList();
+				},
+				err => console.log(err)
+			);
+		}
+	}
+
+
+	// type
+	refreshTypeList() {
+		if (!this._selectedGroup) {
+			this.typeList = [];
+		}
+		else {
+			this.dtSrv.getTypeList(this._selectedGroup.id).subscribe(
+				res => {
+					this.typeList = res;
+					if (this.selectedType) {
+						let find = this.typeList.filter(g => g.id == this.selectedType.id);
+						if (find.length > 0) {
+							this.selectedType = find[0];
+						}
+						else {
+							this.selectedType = undefined;
+						}
+
+					}
+				},
+				err => console.log(err)
+			);
+		}
+	}
+
+	onSelectType(t: DocTypeModel) {
+		this.selectedType = t;
 	}
 
 	onAddType() {
@@ -150,8 +190,8 @@ export class DocTypeList implements OnInit {
 		this.dtSrv.saveTypeModel(this.addTypeModel).subscribe(
 			res => {
 				this.addTypeModel = new DocTypeModel();
-				this.addTypeModel.documentGroupId = this.selectGroupModel.id;
-				this.updateTypeList();
+				this.addTypeModel.documentGroupId = this._selectedGroup.id;
+				this.refreshTypeList();
 			},
 			err => console.log(err)
 		);
@@ -172,7 +212,7 @@ export class DocTypeList implements OnInit {
 		this.dtSrv.saveTypeModel(this.editTypeModel).subscribe(
 			res => {
 				this.editTypeModel = undefined;
-				this.updateTypeList();
+				this.refreshTypeList();
 			},
 			err => console.log(err)
 		);
@@ -187,11 +227,80 @@ export class DocTypeList implements OnInit {
 			return;
 		}
 
-		this.dtSrv.deleteTypeModel(t.id).subscribe(
+		if (confirm('Удалить тип "' + t.name + '" ?')) {
+			this.dtSrv.deleteTypeModel(t.id).subscribe(
+				res => {
+					this.refreshTypeList();
+				},
+				err => console.log(err)
+			);
+		}
+	}
+
+
+	// status
+	refreshStatusList() {
+		if (!this._selectedType) {
+			this.statusList = [];
+		}
+		else {
+			this.dtSrv.getStatusList(this._selectedType.id).subscribe(
+				res => this.statusList = res,
+				err => console.log(err)
+			);
+		}
+	}
+
+	onAddStatus() {
+		if (!this.addStatusModel.name || !this.addStatusModel.documentTypeId) {
+			return;
+		}
+
+		this.dtSrv.saveStatusModel(this.addStatusModel).subscribe(
 			res => {
-				this.updateTypeList();
+				this.addStatusModel = new DocStatusModel();
+				this.addStatusModel.documentTypeId = this._selectedType.id;
+				this.refreshStatusList();
 			},
 			err => console.log(err)
 		);
 	}
+
+	onEditStatus(s: DocStatusModel) {
+		this.editStatusModel = s;
+	}
+
+	onUpdateStatus() {
+		if (!this.editStatusModel) {
+			return;
+		}
+
+		this.dtSrv.saveStatusModel(this.editStatusModel).subscribe(
+			res => {
+				this.editStatusModel = undefined;
+				this.refreshStatusList();
+			},
+			err => console.log(err)
+		);
+	}
+
+	onCancelStatus() {
+		this.editStatusModel = undefined;
+	}
+
+	onDeleteStatus(s: DocStatusModel) {
+
+		if (!s) {
+			return;
+		}
+
+		if (confirm('Удалить статус "' + s.name + '" ?')) {
+			this.dtSrv.deleteStatusModel(s.id).subscribe(
+				res => this.refreshStatusList(),
+				err => console.log(err)
+			);
+		}
+	}
+
+
 }

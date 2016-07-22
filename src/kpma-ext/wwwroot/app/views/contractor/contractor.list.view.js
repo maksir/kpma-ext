@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
+var router_1 = require('@angular/router');
 var contractor_service_1 = require('../../services/contractor.service');
 var ContractorList = (function () {
     function ContractorList(contrSrv) {
@@ -17,15 +18,18 @@ var ContractorList = (function () {
         this.list = [];
     }
     ContractorList.prototype.ngOnInit = function () {
+        this.refreshList();
+    };
+    ContractorList.prototype.refreshList = function () {
         var _this = this;
-        this.contrSrv.getList().subscribe(function (result) { return _this.list = result; }, function (err) { return console.log(err); });
+        this.contrSrv.getContrList().subscribe(function (result) { return _this.list = result; }, function (err) { return console.log(err); });
     };
     ContractorList = __decorate([
         core_1.Component({
             moduleId: module.id,
             selector: 'contractor-list',
             templateUrl: 'contractor.list.html',
-            directives: [common_1.CORE_DIRECTIVES],
+            directives: [common_1.CORE_DIRECTIVES, router_1.ROUTER_DIRECTIVES],
             providers: [contractor_service_1.ContractorService]
         }), 
         __metadata('design:paramtypes', [contractor_service_1.ContractorService])

@@ -12,6 +12,8 @@ import {UserService} from './services/user.service';
 
 import {MainAppComponent} from './main.component';
 
+
+
 //enableProdMode();
 bootstrap(MainAppComponent, [
 	//DomSanitizationService,

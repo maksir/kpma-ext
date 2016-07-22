@@ -73,6 +73,35 @@ var DocTypeService = (function () {
         }
         return this.http.delete('/api/doctype/type/' + id).map(function (res) { return res.ok; });
     };
+    DocTypeService.prototype.getStatusList = function (typeId) {
+        return this.http.get('/api/doctype/status/list/' + typeId).map(function (res) { return res.json(); });
+    };
+    DocTypeService.prototype.getStatusModel = function (id) {
+        return this.http.get('/api/doctype/status/' + id).map(function (res) { return res.json(); });
+    };
+    DocTypeService.prototype.saveStatusModel = function (model) {
+        if (!model) {
+            return Rx_1.Observable.of(model);
+        }
+        var body = JSON.stringify(model);
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.http.post('/api/doctype/status', body, { headers: headers }).map(function (res) {
+            if (res.status == 200) {
+                return res.json();
+            }
+            else {
+                return false;
+            }
+        });
+    };
+    DocTypeService.prototype.deleteStatusModel = function (id) {
+        if (!id) {
+            return Rx_1.Observable.of(false);
+        }
+        return this.http.delete('/api/doctype/status/' + id).map(function (res) { return res.ok; });
+    };
     DocTypeService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
@@ -92,4 +121,10 @@ var DocGroupModel = (function () {
     return DocGroupModel;
 }());
 exports.DocGroupModel = DocGroupModel;
+var DocStatusModel = (function () {
+    function DocStatusModel() {
+    }
+    return DocStatusModel;
+}());
+exports.DocStatusModel = DocStatusModel;
 //# sourceMappingURL=doctype.service.js.map

@@ -7,6 +7,9 @@ import {MetaObjectRoutes} from './views/metaobject/metaobject.routes';
 import {UserRoutes} from './views/user/user.routes';
 import {MenuRoutes} from './views/menu/menu.routes';
 import {DocTypeRoutes} from './views/doctype/doctype.routes';
+import {ServiceRoutes} from './views/service/service.routes';
+import {DocCardRoutes} from './views/doccard/doccard.routes';
+
 
 
 import {SandBox} from './views/sandbox/sandbox.view';
@@ -18,6 +21,9 @@ const routes: RouterConfig = [
 	...MetaObjectRoutes,
 	...MenuRoutes,
 	...DocTypeRoutes,
+	...ServiceRoutes,
+	...DocCardRoutes,
+	{ path: 'sandbox', component: SandBox },
 	{ path: '', redirectTo: '/login', terminal: true }
 	
 ];

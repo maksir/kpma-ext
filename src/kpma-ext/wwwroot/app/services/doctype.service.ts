@@ -92,6 +92,47 @@ export class DocTypeService {
 
 		return this.http.delete('/api/doctype/type/' + id).map(res => res.ok);
 	}
+
+
+	getStatusList(typeId: number): Observable<DocStatusModel[]> {
+		return this.http.get('/api/doctype/status/list/' + typeId).map(res => res.json());
+	}
+
+	getStatusModel(id: number) {
+		return this.http.get('/api/doctype/status/' + id).map(res => res.json());
+	}
+
+	saveStatusModel(model: DocStatusModel): Observable<DocStatusModel> {
+
+		if (!model) {
+			return Observable.of(model);
+		}
+
+		let body = JSON.stringify(model);
+		let headers = new Headers({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post('/api/doctype/status', body, { headers: headers }).map(
+			res => {
+				if (res.status == 200) {
+					return res.json();
+				}
+				else {
+					return false;
+				}
+			}
+		);
+	}
+
+	deleteStatusModel(id: number): Observable<boolean> {
+
+		if (!id) {
+			return Observable.of(false);
+		}
+
+		return this.http.delete('/api/doctype/status/' + id).map(res => res.ok);
+	}
 }
 
 
@@ -106,9 +147,25 @@ export class DocTypeModel {
 	public lastUpdatedDate: Date;
 }
 
+
 export class DocGroupModel {
 	public id: number;
 	public name: string;
+	public createdBy: string;
+	public createdDate: Date;
+	public lastUpdatedBy: string;
+	public lastUpdatedDate: Date;
+}
+
+
+export class DocStatusModel {
+	public id: number;
+	public name: string;
+	public displayName: string;
+	public documentTypeId: number;
+	public value: string;
+	public orderNumber: string;
+	public color: string;
 	public createdBy: string;
 	public createdDate: Date;
 	public lastUpdatedBy: string;

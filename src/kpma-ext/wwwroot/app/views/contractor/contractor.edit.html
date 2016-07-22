@@ -1,1 +1,63 @@
-﻿<h4>Карточка контрагента</h4>
+﻿<div class="col-sm-4">
+	<div class="panel panel-default">
+		<div class="panel-heading">Карточка контрагента</div>
+		<div class="panel-body">
+			<form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="form-horizontal" role="form">
+				<div class="form-group">
+					<label class="control-label col-sm-4" for="inputName">Наименование</label>
+					<div class="col-sm-8">
+						<input [(ngModel)]="model.name" formControlName="name" name="name" type="text" class="form-control" id="inputName" placeholder="Наименование">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-4" for="inputFullName">Полное наименование</label>
+					<div class="col-sm-8">
+						<input [(ngModel)]="model.fullName" formControlName="fullName" name="fullName" type="text" class="form-control" id="inputFullName" placeholder="Полное наименование">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-4" for="inputInn">ИНН</label>
+					<div class="col-sm-8">
+						<input [(ngModel)]="model.inn" formControlName="inn" name="inn" type="text" class="form-control" id="inputInn" placeholder="ИНН">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-4" for="inputKpp">КПП</label>
+					<div class="col-sm-8">
+						<input [(ngModel)]="model.kpp" formControlName="kpp" name="kpp" type="text" class="form-control" id="inputKpp" placeholder="КПП">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-4" for="inputOgrn">ОГРН</label>
+					<div class="col-sm-8">
+						<input [(ngModel)]="model.ogrn" formControlName="ogrn" name="ogrn" type="text" class="form-control" id="inputOgrn" placeholder="ОГРН">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-8">
+						<button [disabled]="!editForm.valid" type="submit" class="btn btn-default"><i class="fa fa-save"> Сохранить</i></button>
+						<button (click)="onCancel()" class="btn btn-default"><i class="fa fa-undo"> Назад</i></button>
+						<button (click)="onRefresh()" class="btn btn-default"><i class="fa fa-refresh"> Обновить</i></button>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</div>
+<div *ngIf="id" class="col-sm-8">
+	<div class="panel panel-default">
+		<div class="panel-heading">Зависимые списки контрагента</div>
+		<div class="panel-body">
+			<tabs>
+				<tab title="Подразделения">
+					<department-list [contractorId]="id"></department-list>
+				</tab>
+				<tab title="Вложения">
+					<attachment-list [metaObjectId]="108" [objectId]="id"></attachment-list>
+				</tab>
+				<tab></tab>
+			</tabs>
+		</div>
+	</div>
+</div>

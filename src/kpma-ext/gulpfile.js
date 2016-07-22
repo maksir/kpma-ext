@@ -45,3 +45,12 @@ gulp.task("fontawesome", function () {
 	gulp.src(["lib/font-awesome/css/*"]).pipe(gulp.dest("wwwroot/lib/fontawesome"));
 	gulp.src(["lib/font-awesome/fonts/*"]).pipe(gulp.dest("wwwroot/lib/fonts"));
 });
+
+gulp.task('moment', function () {
+	gulp.src(["lib/moment/min/moment-*.*"]).pipe(gulp.dest("wwwroot/lib/moment"));
+});
+
+gulp.task('datetimepicker', ['bootstrap', 'moment'], function () {
+
+	gulp.src(["lib/eonasdan-bootstrap-datetimepicker/build/*/*.*"]).pipe(gulp.dest("wwwroot/lib/datetimepicker"));
+});

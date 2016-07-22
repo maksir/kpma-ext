@@ -14,3 +14,9 @@
 		</div>
 	</tab>
 </tabs>
+
+<form>
+	<input type="text" [(ngModel)]="model.description" name="description" />
+	<input type="file" #file/>
+	<button (click)="onSend(file)">Отправить</button>
+</form>

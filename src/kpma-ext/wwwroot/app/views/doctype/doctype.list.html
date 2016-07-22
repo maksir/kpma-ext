@@ -1,6 +1,6 @@
 ﻿<div class="col-sm-4">
 	<div class="panel panel-default">
-		<div class="panel-heading">Группы документов <a (click)="updateGroupList()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить</i></a></div>
+		<div class="panel-heading">Группы документов <a (click)="refreshGroupList()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить</i></a></div>
 		<div class="panel-body">
 			<table class="table table-bordered table-condensed table-hover">
 				<thead>
@@ -10,7 +10,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let g of groupList" (click)="onSelectGroup(g)" [ngClass]="{'info': selectGroupModel == g, 'warning': editGroupModel == g}">
+					<tr *ngFor="let g of groupList" (click)="onSelectGroup(g)" [ngClass]="{'info': selectedGroup === g, 'warning': editGroupModel === g}">
 						<template [ngIf]="g != editGroupModel">
 							<td style="min-width:60px;">
 								<a (click)="onEditGroup(g)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-pencil-square-o fa-fw"></i></a>
@@ -18,7 +18,7 @@
 							</td>
 							<td>{{g.name}}</td>
 						</template>
-						<template [ngIf]="g == editGroupModel">
+						<template [ngIf]="g === editGroupModel">
 							<td style="min-width:60px;">
 								<a (click)="onCancelGroup()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
 								<a (click)="onUpdateGroup()" class="btn btn-xs btn-success" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
@@ -40,7 +40,7 @@
 </div>
 <div class="col-sm-8">
 	<div class="panel panel-default">
-		<div class="panel-heading">Типы документов <a (click)="updateTypeList()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить</i></a></div>
+		<div class="panel-heading">Типы документов <a (click)="refreshTypeList()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить</i></a></div>
 		<div class="panel-body">
 			<table class="table table-bordered table-condensed table-hover">
 				<thead>
@@ -50,7 +50,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let t of typeList" [class.warning]="t == editTypeModel">
+					<tr *ngFor="let t of typeList" (click)="onSelectType(t)" [ngClass]="{'info': selectedType === t, 'warning': editTypeModel === t}">
 						<template [ngIf]="t != editTypeModel">
 							<td style="min-width:60px;">
 								<a (click)="onEditType(t)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-pencil-square-o fa-fw"></i></a>
@@ -58,7 +58,7 @@
 							</td>
 							<td>{{t.name}}</td>
 						</template>
-						<template [ngIf]="t == editTypeModel">
+						<template [ngIf]="t === editTypeModel">
 							<td style="min-width:60px;">
 								<a (click)="onCancelType()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
 								<a (click)="onUpdateType()" class="btn btn-xs btn-success" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
@@ -70,8 +70,55 @@
 						<td colspan="2">Добавление нового типа</td>
 					</tr>
 					<tr class="success">
-						<td><a (click)="onAddType()" [class.disabled]="!addTypeModel.name || !selectGroupModel" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a></td>
-						<td><input [(ngModel)]="addTypeModel.name" [disabled]="!selectGroupModel" class="form-control" /></td>
+						<td><a (click)="onAddType()" [class.disabled]="!addTypeModel.name || !selectedGroup" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a></td>
+						<td><input [(ngModel)]="addTypeModel.name" [disabled]="!selectedGroup" class="form-control" /></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">Список статусов <a (click)="refreshStatusList()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить</i></a></div>
+		<div class="panel-body">
+			<table class="table table-bordered table-condensed table-hover">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Наименование</th>
+						<th>Порядковый номер</th>
+						<th>Значение</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let s of statusList" [class.warning]="s == editStatusModel">
+						<template [ngIf]="s != editStatusModel">
+							<td style="min-width:60px;">
+								<a (click)="onEditStatus(s)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-pencil-square-o fa-fw"></i></a>
+								<a (click)="onDeleteStatus(s)" class="btn btn-xs btn-danger" title="Удалить"><i class="fa fa-trash fa-fw"></i></a>
+							</td>
+							<td>{{s.name}}</td>
+							<td>{{s.orderNumber}}</td>
+							<td>{{s.value}}</td>
+						</template>
+						<template [ngIf]="s === editStatusModel">
+							<td style="min-width:60px;">
+								<a (click)="onCancelStatus()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
+								<a (click)="onUpdateStatus()" class="btn btn-xs btn-success" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
+							</td>
+							<td><input [(ngModel)]="editStatusModel.name" class="form-control" /></td>
+							<td><input [(ngModel)]="editStatusModel.orderNumber" type="number" class="form-control" /></td>
+							<td><input [(ngModel)]="editStatusModel.value" class="form-control" /></td>
+						</template>
+					</tr>
+					<tr class="success">
+						<td colspan="4">Добавление нового статуса</td>
+					</tr>
+					<tr class="success">
+						<td><a (click)="onAddStatus()" [class.disabled]="!addStatusModel.name || !selectedType" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a></td>
+						<td><input [(ngModel)]="addStatusModel.name" [disabled]="!selectedType" class="form-control" /></td>
+						<td><input [(ngModel)]="addStatusModel.orderNumber" [disabled]="!selectedType" type="number" class="form-control" /></td>
+						<td><input [(ngModel)]="addStatusModel.value" [disabled]="!selectedType" class="form-control" /></td>
 					</tr>
 				</tbody>
 			</table>
