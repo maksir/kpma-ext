@@ -277,7 +277,8 @@ namespace kpma_ext.Controllers
 					UserName = user.UserName,
 					Email = user.Email,
 					PhoneNumber = user.PhoneNumber,
-					ConcurencyStamp = user.ConcurrencyStamp
+					ConcurencyStamp = user.ConcurrencyStamp,
+					ContractorId = user.ContractorId
 				});
 
 			}
@@ -574,6 +575,7 @@ namespace kpma_ext.Controllers
 		public string PhoneNumber { get; set; }
 		public string UserName { get; set; }
 		public string ConcurencyStamp { get; set; }
+		public int ContractorId { get; set; }
 	}
 	public class RoleViewModel
 	{

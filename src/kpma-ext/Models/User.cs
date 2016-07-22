@@ -16,7 +16,7 @@ namespace kpma_ext.Models
 		public string Name { get; set; }
 		public string DisplayName { get; set; }
 
-		public int? ContractorId { get; set; }
+		public int ContractorId { get; set; }
 
 		[ForeignKey("ContractorId")]
 		public Contractor Contractor { get; set; }

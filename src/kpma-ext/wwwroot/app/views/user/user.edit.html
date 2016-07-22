@@ -1,57 +1,68 @@
 ﻿<h4>Профиль пользователя</h4>
 <div class="col-lg-6 col-sm-12">
-	Параметры пользователя
-	<form (ngSubmit)="onSubmit()" id="useredit" class="form-horizontal" role="form">
-		<div class="form-group">
-			<span class="control-label col-sm-2">Ид</span>
-			<div class="col-sm-4">
-				<span class="form-control">{{model.id}}</span>
-			</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">Параметры пользователя</div>
+		<div class="panel-body">
+			<form (ngSubmit)="onSubmit()" id="useredit" class="form-horizontal" role="form">
+				<div class="form-group">
+					<span class="control-label col-sm-2">Ид</span>
+					<div class="col-sm-4">
+						<span class="form-control">{{model.id}}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<span class="control-label col-sm-2">Имя</span>
+					<div class="col-sm-4">
+						<input type="text" [(ngModel)]="model.name" name="name" class="form-control" />
+					</div>
+				</div>
+				<div class="form-group">
+					<span class="control-label col-sm-2">Email</span>
+					<div class="col-sm-4">
+						<input type="text" [(ngModel)]="model.email" name="email" class="form-control" />
+					</div>
+				</div>
+				<div class="form-group">
+					<span class="control-label col-sm-2">Телефон</span>
+					<div class="col-sm-4">
+						<input type="text" [(ngModel)]="model.phoneNumber" name="phoneNumber" class="form-control" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-4">
+						<button (click)="onBackBtn()" class="btn btn-primary">Назад</button>
+						<button type="submit" class="btn btn-primary" id="btnSubmit">Сохранить</button>
+					</div>
+				</div>
+			</form>
 		</div>
-		<div class="form-group">
-			<span class="control-label col-sm-2">Имя</span>
-			<div class="col-sm-4">
-				<input type="text" [(ngModel)]="model.name" name="name" class="form-control" />
-			</div>
-		</div>
-		<div class="form-group">
-			<span class="control-label col-sm-2">Email</span>
-			<div class="col-sm-4">
-				<input type="text" [(ngModel)]="model.email" name="email" class="form-control" />
-			</div>
-		</div>
-		<div class="form-group">
-			<span class="control-label col-sm-2">Телефон</span>
-			<div class="col-sm-4">
-				<input type="text" [(ngModel)]="model.phoneNumber" name="phoneNumber" class="form-control" />
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-4">
-				<button (click)="onBackBtn()" class="btn btn-primary">Назад</button>
-				<button type="submit" class="btn btn-primary" id="btnSubmit">Сохранить</button>
-			</div>
-		</div>
-	</form>
+	</div>
+
 </div>
 <div class="col-lg-6 col-sm-12">
-	Список ролей пользователя
-	<table class="table table-hover table-bordered table-condensed">
-		<tr *ngFor="let r of roleList">
-			<td>
-				<a (click)="onClickDelRole(r)" class="btn btn-xs btn-danger" title="Удалить роль пользователя"><i class="fa fa-trash-o"></i></a>
-			</td>
-			<td>
-				{{r.roleName}}
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a (click)="onClickAddRole()" [class.disabled]="!addRoleId" class="btn btn-xs btn-primary" title="Добавить роль пользователю"><i class="fa fa-save"></i></a>
-			</td>
-			<td>
-				<dropdown [ItemType]="'Role'" [MinTerm]="0" [(ngModel)]="addRole.roleId" name="roleId" class="form-control"></dropdown>
-			</td>
-		</tr>
-	</table>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">Роли пользователя</div>
+		<div class="panel-body">
+
+			<table class="table table-hover table-bordered table-condensed">
+				<tr *ngFor="let r of roleList">
+					<td>
+						<a (click)="onClickDelRole(r)" class="btn btn-xs btn-danger" title="Удалить роль пользователя"><i class="fa fa-trash-o"></i></a>
+					</td>
+					<td>
+						{{r.roleName}}
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a (click)="onClickAddRole()" [class.disabled]="!addRole.roleId" class="btn btn-xs btn-primary" title="Добавить роль пользователю"><i class="fa fa-save"></i></a>
+					</td>
+					<td>
+						<dropdown [ItemType]="'Role'" [MinTerm]="0" [(ngModel)]="addRole.roleId" name="roleId" class="form-control"></dropdown>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
 </div>
