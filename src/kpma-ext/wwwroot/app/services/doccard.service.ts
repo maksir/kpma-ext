@@ -49,6 +49,16 @@ export class DocCardService {
 		return this.http.delete('/api/doccard/' + id).map(res => res.ok);
 	}
 
+
+	getGroupIn() {
+		return this.http.get('/api/doccard/group/in').map(res => res.json());
+	}
+
+	getGroupOut() {
+		return this.http.get('/api/doccard/group/out').map(res => res.json());
+	}
+
+
 }
 
 

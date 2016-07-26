@@ -1,1 +1,8 @@
-﻿
+﻿<div class="col-sm-3">
+	<div class="panel panel-default">
+		<div class="panel-heading">Документы</div>
+		<div class="panel-body">
+			<tree-view [Nodes]="root" [SelectedNode]="selectedNode" [CanExpand]="true" [isRoot]="true" (onSelectedChanged)="onSelectNode($event)" (onRequestNodes)="onRequestNodes($event)"></tree-view>
+		</div>
+	</div>
+</div>

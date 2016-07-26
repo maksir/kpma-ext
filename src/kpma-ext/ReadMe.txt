@@ -28,3 +28,14 @@ dotnet ef database update
 База данных: kpma-ext
 user: ext-user
 pass: !u$eR-ex7
+
+
+
+reCapcha
+
+public:
+6LdF3yUTAAAAAFsMvObZkKSwKaS0NRzcjCAUmPmA
+
+secret:
+6LdF3yUTAAAAABg6JcyyfaUae1nv5R5cnSXoooQD
+

@@ -78,7 +78,10 @@ var UserService = (function () {
         });
     };
     UserService.prototype.logout = function () {
-        return true;
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.http.post('/api/user/logout', '', { headers: headers }).map(function (res) { return res.ok; });
     };
     UserService.prototype.userGet = function (id) {
         return this.http.get('/api/user/' + id).map(function (res) { return res.json(); });

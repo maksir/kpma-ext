@@ -19,6 +19,8 @@ namespace kpma_ext.Data
 		public DbSet<Menu> Menus { get; set; }
 		public DbSet<RoleMenu> RoleMenus { get; set; }
 
+		public DbSet<DataRestriction> DataRestrictions { get; set; }
+
 		public DbSet<Contractor> Contractors { get; set; }
 
 		public DbSet<Service> Services { get; set; }
@@ -129,11 +131,19 @@ namespace kpma_ext.Data
 			builder.Entity<MetaObject>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<MetaObject>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
 
+			// интеграция с другими системами
 			builder.Entity<ObjectIntegration>().HasKey("MetaObjectId", "ObjectId", "SystemName");
 			builder.Entity<ObjectIntegration>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<ObjectIntegration>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");
 			builder.Entity<ObjectIntegration>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<ObjectIntegration>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
+
+			// ограничение доступа по записям
+			builder.Entity<DataRestriction>().HasKey("DepartmentId", "MetaObjectId", "ObjectId");
+			builder.Entity<DataRestriction>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<DataRestriction>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");
+			builder.Entity<DataRestriction>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<DataRestriction>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
 
 			// группы документов
 			builder.Entity<DocumentGroup>().Property(p => p.DisplayName).HasComputedColumnSql("[Name]");

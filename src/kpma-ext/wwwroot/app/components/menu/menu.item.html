@@ -1,0 +1,12 @@
+﻿<li *ngFor="let item of list" [class.dropdown]="item.isGroup">
+	<template [ngIf]="item.isGroup">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{item.name}} <b class="caret"></b></a>
+		<ul class="dropdown-menu" menu-item [list]="item.children">
+		</ul>
+	</template>
+
+	<template [ngIf]="!item.isGroup">
+		<a [routerLink]="[item.url]">{{item.name}}</a>
+	</template>
+
+</li>

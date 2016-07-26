@@ -21,7 +21,7 @@ var MenuList = (function () {
         // элементы списка, подчиненные выбранной ветке
         this.menuList = [];
         // модель добавления нового элемента
-        this.addModel = new menu_service_1.MenuModel();
+        this.addModel = new menu_service_1.MenuViewModel();
         this.root.push({ id: null, name: '...', children: [], isExpanded: true, bage: null, parent: null });
         this.selectedNode = this.root[0];
     }
@@ -67,7 +67,7 @@ var MenuList = (function () {
     MenuList.prototype.onAdd = function () {
         var _this = this;
         this.menuSrv.saveModel(this.addModel).subscribe(function (res) {
-            _this.addModel = new menu_service_1.MenuModel();
+            _this.addModel = new menu_service_1.MenuViewModel();
             _this.addModel.parentId = _this.selectedNode.id;
             _this.onRequestNodes(_this.selectedNode);
             _this.updateList();

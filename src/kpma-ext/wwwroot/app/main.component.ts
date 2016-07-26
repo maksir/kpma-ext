@@ -8,7 +8,7 @@ import {AttachmentService} from './services/attachment.service';
 
 import {ShadowBoxDirective} from './directives/shadowbox.directive';
 
-import {Menu} from './components/menu.component';
+import {Menu} from './components/menu/menu.component';
 
 
 @Component({

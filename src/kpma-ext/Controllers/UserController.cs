@@ -119,6 +119,14 @@ namespace kpma_ext.Controllers
 
 		}
 
+		[HttpPost("api/[controller]/logout")]
+		public async Task<IActionResult> LogOut()
+		{
+			await signInManager.SignOutAsync();
+			logger.LogInformation(4, "User logged out.");
+			return Ok();
+		}
+
 
 		[HttpPost]
 		[AllowAnonymous]
@@ -487,6 +495,8 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
 				var nrm = new RoleMenu()
 				{
 					RoleId = roleId,
@@ -512,6 +522,8 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
 				var model = db.RoleMenus.FirstOrDefault(m => m.RoleId == roleId && m.MenuId == menuId);
 
 				if (model != null)

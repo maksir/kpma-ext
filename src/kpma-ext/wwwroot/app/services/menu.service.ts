@@ -9,19 +9,18 @@ export class MenuService {
 	constructor(private http: Http) {
 	}
 
-	getList(parentId: number): Observable<MenuModel[]> {
+	getList(parentId: number): Observable<MenuViewModel[]> {
 
 		return this.http.get('/api/menu/list?parentId=' + parentId).map(res => res.json());
 	}
 
-
-	getModel(id: number): Observable<MenuModel> {
+	getModel(id: number): Observable<MenuViewModel> {
 
 		return this.http.get('/api/menu/' + id).map(res => res.json());
 
 	}
 
-	saveModel(model: MenuModel): Observable<MenuModel> {
+	saveModel(model: MenuViewModel): Observable<MenuViewModel> {
 
 		if (!model) {
 			return Observable.of(model);
@@ -49,10 +48,16 @@ export class MenuService {
 
 		return Observable.of(false);
 	}
+
+	getUserMenu(): Observable<MenuViewModel[]> {
+
+		return this.http.get('/api/menu/user').map(res => res.json());
+
+	}
 }
 
 
-export class MenuModel {
+export class MenuViewModel {
 	public id: number;
 	public name: string;
 	public parentId: number;
@@ -62,10 +67,10 @@ export class MenuModel {
 	public icon: string;
 	public onRight: boolean;
 	public command: string;
-	public createdBy: string;
-	public createdDate: Date;
-	public lastUpdatedBy: string;
-	public lastUpdatedDate: Date;
-	public parent: MenuModel;
-	public children: MenuModel[];
+	//public createdBy: string;
+	//public createdDate: Date;
+	//public lastUpdatedBy: string;
+	//public lastUpdatedDate: Date;
+	public parent: MenuViewModel;
+	public children: MenuViewModel[];
 }

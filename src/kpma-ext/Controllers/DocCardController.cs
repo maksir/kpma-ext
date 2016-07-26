@@ -167,6 +167,46 @@ namespace kpma_ext.Controllers
 		}
 
 
+		[HttpGet("group/in")]
+		public IActionResult InGroupList()
+		{
+			try
+			{
+				var currentUser = userManager.GetUserAsync(User).Result;
+
+				var depList = db.UserDepartments.Where(m => m.UserId == currentUser.Id).Select(m=>m.DepartmentId);
+
+				var list = db.DocCards.Where(d => depList.Contains(d.DepartmentToId)).Select(d => d.DocumentType.DocumentGroup).Distinct().OrderBy(d => d.DisplayName);
+
+				return Json(list.Select(m=> new { id = m.Id, name = m.Name, bage = 0}));
+
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
+		[HttpGet("group/out")]
+		public IActionResult OutGroupList()
+		{
+			try
+			{
+				var currentUser = userManager.GetUserAsync(User).Result;
+
+				var depList = db.UserDepartments.Where(m => m.UserId == currentUser.Id).Select(m => m.DepartmentId);
+
+				var list = db.DocCards.Where(d => depList.Contains(d.DepartmentFromId)).Select(d => d.DocumentType.DocumentGroup).Distinct().OrderBy(d => d.DisplayName);
+
+				return Json(list.Select(m => new { id = m.Id, name = m.Name, bage = 0 }));
+
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
 	}
 
 	public class DocCardViewModel

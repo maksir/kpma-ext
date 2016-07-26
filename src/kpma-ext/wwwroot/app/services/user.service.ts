@@ -97,9 +97,13 @@ export class UserService implements CanActivate {
 			});
 	}
 
-	logout(): boolean {
+	logout(): Observable<boolean> {
 
-		return true;
+		let headers = new Headers({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post('/api/user/logout', '', { headers: headers }).map(res => res.ok);
 	}
 
 	userGet(id: number): Observable<UserViewModel> {

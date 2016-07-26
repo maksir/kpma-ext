@@ -9,16 +9,47 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var doccard_service_1 = require('../../services/doccard.service');
+var treeview_1 = require('../../controls/treeview');
 var Dashboard = (function () {
-    function Dashboard() {
+    function Dashboard(docSrv) {
+        this.docSrv = docSrv;
+        this.root = [];
+        this.root.push({ id: 1, name: 'Входящие', children: [], isExpanded: true, bage: 0, parent: null });
+        this.root.push({ id: 2, name: 'Исходящие', children: [], isExpanded: true, bage: 0, parent: null });
     }
+    Dashboard.prototype.ngOnInit = function () {
+        this.onRequestNodes(this.root[0]);
+        this.onRequestNodes(this.root[1]);
+    };
+    Dashboard.prototype.onSelectNode = function ($event) {
+    };
+    Dashboard.prototype.onRequestNodes = function (node) {
+        var _this = this;
+        if (!node.parent) {
+            if (node.id == 1) {
+                this.docSrv.getGroupIn().subscribe(function (res) { return _this.fillNodes(res, node); }, function (err) { return console.log(err); });
+            }
+            else if (node.id == 2) {
+                this.docSrv.getGroupOut().subscribe(function (res) { return _this.fillNodes(res, node); }, function (err) { return console.log(err); });
+            }
+        }
+    };
+    Dashboard.prototype.fillNodes = function (res, parent) {
+        parent.children = [];
+        res.forEach(function (item) {
+            parent.children.push({ id: item.id, name: item.name, children: [], isExpanded: false, bage: item.bage, parent: null });
+        });
+    };
     Dashboard = __decorate([
         core_1.Component({
             moduleId: module.id,
             selector: 'dashboard',
-            templateUrl: 'dashboard.html'
+            templateUrl: 'dashboard.html',
+            directives: [treeview_1.TreeView],
+            providers: [doccard_service_1.DocCardService]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [doccard_service_1.DocCardService])
     ], Dashboard);
     return Dashboard;
 }());

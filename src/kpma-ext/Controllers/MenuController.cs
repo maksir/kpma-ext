@@ -78,6 +78,84 @@ namespace kpma_ext.Controllers
 				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
+
+		[HttpGet("user")]
+		public IActionResult UserMenu()
+		{
+			try
+			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+
+				var roleList = db.UserRoles.Where(m => m.UserId == db.CurrentUser.Id).Select(m => m.RoleId).ToList();
+				var menuList = db.RoleMenus.Where(m => roleList.Contains(m.RoleId)).Select(m => m.MenuId).ToList();
+
+				var topLevel = db.Menus.Where(m => !m.ParentId.HasValue).OrderBy(m => m.SortOrder).Select(m => new MenuViewModel
+				{
+					Id = m.Id,
+					Name = m.Name,
+					ParentId = m.ParentId,
+					Url = m.Url,
+					Command = m.Command,
+					Icon = m.Icon,
+					IsGroup = m.IsGroup,
+					OnRight = m.OnRight,
+					SortOrder = m.SortOrder
+				}).ToList();
+
+				fillChildren(topLevel, menuList);
+
+				return Json(topLevel);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
+		private void fillChildren(List<MenuViewModel> parents, IList<int> menuList)
+		{
+			foreach (var parent in parents)
+			{
+				if (parent.IsGroup) {
+
+					var children = db.Menus.Where(m => m.ParentId == parent.Id && menuList.Contains(m.Id)).OrderBy(m => m.SortOrder).Select(m => new MenuViewModel
+					{
+						Id = m.Id,
+						Name = m.Name,
+						ParentId = m.ParentId,
+						Url = m.Url,
+						Command = m.Command,
+						Icon = m.Icon,
+						IsGroup = m.IsGroup,
+						OnRight = m.OnRight,
+						SortOrder = m.SortOrder
+					}).ToList();
+
+					parent.Children = children;
+
+					if (children.Any(m => m.IsGroup)) {
+						fillChildren(children, menuList);
+					}
+
+				}
+
+			}
+		}
+	}
+
+
+	public class MenuViewModel
+	{
+		public int Id { get; set; }
+		public string Name { get; set; }
+		public int? ParentId { get; set; }
+		public string Url { get; set; }
+		public bool IsGroup { get; set; }
+		public int SortOrder { get; set; }
+		public string Icon { get; set; }
+		public bool OnRight { get; set; }
+		public string Command { get; set; }
+		public IList<MenuViewModel> Children { get; set; }
 	}
 
 

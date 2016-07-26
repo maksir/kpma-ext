@@ -23,8 +23,8 @@ const routes: RouterConfig = [
 	...DocTypeRoutes,
 	...ServiceRoutes,
 	...DocCardRoutes,
-	{ path: 'dashboard', component: Dashboard},
-	{ path: 'sandbox', component: SandBox },
+	{ path: 'dashboard', component: Dashboard, canActivate: [UserService]},
+	{ path: 'sandbox', component: SandBox, canActivate: [UserService] },
 	{ path: '', redirectTo: '/login', terminal: true }
 	
 ];

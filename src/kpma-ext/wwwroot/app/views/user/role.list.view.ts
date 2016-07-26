@@ -1,7 +1,7 @@
 ﻿import {Component, OnInit} from '@angular/core';
 
 import {UserService, RoleViewModel, RoleMenuViewModel} from '../../services/user.service';
-import {MenuService, MenuModel} from '../../services/menu.service';
+import {MenuService, MenuViewModel} from '../../services/menu.service';
 
 import {DropDown, DropDownItem, DropDownVA} from '../../controls/dropdown/dropdown.control';
 

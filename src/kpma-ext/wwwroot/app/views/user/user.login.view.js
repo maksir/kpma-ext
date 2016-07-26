@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var user_service_1 = require('../../services/user.service');
+var recaptcha_component_1 = require('../../components/recaptcha.component');
 var UserLogin = (function () {
     function UserLogin(route, userSrv, //private data: RouteData,
         router) {
@@ -21,6 +22,7 @@ var UserLogin = (function () {
         this.model = new user_service_1.UserLoginModel();
         //loginForm: ControlGroup;
         this.returnUrl = '';
+        this.captchaSuccess = false;
         this.router.routerState.queryParams.subscribe(function (params) { return _this.returnUrl = params['returnUrl']; }, function (err) { return console.log(err); });
         //this.loginForm = new ControlGroup({
         //	email: new Control('', Validators.required),
@@ -30,6 +32,9 @@ var UserLogin = (function () {
     }
     UserLogin.prototype.onClick = function (f) {
         var val = f.value;
+    };
+    UserLogin.prototype.onReCaptcha = function ($event) {
+        this.captchaSuccess = true;
     };
     UserLogin.prototype.onSubmit = function () {
         var _this = this;
@@ -48,7 +53,8 @@ var UserLogin = (function () {
         core_1.Component({
             moduleId: module.id,
             selector: 'user-login',
-            templateUrl: 'user.login.html'
+            templateUrl: 'user.login.html',
+            directives: [recaptcha_component_1.ReCaptchaComponent]
         }), 
         __metadata('design:paramtypes', [router_1.ActivatedRoute, user_service_1.UserService, router_1.Router])
     ], UserLogin);

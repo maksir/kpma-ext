@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using kpma_ext.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using kpma_ext.Models;
+using System.Collections.Generic;
 
-// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace kpma_ext.Controllers
 {
@@ -13,13 +15,17 @@ namespace kpma_ext.Controllers
     {
 		private readonly ILogger logger;
 		private readonly AppDbContext db;
+		private readonly UserManager<User> userManager;
 
 		public SelectController(
+			UserManager<User> userManager,
 			ILoggerFactory loggerFactory,
 			AppDbContext context)
 		{
 			logger = loggerFactory.CreateLogger<SelectController>();
+			this.userManager = userManager;
 			this.db = context;
+			
 		}
 
 
@@ -35,6 +41,17 @@ namespace kpma_ext.Controllers
 				type = "Enum";
 			}
 
+			var currUser = userManager.GetUserAsync(User).Result;
+
+			var isDataManager = userManager.IsInRoleAsync(currUser, "DataManager").Result;
+
+			var depList = db.UserDepartments.Where(d => d.UserId == currUser.Id).Select(d => d.Department);
+			var restList = db.DataRestrictions.Where(r => depList.Contains(r.Department));
+
+
+			IList<SelectItem> selectList = null;
+			MetaObject moModel = null;
+
 			switch (type)
 			{
 				case "User":
@@ -44,7 +61,11 @@ namespace kpma_ext.Controllers
 						{
 							list = list.Where(u => u.Name.Contains(term) || u.Email.Contains(term));
 						}
-						return Json(list.Select(u => new { id = u.Id, text = u.DisplayName }).ToList()); //string.Format("{0} ({1})", u.Name, u.Email)
+
+						moModel = db.MetaObjects.Single(m=>m.TableName == "User");
+
+						selectList = list.Select(u => new SelectItem { id = u.Id, text = u.DisplayName }).ToList();
+						break;
 					}
 				case "Role":
 					{
@@ -53,7 +74,10 @@ namespace kpma_ext.Controllers
 						{
 							list = list.Where(u => u.Name.Contains(term));
 						}
-						return Json(list.Select(u => new { id = u.Id, text = u.DisplayName }).ToList());
+						moModel = db.MetaObjects.Single(m => m.TableName == "Role");
+
+						selectList = list.Select(u => new SelectItem { id = u.Id, text = u.DisplayName }).ToList();
+						break;
 					}
 				case "MetaObjectTypes":
 					{
@@ -62,7 +86,10 @@ namespace kpma_ext.Controllers
 						{
 							list = list.Where(u => u.Name.Contains(term));
 						}
-						return Json(list.Select(u => new { id = u.Id, text = u.DisplayName }).ToList());
+						moModel = db.MetaObjects.Single(m => m.TableName == "MetaObject");
+
+						selectList = list.Select(u => new SelectItem { id = u.Id, text = u.DisplayName }).ToList();
+						break;
 					}
 				case "MetaObject":
 					{
@@ -71,7 +98,10 @@ namespace kpma_ext.Controllers
 						{
 							list = list.Where(u => u.Name.Contains(term));
 						}
-						return Json(list.Select(u => new { id = u.Id, text = u.DisplayName }).ToList());
+						moModel = db.MetaObjects.Single(m => m.TableName == "MetaObject");
+
+						selectList = list.Select(u => new SelectItem { id = u.Id, text = u.DisplayName }).ToList();
+						break;
 					}
 				case "Service":
 					{
@@ -80,7 +110,10 @@ namespace kpma_ext.Controllers
 						{
 							list = list.Where(u => u.Name.Contains(term));
 						}
-						return Json(list.Select(u => new { id = u.Id, text = u.DisplayName }).ToList());
+						moModel = db.MetaObjects.Single(m => m.TableName == "Service");
+
+						selectList = list.Select(u => new SelectItem { id = u.Id, text = u.DisplayName }).ToList();
+						break;
 					}
 				case "Contractor":
 					{
@@ -89,7 +122,10 @@ namespace kpma_ext.Controllers
 						{
 							list = list.Where(u => u.Name.Contains(term));
 						}
-						return Json(list.Select(u => new { id = u.Id, text = u.DisplayName }).ToList());
+						moModel = db.MetaObjects.Single(m => m.TableName == "Contractor");
+
+						selectList = list.Select(u => new SelectItem { id = u.Id, text = u.DisplayName }).ToList();
+						break;
 					}
 				case "Department":
 					{
@@ -98,7 +134,11 @@ namespace kpma_ext.Controllers
 						{
 							list = list.Where(u => u.Name.Contains(term));
 						}
-						return Json(list.Select(u => new { id = u.Id, text = u.DisplayName }).ToList());
+
+						moModel = db.MetaObjects.Single(m => m.TableName == "Department");
+
+						selectList = list.Select(u => new SelectItem { id = u.Id, text = u.DisplayName }).ToList();
+						break;
 					}
 				case "DocumentType":
 					{
@@ -107,7 +147,10 @@ namespace kpma_ext.Controllers
 						{
 							list = list.Where(u => u.Name.Contains(term));
 						}
-						return Json(list.Select(u => new { id = u.Id, text = u.DisplayName }).ToList());
+						moModel = db.MetaObjects.Single(m => m.TableName == "DocumentType");
+
+						selectList = list.Select(u => new SelectItem { id = u.Id, text = u.DisplayName }).ToList();
+						break;
 					}
 				case "DocumentStatus":
 					{
@@ -116,12 +159,26 @@ namespace kpma_ext.Controllers
 						{
 							list = list.Where(u => u.Name.Contains(term));
 						}
-						return Json(list.Select(u => new { id = u.Id, text = u.DisplayName }).ToList());
+						moModel = db.MetaObjects.Single(m => m.TableName == "DocumentStatus");
+
+						selectList = list.Select(u => new SelectItem { id = u.Id, text = u.DisplayName }).ToList();
+						break;
 					}
 
 				default:
 					break;
 			}
+
+			if (!isDataManager && moModel != null)
+			{
+				selectList = selectList.Where(m => restList.Where(r => r.MetaObjectId == moModel.Id).Select(r => r.ObjectId).Contains(m.id)).ToList();
+			}
+
+			if (selectList != null)
+			{
+				return Json(selectList);
+			}
+
 			return null;
 		}
 
@@ -220,4 +277,10 @@ namespace kpma_ext.Controllers
 		}
 
     }
+
+	public class SelectItem
+	{
+		public int id { get; set; }
+		public string text { get; set; }
+	}
 }

@@ -2,7 +2,7 @@
 import {CORE_DIRECTIVES} from '@angular/common';
 import {ROUTER_DIRECTIVES} from '@angular/router';
 
-import {MenuService, MenuModel} from '../../services/menu.service';
+import {MenuService, MenuViewModel} from '../../services/menu.service';
 
 import {ITreeNode, TreeView} from '../../controls/treeview';
 
@@ -21,12 +21,12 @@ export class MenuList implements OnInit {
 	private selectedNode: ITreeNode;
 
 	// элементы списка, подчиненные выбранной ветке
-	private menuList: MenuModel[] = [];
+	private menuList: MenuViewModel[] = [];
 
 	// модель добавления нового элемента
-	private addModel = new MenuModel();
+	private addModel = new MenuViewModel();
 	// редактируемая модель
-	private editModel: MenuModel;
+	private editModel: MenuViewModel;
 
 	constructor(private menuSrv: MenuService) {
 
@@ -59,7 +59,7 @@ export class MenuList implements OnInit {
 		);
 	}
 
-	fillChildren(node: ITreeNode, res: MenuModel[]) {
+	fillChildren(node: ITreeNode, res: MenuViewModel[]) {
 
 		node.children = [];
 
@@ -89,7 +89,7 @@ export class MenuList implements OnInit {
 
 		this.menuSrv.saveModel(this.addModel).subscribe(
 			res => {
-				this.addModel = new MenuModel();
+				this.addModel = new MenuViewModel();
 				this.addModel.parentId = this.selectedNode.id;
 				this.onRequestNodes(this.selectedNode);
 				this.updateList();
@@ -97,7 +97,7 @@ export class MenuList implements OnInit {
 		);
 	}
 
-	onEdit(item: MenuModel) {
+	onEdit(item: MenuViewModel) {
 		this.editModel = item;
 	}
 
@@ -105,7 +105,7 @@ export class MenuList implements OnInit {
 		this.editModel = undefined;
 	}
 
-	onDelete(item: MenuModel) {
+	onDelete(item: MenuViewModel) {
 
 	}
 

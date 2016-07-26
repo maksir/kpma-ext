@@ -14,7 +14,7 @@ var select_service_1 = require('./services/select.service');
 var user_service_1 = require('./services/user.service');
 var attachment_service_1 = require('./services/attachment.service');
 var shadowbox_directive_1 = require('./directives/shadowbox.directive');
-var menu_component_1 = require('./components/menu.component');
+var menu_component_1 = require('./components/menu/menu.component');
 var MainAppComponent = (function () {
     function MainAppComponent(userSrv) {
         var _this = this;

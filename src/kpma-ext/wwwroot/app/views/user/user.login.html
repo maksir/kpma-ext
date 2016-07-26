@@ -24,9 +24,16 @@
 					</label>
 				</div>
 			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2">
+					<re-captcha (captchaResponse)="onReCaptcha($event)" siteKey="'6LdF3yUTAAAAAFsMvObZkKSwKaS0NRzcjCAUmPmA'"></re-captcha>
+				</div>
+			</div>
+
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" [disabled]="!f.valid && f.touched" class="btn btn-primary" id="btnSubmit">Войти</button>
+					<button type="submit" [disabled]="(!f.valid && f.touched) || !captchaSuccess" class="btn btn-primary" id="btnSubmit">Войти</button>
 				</div>
 			</div>
 		</form>

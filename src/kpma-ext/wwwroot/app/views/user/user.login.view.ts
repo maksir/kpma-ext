@@ -1,19 +1,23 @@
 ﻿import {Component} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 
-
 import {UserService, UserLoginModel} from '../../services/user.service';
+
+import {ReCaptchaComponent} from '../../components/recaptcha.component';
 
 @Component({
 	moduleId: module.id,
 	selector: 'user-login',
-	templateUrl: 'user.login.html'
+	templateUrl: 'user.login.html',
+	directives: [ReCaptchaComponent]
 })
 export class UserLogin {
 
 	model: UserLoginModel = new UserLoginModel();
 	//loginForm: ControlGroup;
 	returnUrl = '';
+
+	captchaSuccess = false;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -36,6 +40,10 @@ export class UserLogin {
 	onClick(f) {
 
 		let val = f.value;
+	}
+	onReCaptcha($event) {
+
+		this.captchaSuccess = true;
 	}
 
 	onSubmit() {

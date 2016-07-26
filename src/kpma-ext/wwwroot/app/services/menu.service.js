@@ -41,6 +41,9 @@ var MenuService = (function () {
     MenuService.prototype.delModel = function (id) {
         return Rx_1.Observable.of(false);
     };
+    MenuService.prototype.getUserMenu = function () {
+        return this.http.get('/api/menu/user').map(function (res) { return res.json(); });
+    };
     MenuService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
@@ -48,10 +51,10 @@ var MenuService = (function () {
     return MenuService;
 }());
 exports.MenuService = MenuService;
-var MenuModel = (function () {
-    function MenuModel() {
+var MenuViewModel = (function () {
+    function MenuViewModel() {
     }
-    return MenuModel;
+    return MenuViewModel;
 }());
-exports.MenuModel = MenuModel;
+exports.MenuViewModel = MenuViewModel;
 //# sourceMappingURL=menu.service.js.map

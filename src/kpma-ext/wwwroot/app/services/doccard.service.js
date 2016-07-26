@@ -44,6 +44,12 @@ var DocCardService = (function () {
         }
         return this.http.delete('/api/doccard/' + id).map(function (res) { return res.ok; });
     };
+    DocCardService.prototype.getGroupIn = function () {
+        return this.http.get('/api/doccard/group/in').map(function (res) { return res.json(); });
+    };
+    DocCardService.prototype.getGroupOut = function () {
+        return this.http.get('/api/doccard/group/out').map(function (res) { return res.json(); });
+    };
     DocCardService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
