@@ -20,6 +20,7 @@ export class UserService implements CanActivate {
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
 
 		if (this.isLoggetIn()) {
+			route.params['mo'] = 4;
 			return Observable.of(true);
 		}
 		else {
@@ -31,6 +32,7 @@ export class UserService implements CanActivate {
 						if (res.status == 200) {
 							this.loggetIn = true;
 							this._currentUser.next(res.json());
+							route.params['mo'] = 4;
 							observer.next(true);
 						}
 						else {
@@ -88,7 +90,7 @@ export class UserService implements CanActivate {
 
 		return this.http.post('/api/user/login', body, { headers: headers })
 			.map(res => {
-				this.loggetIn = res.status == 200;
+				this.loggetIn = res.ok;
 				if (this.loggetIn) {
 					this._currentUser.next(<UserViewModel>res.json());
 				}
@@ -245,7 +247,12 @@ export class UserViewModel {
 	email: string;
 	phoneNumber: string;
 	userName: string;
-	concurencyStamp: string;
+	contractorId: number;
+}
+
+export class DepartmentDataModel {
+	id: number;
+	name: string;
 }
 
 export class RoleViewModel {

@@ -1,4 +1,4 @@
-﻿import {Component, OnInit, Input, ViewChild} from '@angular/core';
+﻿import {Component, OnInit, OnChanges, SimpleChanges, Input, ViewChild} from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
 
 import {ServiceService, ServiceModel} from '../../services/service.service';
@@ -31,6 +31,10 @@ export class AttachmentList implements OnInit {
 		this.refreshList();
 	}
 
+	ngOnChanges(changes: SimpleChanges) {
+		this.refreshList();
+	}
+
 	refreshList() {
 		this.attSrv.getList(this.metaObjectId, this.objectId).subscribe(
 			res => this.list = res,
@@ -50,7 +54,6 @@ export class AttachmentList implements OnInit {
 		else {
 			model.file = addFileInput.files[0];
 		}
-
 	}
 
 	onAdd() {
@@ -63,8 +66,6 @@ export class AttachmentList implements OnInit {
 			res => this.refreshList(),
 			err => console.log(err)
 		);
-
-
 	}
 
 	onEdit(item: AttachmentViewModel) {

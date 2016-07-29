@@ -34,8 +34,9 @@ namespace kpma_ext.Data
 		public DbSet<Attachment> Attachments { get; set; }
 		public DbSet<DocCard> DocCards { get; set; }
 		public DbSet<Chat> Chats { get; set; }
+		public DbSet<ChatRead> ChatReads { get; set; }
 
-
+		public DbSet<ClientRequestReport> ClientRequestReports { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -216,7 +217,8 @@ namespace kpma_ext.Data
 			builder.Entity<Attachment>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
 
 			// запросы
-			builder.Entity<DocCard>().Property(p => p.DisplayName).HasComputedColumnSql("cast([DocNumber] as nvarchar) + ' от ' + convert(nvarchar(10), [DocDate], 104)");
+			builder.Entity<DocCard>().Property(p => p.DocNumber).HasComputedColumnSql("[Id]");
+			builder.Entity<DocCard>().Property(p => p.DisplayName).HasComputedColumnSql("cast([Id] as nvarchar) + ' от ' + convert(nvarchar(10), [DocDate], 104)");
 			builder.Entity<DocCard>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<DocCard>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");
 			builder.Entity<DocCard>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
@@ -233,6 +235,14 @@ namespace kpma_ext.Data
 			builder.Entity<Chat>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");
 			builder.Entity<Chat>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<Chat>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
+
+
+			// прочитанный чат
+			builder.Entity<ChatRead>().HasKey("DepartmentId", "ChatId");
+			builder.Entity<ChatRead>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<ChatRead>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");
+			builder.Entity<ChatRead>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<ChatRead>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
 
 
 		}

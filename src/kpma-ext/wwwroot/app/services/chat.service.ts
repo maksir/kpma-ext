@@ -8,8 +8,8 @@ export class ChatService {
 	constructor(private http: Http) {
 	}
 
-	getList(metaObjectId: number, objectId: number): Observable<ChatViewModel[]> {
-		return this.http.get('/api/chat/list/' + metaObjectId + '/' + objectId).map(res => res.json());
+	getList(metaObjectId: number, objectId: number, departmentId: number): Observable<ChatViewModel[]> {
+		return this.http.get('/api/chat/list/' + metaObjectId + '/' + objectId + '/' + departmentId).map(res => res.json());
 	}
 
 	getModel(id: number): Observable<ChatDateModel> {
@@ -48,6 +48,20 @@ export class ChatService {
 		}
 
 		return this.http.delete('/api/chat/' + id).map(res => res.ok);
+	}
+
+
+	markAsReaded(metaObjectId: number, objectId: number, departmentId: number) {
+
+		if (!metaObjectId || !objectId || !departmentId) {
+			return Observable.of(false);
+		}
+
+		let headers = new Headers({
+			'Content-Type': 'application/json'
+		});
+
+		return this.http.post('/api/chat/read/' + metaObjectId + '/' + objectId + '/' + departmentId, '', { headers: headers }).map(res => res.ok);
 	}
 	
 }

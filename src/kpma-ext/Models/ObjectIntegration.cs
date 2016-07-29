@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace kpma_ext.Models
 {
 	[Table("ObjectIntegration", Schema = "meta")]
-	public class ObjectIntegration :ILogModel
+	public class ObjectIntegration : ILogModel
     {
 		public int MetaObjectId { get; set; }
 		public int ObjectId { get; set; }
@@ -17,8 +17,7 @@ namespace kpma_ext.Models
 		[Required]
 		public string SystemName { get; set; }
 
-		[MaxLength(100)]
-		public string SystemValue { get; set; }
+		public int SystemId { get; set; }
 
 
 		[MaxLength(100)]

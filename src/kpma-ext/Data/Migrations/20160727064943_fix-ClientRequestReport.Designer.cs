@@ -8,9 +8,10 @@ using kpma_ext.Data;
 namespace kpmaext.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160727064943_fix-ClientRequestReport")]
+    partial class fixClientRequestReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -109,35 +110,6 @@ namespace kpmaext.Data.Migrations
                     b.HasIndex("MetaObjectId");
 
                     b.ToTable("Chat","mess");
-                });
-
-            modelBuilder.Entity("kpma_ext.Models.ChatRead", b =>
-                {
-                    b.Property<int>("DepartmentId");
-
-                    b.Property<int>("ChatId");
-
-                    b.Property<string>("CreatedBy")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("suser_sname()")
-                        .HasAnnotation("MaxLength", 100);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("sysdatetime()");
-
-                    b.Property<string>("LastUpdatedBy")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("suser_sname()")
-                        .HasAnnotation("MaxLength", 100);
-
-                    b.Property<DateTime>("LastUpdatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("sysdatetime()");
-
-                    b.HasKey("DepartmentId", "ChatId");
-
-                    b.ToTable("ChatRead","mess");
                 });
 
             modelBuilder.Entity("kpma_ext.Models.ClientRequestReport", b =>
@@ -405,13 +377,11 @@ namespace kpmaext.Data.Migrations
 
                     b.Property<string>("DisplayName")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasComputedColumnSql("cast([Id] as nvarchar) + ' от ' + convert(nvarchar(10), [DocDate], 104)");
+                        .HasComputedColumnSql("cast([DocNumber] as nvarchar) + ' от ' + convert(nvarchar(10), [DocDate], 104)");
 
                     b.Property<DateTime>("DocDate");
 
-                    b.Property<int>("DocNumber")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasComputedColumnSql("[Id]");
+                    b.Property<int>("DocNumber");
 
                     b.Property<int>("DocumentStatusId");
 

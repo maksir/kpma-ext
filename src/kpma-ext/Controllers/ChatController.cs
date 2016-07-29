@@ -31,12 +31,14 @@ namespace kpma_ext.Controllers
 		}
 
 
-		[HttpGet("list/{metaObjectId:int}/{objectId:int}")]
-		public IActionResult List(int metaObjectId, int objectId)
+		[HttpGet("list/{metaObjectId:int}/{objectId:int}/{departmentId:int}")]
+		public IActionResult List(int metaObjectId, int objectId, int departmentId)
 		{
 			try
 			{
 				var CurrentUser = userManager.GetUserAsync(User).Result;
+
+				var readed = db.ChatReads.Where(m => m.DepartmentId == departmentId).Select(m => m.ChatId);
 
 				var depList = db.UserDepartments.Where(d => d.UserId == CurrentUser.Id).Select(d => d.DepartmentId);
 
@@ -53,7 +55,7 @@ namespace kpma_ext.Controllers
 					CreatedDate = c.CreatedDate,
 					LastUpdatedBy = c.LastUpdatedBy,
 					LastUpdatedDate = c.LastUpdatedDate,
-					Readed = false,
+					Readed = readed.Contains(c.Id),
 					IsOut = depList.Contains(c.DepartmentId)
 					
 				}).ToList();
@@ -133,6 +135,41 @@ namespace kpma_ext.Controllers
 				{
 					return BadRequest($"Запись не найдена! ({id})");
 				}
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
+		[HttpPost("read/{metaObjectId}/{objectId}/{departmentId}")]
+		public IActionResult MarkAsRead(int metaObjectId, int objectId, int departmentId)
+		{
+			try
+			{
+				db.CurrentUser = userManager.GetUserAsync(User).Result;
+				// уже прочитанные сообщения
+				var readed = db.ChatReads.Where(m => m.DepartmentId == departmentId).Select(m=>m.ChatId);
+
+				// не прочитанные
+				var list = db.Chats.Where(m => m.MetaObjectId == metaObjectId && m.ObjectId == objectId && m.DepartmentId != departmentId && !readed.Contains(m.Id)).ToList();
+
+				foreach (var item in list)
+				{
+					var cr = new ChatRead();
+					cr.ChatId = item.Id;
+					cr.DepartmentId = departmentId;
+
+					db.ChatReads.Add(cr);
+				}
+
+				if (list.Count > 0)
+				{
+					db.SaveChanges();
+				}
+
+				return Ok();
+
 			}
 			catch (Exception ex)
 			{

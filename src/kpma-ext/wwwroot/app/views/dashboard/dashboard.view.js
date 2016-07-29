@@ -27,12 +27,7 @@ var Dashboard = (function () {
     Dashboard.prototype.onRequestNodes = function (node) {
         var _this = this;
         if (!node.parent) {
-            if (node.id == 1) {
-                this.docSrv.getGroupIn().subscribe(function (res) { return _this.fillNodes(res, node); }, function (err) { return console.log(err); });
-            }
-            else if (node.id == 2) {
-                this.docSrv.getGroupOut().subscribe(function (res) { return _this.fillNodes(res, node); }, function (err) { return console.log(err); });
-            }
+            this.docSrv.getGroupList(node.id).subscribe(function (res) { return _this.fillNodes(res, node); }, function (err) { return console.log(err); });
         }
     };
     Dashboard.prototype.fillNodes = function (res, parent) {

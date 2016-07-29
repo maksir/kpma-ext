@@ -35,18 +35,10 @@ export class Dashboard implements OnInit {
 	onRequestNodes(node: ITreeNode) {
 
 		if (!node.parent) {
-			if (node.id == 1) {
-				this.docSrv.getGroupIn().subscribe(
-					res => this.fillNodes(res, node),
-					err => console.log(err)
-				);
-			}
-			else if (node.id == 2) {
-				this.docSrv.getGroupOut().subscribe(
-					res => this.fillNodes(res, node),
-					err => console.log(err)
-				);
-			}
+			this.docSrv.getGroupList(node.id).subscribe(
+				res => this.fillNodes(res, node),
+				err => console.log(err)
+			);
 		}
 		
 	}

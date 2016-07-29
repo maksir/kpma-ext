@@ -61,7 +61,8 @@ namespace kpma_ext.Controllers
 					Email = user.Email,
 					PhoneNumber = user.PhoneNumber,
 					ConcurencyStamp = user.ConcurrencyStamp,
-					UserName = user.UserName
+					UserName = user.UserName,
+					ContractorId = user.ContractorId
 				});
 			}
 			catch (Exception ex)
@@ -93,7 +94,8 @@ namespace kpma_ext.Controllers
 							Email = user.Email,
 							PhoneNumber = user.PhoneNumber,
 							ConcurencyStamp = user.ConcurrencyStamp,
-							UserName = user.UserName
+							UserName = user.UserName,
+							ContractorId = user.ContractorId
 						});
 					}
 					if (result.IsLockedOut)
@@ -184,7 +186,8 @@ namespace kpma_ext.Controllers
 					Name = m.Name,
 					Email = m.Email,
 					PhoneNumber = m.PhoneNumber,
-					UserName = m.UserName
+					UserName = m.UserName,
+					ContractorId = m.ContractorId
 				});
 
 				return Json(ret);
@@ -321,6 +324,7 @@ namespace kpma_ext.Controllers
 				user.Email = model.Email;
 				user.PhoneNumber = model.PhoneNumber;
 				user.UserName = model.UserName;
+				user.ContractorId = model.ContractorId;
 
 				db.SaveChanges();
 

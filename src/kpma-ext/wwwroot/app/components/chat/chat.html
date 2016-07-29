@@ -1,24 +1,29 @@
 ﻿<table class="table table-bordered table-condensed table-hover">
 	<thead>
 		<tr>
-			<th></th>
+			<th>
+				<a (click)="refreshList()" [class.disabled]="!metaObjectId || !objectId" class="btn btn-xs btn-primary"><i class="fa fa-refresh"> Обновить</i></a>
+				<a (click)="allRead()" [class.disabled]="!canAdd()" class="btn btn-xs btn-success"><i class="fa fa-check"> Прочитать</i></a>
+			</th>
+			<th>Дата</th>
 			<th>Сообщения</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let item of list" [class.success]="!item.readed">
+		<tr *ngFor="let item of list" [ngClass]="{'warning': item.departmentId === departmentId, 'success': !item.readed}">
+			<td></td>
 			<td>{{item.createdDate}}</td>
 			<td>{{item.messageText}}</td>
 		</tr>
 		<tr>
-			<td colspan="2"></td>
+			<td colspan="3"></td>
 		</tr>
-		<tr>
-			<td>
-				<a (click)="onAdd()" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a>
+		<tr class="warning">
+			<td colspan="2">
+				<a (click)="onAdd()" [class.disabled]="!canAdd() || !addModel.messageText" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a>
 			</td>
 			<td>
-				<input [(ngModel)]="addModel.messageText" class="form-control" />
+				<input [(ngModel)]="addModel.messageText" [disabled]="!canAdd()" class="form-control" />
 			</td>
 		</tr>
 	</tbody>

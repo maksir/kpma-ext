@@ -43,11 +43,21 @@ var Chat = (function () {
         if (!this.metaObjectId || !this.objectId) {
             this.list = [];
         }
-        this.chatSrv.getList(this.metaObjectId, this.objectId).subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); });
+        this.chatSrv.getList(this.metaObjectId, this.objectId, this.departmentId).subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); });
+    };
+    Chat.prototype.allRead = function () {
+        var _this = this;
+        if (!this.list.length) {
+            return;
+        }
+        this.chatSrv.markAsReaded(this.metaObjectId, this.objectId, this.departmentId).subscribe(function (res) { return _this.refreshList(); }, function (err) { return console.log(err); });
+    };
+    Chat.prototype.canAdd = function () {
+        return this.metaObjectId && this.departmentId && this.objectId;
     };
     Chat.prototype.onAdd = function () {
         var _this = this;
-        if (!this.addModel.messageText || !this.addModel.metaObjectId || !this.addModel.objectId) {
+        if (!this.canAdd() || !this.addModel.messageText) {
             return;
         }
         this.chatSrv.saveModel(this.addModel).subscribe(function (res) {

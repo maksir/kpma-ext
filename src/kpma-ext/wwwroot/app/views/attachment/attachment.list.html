@@ -42,10 +42,10 @@
 				<a (click)="onAdd()" [class.disabled]="!addModel.name || !addModel.file || !metaObjectId || !objectId" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a>
 			</td>
 			<td>
-				<input [(ngModel)]="addModel.name" placeholder="Введите описание для файла" class="form-control input-sm" />
+				<input [(ngModel)]="addModel.name" [disabled]="!metaObjectId || !objectId" placeholder="Введите описание для файла" class="form-control input-sm" />
 			</td>
 			<td>
-				<input type="file" #addFileInput (change)="onSelectFile(addFileInput, addModel)" />
+				<input type="file" #addFileInput (change)="onSelectFile(addFileInput, addModel)" [disabled]="!metaObjectId || !objectId" />
 			</td>
 		</tr>
 	</tbody>

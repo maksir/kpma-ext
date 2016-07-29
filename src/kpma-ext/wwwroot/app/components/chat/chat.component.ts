@@ -55,17 +55,30 @@ export class Chat implements OnInit, OnChanges {
 			this.list = [];
 		}
 
-		this.chatSrv.getList(this.metaObjectId, this.objectId).subscribe(
+		this.chatSrv.getList(this.metaObjectId, this.objectId, this.departmentId).subscribe(
 			res => this.list = res,
 			err => console.log(err)
 		);
+	}
 
+	allRead() {
+		if (!this.list.length) {
+			return;
+		}
 
+		this.chatSrv.markAsReaded(this.metaObjectId, this.objectId, this.departmentId).subscribe(
+			res => this.refreshList(),
+			err => console.log(err)
+		);
+	}
+
+	canAdd() {
+		return this.metaObjectId && this.departmentId && this.objectId;
 	}
 
 	onAdd() {
 
-		if (!this.addModel.messageText || !this.addModel.metaObjectId || !this.addModel.objectId) {
+		if (!this.canAdd() || !this.addModel.messageText) {
 			return;
 		}
 

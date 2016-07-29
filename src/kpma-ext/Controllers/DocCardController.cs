@@ -167,28 +167,9 @@ namespace kpma_ext.Controllers
 		}
 
 
-		[HttpGet("group/in")]
-		public IActionResult InGroupList()
-		{
-			try
-			{
-				var currentUser = userManager.GetUserAsync(User).Result;
-
-				var depList = db.UserDepartments.Where(m => m.UserId == currentUser.Id).Select(m=>m.DepartmentId);
-
-				var list = db.DocCards.Where(d => depList.Contains(d.DepartmentToId)).Select(d => d.DocumentType.DocumentGroup).Distinct().OrderBy(d => d.DisplayName);
-
-				return Json(list.Select(m=> new { id = m.Id, name = m.Name, bage = 0}));
-
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
-			}
-		}
-
-		[HttpGet("group/out")]
-		public IActionResult OutGroupList()
+	
+		[HttpGet("group/{folderId:int}")]
+		public IActionResult GroupList(int folderId)
 		{
 			try
 			{
@@ -196,7 +177,21 @@ namespace kpma_ext.Controllers
 
 				var depList = db.UserDepartments.Where(m => m.UserId == currentUser.Id).Select(m => m.DepartmentId);
 
-				var list = db.DocCards.Where(d => depList.Contains(d.DepartmentFromId)).Select(d => d.DocumentType.DocumentGroup).Distinct().OrderBy(d => d.DisplayName);
+				IQueryable<DocumentGroup> list = null;
+
+				DocCardFolder folder = (DocCardFolder)folderId;
+
+				switch (folder)
+				{
+					case DocCardFolder.In:
+						list = db.DocCards.Where(d => depList.Contains(d.DepartmentToId)).Select(d => d.DocumentType.DocumentGroup).Distinct().OrderBy(d => d.DisplayName);
+						break;
+					case DocCardFolder.Out:
+						list = db.DocCards.Where(d => depList.Contains(d.DepartmentFromId)).Select(d => d.DocumentType.DocumentGroup).Distinct().OrderBy(d => d.DisplayName);
+						break;
+					default:
+						break;
+				}
 
 				return Json(list.Select(m => new { id = m.Id, name = m.Name, bage = 0 }));
 
@@ -207,6 +202,78 @@ namespace kpma_ext.Controllers
 			}
 		}
 
+
+		[HttpGet("list/{folderId:int}/{groupId:int?}")]
+		public IActionResult DocList(int folderId, int? groupId)
+		{
+			try
+			{
+				var currentUser = userManager.GetUserAsync(User).Result;
+				var depList = db.UserDepartments.Where(m => m.UserId == currentUser.Id).Select(m => m.DepartmentId);
+
+				IQueryable<DocCard> list = null;
+
+				DocCardFolder folder = (DocCardFolder)folderId;
+
+				switch (folder)
+				{
+					case DocCardFolder.In:
+						list = db.DocCards.Where(d => depList.Contains(d.DepartmentToId)).OrderByDescending(d => d.DisplayName);
+						break;
+					case DocCardFolder.Out:
+						list = db.DocCards.Where(d => depList.Contains(d.DepartmentFromId)).OrderByDescending(d => d.DisplayName);
+						break;
+					default:
+						break;
+				}
+
+				if (list == null)
+				{
+					return BadRequest("Ошибка определения списка документов");
+				}
+
+				var ret = list.Select(d => new DocCardViewModel
+				{
+					Id = d.Id,
+					AuthorId = d.AuthorId,
+					AuthorName = d.Author.DisplayName,
+					Barcode = d.Barcode,
+					Content1 = d.Content1,
+					Content2 = d.Content2,
+					Content3 = d.Content3,
+					Content4 = d.Content4,
+					Content5 = d.Content5,
+					ContractorFromId = d.ContractorFromId,
+					ContractorFromName = d.ContractorFrom.DisplayName,
+					ContractorToId = d.ContractorToId,
+					ContractorToName = d.ContractorTo.DisplayName,
+					CreatedBy = d.CreatedBy,
+					CreatedDate = d.CreatedDate,
+					DisplayName = d.DisplayName,
+					DocDate = d.DocDate,
+					DocNumber = d.DocNumber,
+					DocumentStatusId = d.DocumentStatusId,
+					DocumentStatusName = d.DocumentStatus.DisplayName,
+					DocumentTypeId = d.DocumentTypeId,
+					DocumentTypeName = d.DocumentType.DisplayName,
+					LastUpdatedBy = d.LastUpdatedBy,
+					LastUpdatedDate = d.LastUpdatedDate,
+					DepartmentFromId = d.DepartmentFromId,
+					DepartmentFromName = d.DepartmentFrom.DisplayName,
+					DepartmentToId = d.DepartmentToId,
+					DepartmentToName = d.DepartmentTo.DisplayName
+
+				}).ToList();
+
+				return Json(ret);
+
+
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
 	}
 
 	public class DocCardViewModel
@@ -247,5 +314,11 @@ namespace kpma_ext.Controllers
 		public string LastUpdatedBy { get; set; }
 		public DateTime LastUpdatedDate { get; set; }
 
+	}
+
+	public enum DocCardFolder
+	{
+		In = 1,
+		Out = 2
 	}
 }

@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace kpma_ext.Models
 {
-	[Table("ChatRead", Schema = "mess")]
-	public class ChatRead : ILogModel
+	[Table("ObjectIntegration", Schema = "meta")]
+	public class ObjectFavorite : ILogModel
 	{
-		public int DepartmentId { get; set; }
-		public int ChatId { get; set; }
+		public int UserId { get; set; }
+		public int MetaObjectId { get; set; }
+		public int ObjectId { get; set; }
 
 		[MaxLength(100)]
 		public string CreatedBy { get; set; }
@@ -20,5 +21,11 @@ namespace kpma_ext.Models
 		[MaxLength(100)]
 		public string LastUpdatedBy { get; set; }
 		public DateTime LastUpdatedDate { get; set; }
+
+		[ForeignKey("UserId")]
+		public User User { get; set; }
+
+		[ForeignKey("MetaObjectId")]
+		public MetaObject MetaObject { get; set; }
 	}
 }

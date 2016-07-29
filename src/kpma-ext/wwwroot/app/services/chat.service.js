@@ -20,8 +20,8 @@ var ChatService = (function () {
     function ChatService(http) {
         this.http = http;
     }
-    ChatService.prototype.getList = function (metaObjectId, objectId) {
-        return this.http.get('/api/chat/list/' + metaObjectId + '/' + objectId).map(function (res) { return res.json(); });
+    ChatService.prototype.getList = function (metaObjectId, objectId, departmentId) {
+        return this.http.get('/api/chat/list/' + metaObjectId + '/' + objectId + '/' + departmentId).map(function (res) { return res.json(); });
     };
     ChatService.prototype.getModel = function (id) {
         return this.http.get('/api/chat/' + id).map(function (res) { return res.json(); });
@@ -48,6 +48,15 @@ var ChatService = (function () {
             return Rx_1.Observable.of(false);
         }
         return this.http.delete('/api/chat/' + id).map(function (res) { return res.ok; });
+    };
+    ChatService.prototype.markAsReaded = function (metaObjectId, objectId, departmentId) {
+        if (!metaObjectId || !objectId || !departmentId) {
+            return Rx_1.Observable.of(false);
+        }
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.http.post('/api/chat/read/' + metaObjectId + '/' + objectId + '/' + departmentId, '', { headers: headers }).map(function (res) { return res.ok; });
     };
     ChatService = __decorate([
         core_1.Injectable(), 

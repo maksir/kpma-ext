@@ -44,11 +44,11 @@ var DocCardService = (function () {
         }
         return this.http.delete('/api/doccard/' + id).map(function (res) { return res.ok; });
     };
-    DocCardService.prototype.getGroupIn = function () {
-        return this.http.get('/api/doccard/group/in').map(function (res) { return res.json(); });
+    DocCardService.prototype.getGroupList = function (folderId) {
+        return this.http.get('/api/doccard/group/' + folderId).map(function (res) { return res.json(); });
     };
-    DocCardService.prototype.getGroupOut = function () {
-        return this.http.get('/api/doccard/group/out').map(function (res) { return res.json(); });
+    DocCardService.prototype.getDocList = function (folderId, groupId) {
+        return this.http.get('/api/doccard/list/' + folderId + '?groupId=' + groupId).map(function (res) { return res.json(); });
     };
     DocCardService = __decorate([
         core_1.Injectable(), 

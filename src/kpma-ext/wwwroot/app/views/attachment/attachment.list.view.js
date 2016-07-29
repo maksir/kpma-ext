@@ -22,6 +22,9 @@ var AttachmentList = (function () {
     AttachmentList.prototype.ngOnInit = function () {
         this.refreshList();
     };
+    AttachmentList.prototype.ngOnChanges = function (changes) {
+        this.refreshList();
+    };
     AttachmentList.prototype.refreshList = function () {
         var _this = this;
         this.attSrv.getList(this.metaObjectId, this.objectId).subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); });

@@ -30,6 +30,7 @@ var UserService = (function () {
     UserService.prototype.canActivate = function (route, state) {
         var _this = this;
         if (this.isLoggetIn()) {
+            route.params['mo'] = 4;
             return Rx_1.Observable.of(true);
         }
         else {
@@ -38,6 +39,7 @@ var UserService = (function () {
                     if (res.status == 200) {
                         _this.loggetIn = true;
                         _this._currentUser.next(res.json());
+                        route.params['mo'] = 4;
                         observer.next(true);
                     }
                     else {
@@ -70,7 +72,7 @@ var UserService = (function () {
         });
         return this.http.post('/api/user/login', body, { headers: headers })
             .map(function (res) {
-            _this.loggetIn = res.status == 200;
+            _this.loggetIn = res.ok;
             if (_this.loggetIn) {
                 _this._currentUser.next(res.json());
             }
@@ -193,6 +195,12 @@ var UserViewModel = (function () {
     return UserViewModel;
 }());
 exports.UserViewModel = UserViewModel;
+var DepartmentDataModel = (function () {
+    function DepartmentDataModel() {
+    }
+    return DepartmentDataModel;
+}());
+exports.DepartmentDataModel = DepartmentDataModel;
 var RoleViewModel = (function () {
     function RoleViewModel() {
     }

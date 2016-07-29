@@ -1,0 +1,52 @@
+﻿<div class="col-sm-3">
+	<div class="panel panel-default">
+		<div class="panel-heading">Папки документов</div>
+		<div class="panel-body">
+			<tree-view [Nodes]="root" 
+					   [SelectedNode]="selectedNode" 
+					   [CanExpand]="true" 
+					   [isRoot]="true" 
+					   (onSelectedChanged)="onSelectNode($event)" 
+					   (onRequestNodes)="onRequestNodes($event)"></tree-view>
+		</div>
+	</div>
+</div>
+<div class="col-sm-9">
+	<div class="panel panel-default">
+		<div class="panel-heading">Список документов</div>
+		<div class="panel-body">
+			<table class="table table-bordered table-condensed table-hover">
+				<thead>
+					<tr>
+						<th>Номер</th>
+						<th>Статус</th>
+						<th>Контрагент</th>
+						<th>Служба</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let item of docList" (click)="onSelectDoc(item)" [class.info]="item === selectedDoc">
+						<td>{{item.displayName}}</td>
+						<td>{{item.documentStatusName}}</td>
+						<td>{{item.contractorToName}}</td>
+						<td>{{item.departmentToName}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">Информация о выбранном документе</div>
+		<div class="panel-body">
+			<tabs>
+				<tab title="Вложения">
+					<attachment-list [metaObjectId]="109" [objectId]="selectedDoc ? selectedDoc.id : 0"></attachment-list>
+				</tab>
+				<tab title="Переписка">
+					<chat [metaObjectId]="109" [objectId]="selectedDoc ? selectedDoc.id : 0" [departmentId]="getUserDepartment()"></chat>
+				</tab>
+			</tabs>
+		</div>
+	</div>
+</div>
