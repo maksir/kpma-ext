@@ -1,4 +1,5 @@
 ﻿import {Component, OnInit} from '@angular/core';
+import {ROUTER_DIRECTIVES} from '@angular/router';
 
 import {DocCardService, DocCardViewModel} from '../../services/doccard.service';
 
@@ -15,7 +16,7 @@ import {Chat} from '../../components/chat/chat.component';
 	moduleId: module.id,
 	selector: 'doccard-tree',
 	templateUrl: 'doccard.tree.html',
-	directives: [TreeView, Tabs, Tab, AttachmentList, Chat],
+	directives: [ROUTER_DIRECTIVES, TreeView, Tabs, Tab, AttachmentList, Chat],
 	providers: [DocCardService]
 })
 export class DocCardTree implements OnInit {
@@ -48,6 +49,11 @@ export class DocCardTree implements OnInit {
 			);
 
 		}
+	}
+
+	refreshTree() {
+		this.onRequestNodes(this.root[0]);
+		this.onRequestNodes(this.root[1]);
 	}
 
 	fillNodes(res: any[], parent: ITreeNode) {

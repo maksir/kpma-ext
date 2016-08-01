@@ -17,6 +17,12 @@ export class DocCardService {
 
 	}
 
+	copyModel(id: number): Observable<DocCardDataModel> {
+
+		return this.http.get('/api/doccard/copy/' + id).map(res => res.json());
+
+	}
+
 	saveModel(model: DocCardDataModel): Observable<DocCardDataModel> {
 
 		if (!model) {

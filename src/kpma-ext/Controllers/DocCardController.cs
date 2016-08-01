@@ -97,6 +97,12 @@ namespace kpma_ext.Controllers
 					model.DocDate = DateTime.Now;
 					model.ContractorFromId = CurrentUser.ContractorId;
 
+					var depList = db.UserDepartments.Where(m=>m.UserId == CurrentUser.Id).ToList();
+					if (depList.Count == 1)
+					{
+						model.DepartmentFromId = depList[0].DepartmentId;
+					}
+
 				}
 				else
 				{

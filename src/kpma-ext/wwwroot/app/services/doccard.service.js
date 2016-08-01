@@ -21,6 +21,9 @@ var DocCardService = (function () {
     DocCardService.prototype.getModel = function (id) {
         return this.http.get('/api/doccard/' + id).map(function (res) { return res.json(); });
     };
+    DocCardService.prototype.copyModel = function (id) {
+        return this.http.get('/api/doccard/copy/' + id).map(function (res) { return res.json(); });
+    };
     DocCardService.prototype.saveModel = function (model) {
         if (!model) {
             return Rx_1.Observable.of(model);

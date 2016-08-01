@@ -31,10 +31,15 @@ namespace kpma_ext.Models
 
 		public int AuthorId { get; set; }
 
+		[UseProperty]
 		public string Content1 { get; set; }
+		[UseProperty]
 		public string Content2 { get; set; }
+		[UseProperty]
 		public string Content3 { get; set; }
+		[UseProperty]
 		public string Content4 { get; set; }
+		[UseProperty]
 		public string Content5 { get; set; }
 
 		[MaxLength(100)]

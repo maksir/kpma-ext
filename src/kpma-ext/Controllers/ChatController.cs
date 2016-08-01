@@ -76,7 +76,7 @@ namespace kpma_ext.Controllers
 		{
 			try
 			{
-				var model = db.Services.Single(m => m.Id == id);
+				var model = db.Chats.Single(m => m.Id == id);
 				if (model != null)
 				{
 					return Json(model);
@@ -124,10 +124,10 @@ namespace kpma_ext.Controllers
 			{
 				db.CurrentUser = userManager.GetUserAsync(User).Result;
 
-				var model = db.Services.FirstOrDefault(m => m.Id == id);
+				var model = db.Chats.FirstOrDefault(m => m.Id == id);
 				if (model != null)
 				{
-					db.Services.Remove(model);
+					db.Chats.Remove(model);
 					db.SaveChanges();
 					return Ok();
 				}

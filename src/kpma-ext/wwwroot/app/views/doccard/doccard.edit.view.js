@@ -24,6 +24,7 @@ var DocCardEdit = (function () {
         this.route = route;
         this.router = router;
         this.model = new doccard_service_1.DocCardDataModel();
+        this.isViewOnly = false;
         this.id = +this.route.snapshot.params["id"];
         this.mode = this.route.snapshot.params["mode"];
         if (this.mode) {
@@ -48,16 +49,28 @@ var DocCardEdit = (function () {
         });
     }
     DocCardEdit.prototype.ngOnInit = function () {
-        this.onRefresh();
+        var _this = this;
+        if (this.id && !this.mode) {
+            this.onRefresh();
+        }
+        else {
+            switch (this.mode) {
+                case 'new':
+                    this.dcSrv.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+                    break;
+                case 'copy':
+                    this.dcSrv.copyModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+                    break;
+                case 'viewonly':
+                    this.isViewOnly = true;
+                    this.dcSrv.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+                    break;
+            }
+        }
     };
     DocCardEdit.prototype.onRefresh = function () {
         var _this = this;
-        if (this.id) {
-            this.dcSrv.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
-        }
-        else {
-            this.model.docDate = new Date();
-        }
+        this.dcSrv.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
     };
     DocCardEdit.prototype.onSubmit = function () {
         var _this = this;

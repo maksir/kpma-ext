@@ -1,0 +1,86 @@
+﻿<div class="col-sm-4">
+	<div class="panel panel-default">
+		<div class="panel-heading">Список настроек</div>
+		<div class="panel-body">
+			<table class="table table-bordered table-condensed table-hover">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Группа документов</th>
+						<th>Тип документа</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let prop of propList" [ngClass]="{'info': selectedPropModel == prop, 'warning': editPropModel == prop}">
+
+						<template [ngIf]="prop != editPropModel">
+							<td style="min-width:60px;">
+								<a (click)="onEditProp(prop)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-pencil-square-o fa-fw"></i></a>
+								<a (click)="onDeleteProp(prop)" class="btn btn-xs btn-danger" title="Удалить"><i class="fa fa-trash fa-fw"></i></a>
+							</td>
+							<td (click)="onSelectProp(prop)">{{prop.documentGroupName}}</td>
+							<td (click)="onSelectProp(prop)">{{prop.documentTypeName}}</td>
+						</template>
+
+						<template [ngIf]="prop === editPropModel">
+							<td style="min-width:60px;">
+								<a (click)="onCancelProp()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
+								<a (click)="onUpdateProp()" class="btn btn-xs btn-success" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
+							</td>
+							<td>{{prop.documentGroupName}}</td>
+							<td>{{prop.documentTypeName}}</td>
+						</template>
+
+					</tr>
+					<tr class="success">
+						<td colspan="3">Добавление новой настройки</td>
+					</tr>
+					<tr class="success">
+						<td style="min-width:60px;">
+							<a (click)="onAddProp()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-save fa-fw"></i></a>
+						</td>
+						<td>
+							<dropdown [ItemType]="'DocumentGroup'" [MinTerm]="0" [(ngModel)]="addPropModel.documentGroupId" class="form-control"></dropdown>
+						</td>
+						<td>
+							<dropdown [ItemType]="'DocumentType'" [MinTerm]="0" [(ngModel)]="addPropModel.documentTypeId" [parentId]="addPropModel.documentGroupId" class="form-control"></dropdown>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="col-sm-8">
+	<div class="panel panel-default">
+		<div class="panel-heading">Настройки полей</div>
+		<div class="panel-body">
+			<table class="table table-bordered table-condensed table-hover">
+				<thead>
+					<tr>
+						<th>Поле</th>
+						<th>Выводимое имя</th>
+						<th>Обязательное</th>
+						<th>Показывать</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let field of fieldList">
+						<template [ngIf]="!editPropModel">
+							<td>{{field.fieldName}}</td>
+							<td>{{field.displayName}}</td>
+							<td class="text-success text-center"><i class="fa {{field.isMandatory ? 'fa fa-check' : ''}}"></i></td>
+							<td class="text-success text-center"><i class="fa {{field.isShown ? 'fa fa-check' : ''}}"></i></td>
+						</template>
+						<template [ngIf]="editPropModel">
+							<td>{{field.fieldName}}</td>
+							<td><input type="text"  [(ngModel)]="field.displayName" class='form-control' /></td>
+							<td><input type="checkbox" [(ngModel)]="field.isMandatory" /></td>
+							<td><input type="checkbox" [(ngModel)]="field.isShown" /></td>
+						</template>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

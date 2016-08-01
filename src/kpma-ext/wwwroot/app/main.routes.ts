@@ -9,6 +9,7 @@ import {MenuRoutes} from './views/menu/menu.routes';
 import {DocTypeRoutes} from './views/doctype/doctype.routes';
 import {ServiceRoutes} from './views/service/service.routes';
 import {DocCardRoutes} from './views/doccard/doccard.routes';
+import {DocPropRoutes} from './views/docprop/docprop.routes';
 
 
 import {Dashboard} from './views/dashboard/dashboard.view';
@@ -23,6 +24,7 @@ const routes: RouterConfig = [
 	...DocTypeRoutes,
 	...ServiceRoutes,
 	...DocCardRoutes,
+	...DocPropRoutes,
 	{ path: 'dashboard', component: Dashboard, canActivate: [UserService]},
 	{ path: 'sandbox', component: SandBox, canActivate: [UserService] },
 	{ path: '', redirectTo: '/login', terminal: true }

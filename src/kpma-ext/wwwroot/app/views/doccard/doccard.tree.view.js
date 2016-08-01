@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var router_1 = require('@angular/router');
 var doccard_service_1 = require('../../services/doccard.service');
 var main_component_1 = require('../../main.component');
 var treeview_1 = require('../../controls/treeview');
@@ -34,6 +35,10 @@ var DocCardTree = (function () {
         if (!node.parent) {
             this.docSrv.getGroupList(node.id).subscribe(function (res) { return _this.fillNodes(res, node); }, function (err) { return console.log(err); });
         }
+    };
+    DocCardTree.prototype.refreshTree = function () {
+        this.onRequestNodes(this.root[0]);
+        this.onRequestNodes(this.root[1]);
     };
     DocCardTree.prototype.fillNodes = function (res, parent) {
         parent.children = [];
@@ -83,7 +88,7 @@ var DocCardTree = (function () {
             moduleId: module.id,
             selector: 'doccard-tree',
             templateUrl: 'doccard.tree.html',
-            directives: [treeview_1.TreeView, tabs_control_1.Tabs, tabs_control_1.Tab, attachment_list_view_1.AttachmentList, chat_component_1.Chat],
+            directives: [router_1.ROUTER_DIRECTIVES, treeview_1.TreeView, tabs_control_1.Tabs, tabs_control_1.Tab, attachment_list_view_1.AttachmentList, chat_component_1.Chat],
             providers: [doccard_service_1.DocCardService]
         }), 
         __metadata('design:paramtypes', [doccard_service_1.DocCardService, main_component_1.MainAppComponent])

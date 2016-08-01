@@ -51,6 +51,7 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 	@Input() value: any;
 	@Output() valueChange: EventEmitter<any> = new EventEmitter<any>();
 
+
 	constructor(private element: ElementRef, private selSrv: SelectService) {
 	}
 

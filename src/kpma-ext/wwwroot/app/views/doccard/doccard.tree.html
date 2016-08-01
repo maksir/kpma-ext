@@ -1,19 +1,30 @@
 ﻿<div class="col-sm-3">
 	<div class="panel panel-default">
-		<div class="panel-heading">Папки документов</div>
+		<div class="panel-heading">
+			Папки документов
+			<div class="pull-right">
+				<a (click)="refreshTree()" class="btn btn-xs btn-primary" title="Обновить папки"><i class="fa fa-refresh"> Обновить</i></a>
+			</div>
+		</div>
 		<div class="panel-body">
-			<tree-view [Nodes]="root" 
-					   [SelectedNode]="selectedNode" 
-					   [CanExpand]="true" 
-					   [isRoot]="true" 
-					   (onSelectedChanged)="onSelectNode($event)" 
+			<tree-view [Nodes]="root"
+					   [SelectedNode]="selectedNode"
+					   [CanExpand]="true"
+					   [isRoot]="true"
+					   (onSelectedChanged)="onSelectNode($event)"
 					   (onRequestNodes)="onRequestNodes($event)"></tree-view>
 		</div>
 	</div>
 </div>
 <div class="col-sm-9">
 	<div class="panel panel-default">
-		<div class="panel-heading">Список документов</div>
+		<div class="panel-heading">
+			Список документов
+			<div class="pull-right">
+				<a (click)="refreshDocList()" class="btn btn-xs btn-primary" title="Обновить список"><i class="fa fa-refresh"> Обновить</i></a>
+				<a [routerLink]="['../edit', 0, 'new']" class="btn btn-xs btn-primary" title="Создать новый документ"><i class="fa fa-plus-circle"> Новый</i></a>
+			</div>
+		</div>
 		<div class="panel-body">
 			<table class="table table-bordered table-condensed table-hover">
 				<thead>

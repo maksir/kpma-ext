@@ -10,7 +10,7 @@
 					</div>
 					<label class="col-sm-1 control-label" for="inputDocDate">от</label>
 					<div class="col-sm-4">
-						<date-time [(value)]="model.docDate" formControlName="docDate" [options]="{format: 'DD.MM.YYYY'}"></date-time>
+						<date-time [(value)]="model.docDate" [disabled]="true" formControlName="docDate" [options]="{format: 'DD.MM.YYYY'}"></date-time>
 
 						<!--<input [(ngModel)]="model.docDate"  disabled formControlName="docDate" name="docDate" type="text" class="form-control" id="inputDocDate">-->
 					</div>
@@ -18,40 +18,40 @@
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputContFrom">Фирма отправитель</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'Contractor'" [MinTerm]="0" [allowClear]="true" [(ngModel)]="model.contractorFromId" formControlName="contractorFromId" name="contractorFromId" class="form-control" id="inputContFrom"></dropdown>
+						<dropdown [ItemType]="'Contractor'" [MinTerm]="0" [(ngModel)]="model.contractorFromId" [disabled]="true" formControlName="contractorFromId" name="contractorFromId" class="form-control" id="inputContFrom"></dropdown>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-4 control-label" for="inputSrvFrom">Подразделение отправитель</label>
+					<label class="col-sm-4 control-label" for="inputSrvFrom">Служба отправитель</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'Department'" [MinTerm]="0" [allowClear]="true" [parentId]="editForm.value.contractorFromId" [(ngModel)]="model.departmentFromId" formControlName="departmentFromId" name="departmentFromId" class="form-control" id="inputSrvFrom"></dropdown>
+						<dropdown [ItemType]="'Department'" [MinTerm]="0" [parentId]="editForm.value.contractorFromId" [(ngModel)]="model.departmentFromId" formControlName="departmentFromId" name="departmentFromId" class="form-control" id="inputSrvFrom"></dropdown>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputContTo">Фирма получатель</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'Contractor'" [MinTerm]="0" [allowClear]="true" [(ngModel)]="model.contractorToId" formControlName="contractorToId" name="contractorToId" class="form-control" id="inputContTo"></dropdown>
+						<dropdown [ItemType]="'Contractor'" [MinTerm]="0" [(ngModel)]="model.contractorToId" formControlName="contractorToId" name="contractorToId" class="form-control" id="inputContTo"></dropdown>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-4 control-label" for="inputSrvTo">Подразделение получатель</label>
+					<label class="col-sm-4 control-label" for="inputSrvTo">Служба получатель</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'Department'" [MinTerm]="0" [allowClear]="true" [parentId]="editForm.value.contractorToId" [(ngModel)]="model.departmentToId" formControlName="departmentToId" name="departmentToId" class="form-control" id="inputSrvTo"></dropdown>
+						<dropdown [ItemType]="'Department'" [MinTerm]="0" [parentId]="editForm.value.contractorToId" [(ngModel)]="model.departmentToId" formControlName="departmentToId" name="departmentToId" class="form-control" id="inputSrvTo"></dropdown>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputDocType">Тип документа</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'DocumentType'" [MinTerm]="0" [allowClear]="true" [(ngModel)]="model.documentTypeId" formControlName="documentTypeId" name="documentTypeId" class="form-control" id="inputDocType"></dropdown>
+						<dropdown [ItemType]="'DocumentType'" [MinTerm]="0" [(ngModel)]="model.documentTypeId" formControlName="documentTypeId" name="documentTypeId" class="form-control" id="inputDocType"></dropdown>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputDocType">Статус документа</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'DocumentStatus'" [MinTerm]="0" [allowClear]="true"  [parentId]="editForm.value.documentTypeId" [(ngModel)]="model.documentStatusId" formControlName="documentStatusId" name="documentStatusId" class="form-control" id="inputDocType"></dropdown>
+						<dropdown [ItemType]="'DocumentStatus'" [MinTerm]="0" [parentId]="editForm.value.documentTypeId" [(ngModel)]="model.documentStatusId" formControlName="documentStatusId" name="documentStatusId" class="form-control" id="inputDocType"></dropdown>
 					</div>
 				</div>
 

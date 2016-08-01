@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,18 +30,34 @@ namespace kpma_ext.Tools
 		}
 
 
-		public static string GetExceptionMessage(Exception ex)
+		public static ErrorMessage GetExceptionMessage(Exception ex)
 		{
 			var exi = GetInnerException(ex);
 
 			if (ex.Message.Contains("Violation of PRIMARY KEY constraint"))
 			{
-				return "Запись с такими значениями уже существует.";
+				return new ErrorMessage { Show = true, Text = "Запись с такими значениями уже существует." };
 			}
 			else
 			{
-				return "Ошибка программы. Обратитесь в службу поддержки.";
+				return new ErrorMessage { Show = true, Text = "Ошибка программы. Обратитесь в службу поддержки." };
 			}
 		}
+
+		public static ErrorMessage GetErrorMessage(ModelStateDictionary state)
+		{
+			var ret = new ErrorMessage();
+			ret.Show = true;
+
+			ret.Text = state.Count.ToString();
+
+			return ret;
+
+		}
+	}
+
+	public class ErrorMessage {
+		public bool Show { get; set; }
+		public string Text { get; set; }
 	}
 }

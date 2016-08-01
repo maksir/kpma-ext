@@ -33,6 +33,11 @@ namespace kpma_ext.Data
 
 		public DbSet<Attachment> Attachments { get; set; }
 		public DbSet<DocCard> DocCards { get; set; }
+
+		public DbSet<DocCardProperty> DocCardProperties { get; set;}
+
+		public DbSet<DocCardPropertyField> DocCardPropertyFields { get; set; }
+
 		public DbSet<Chat> Chats { get; set; }
 		public DbSet<ChatRead> ChatReads { get; set; }
 
@@ -244,7 +249,21 @@ namespace kpma_ext.Data
 			builder.Entity<ChatRead>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<ChatRead>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
 
+			// настройки
+			builder.Entity<DocCardProperty>().HasIndex("DocumentGroupId", "DocumentTypeId").IsUnique();
+			builder.Entity<DocCardProperty>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<DocCardProperty>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");
+			builder.Entity<DocCardProperty>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<DocCardProperty>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
 
+			// настройки
+			builder.Entity<DocCardPropertyField>().HasKey("DocCardPropertyId", "FieldName");
+			builder.Entity<DocCardPropertyField>().Property(p => p.IsMandatory).HasDefaultValue(false);
+			builder.Entity<DocCardPropertyField>().Property(p => p.IsShown).HasDefaultValue(true);
+			builder.Entity<DocCardPropertyField>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<DocCardPropertyField>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");
+			builder.Entity<DocCardPropertyField>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<DocCardPropertyField>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
 		}
 	}
 }

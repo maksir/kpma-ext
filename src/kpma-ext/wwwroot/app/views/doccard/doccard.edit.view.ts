@@ -25,6 +25,7 @@ export class DocCardEdit implements OnInit {
 	private id: number;
 	private mode: string;
 	private model: DocCardDataModel = new DocCardDataModel();
+	private isViewOnly = false;
 
 	private editForm: FormGroup;
 
@@ -58,21 +59,46 @@ export class DocCardEdit implements OnInit {
 
 	ngOnInit() {
 
-		this.onRefresh();
+		if (this.id && !this.mode) {
+			this.onRefresh();
+		}
+		else {
+			switch (this.mode) {
+				case 'new':
+
+					this.dcSrv.getModel(this.id).subscribe(
+						res => this.model = res,
+						err => console.log(err)
+					);
+				
+					break;
+				case 'copy':
+
+					this.dcSrv.copyModel(this.id).subscribe(
+						res => this.model = res,
+						err => console.log(err)
+					);
+
+					break;
+				case 'viewonly':
+
+					this.isViewOnly = true;
+					this.dcSrv.getModel(this.id).subscribe(
+						res => this.model = res,
+						err => console.log(err)
+					);
+					break;
+
+			}
+		}
 	}
 
 	onRefresh() {
 
-		if (this.id) {
-
-			this.dcSrv.getModel(this.id).subscribe(
-				res => this.model = res,
-				err => console.log(err)
-			);
-		}
-		else {
-			this.model.docDate = new Date();
-		}
+		this.dcSrv.getModel(this.id).subscribe(
+			res => this.model = res,
+			err => console.log(err)
+		);
 	}
 
 	onSubmit() {

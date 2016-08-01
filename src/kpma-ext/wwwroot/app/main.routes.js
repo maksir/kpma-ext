@@ -8,9 +8,10 @@ var menu_routes_1 = require('./views/menu/menu.routes');
 var doctype_routes_1 = require('./views/doctype/doctype.routes');
 var service_routes_1 = require('./views/service/service.routes');
 var doccard_routes_1 = require('./views/doccard/doccard.routes');
+var docprop_routes_1 = require('./views/docprop/docprop.routes');
 var dashboard_view_1 = require('./views/dashboard/dashboard.view');
 var sandbox_view_1 = require('./views/sandbox/sandbox.view');
-var routes = user_routes_1.UserRoutes.concat(contractor_routes_1.ContractorRoutes, metaobject_routes_1.MetaObjectRoutes, menu_routes_1.MenuRoutes, doctype_routes_1.DocTypeRoutes, service_routes_1.ServiceRoutes, doccard_routes_1.DocCardRoutes, [
+var routes = user_routes_1.UserRoutes.concat(contractor_routes_1.ContractorRoutes, metaobject_routes_1.MetaObjectRoutes, menu_routes_1.MenuRoutes, doctype_routes_1.DocTypeRoutes, service_routes_1.ServiceRoutes, doccard_routes_1.DocCardRoutes, docprop_routes_1.DocPropRoutes, [
     { path: 'dashboard', component: dashboard_view_1.Dashboard, canActivate: [user_service_1.UserService] },
     { path: 'sandbox', component: sandbox_view_1.SandBox, canActivate: [user_service_1.UserService] },
     { path: '', redirectTo: '/login', terminal: true }

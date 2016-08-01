@@ -45,8 +45,8 @@ namespace kpma_ext.Controllers
 
 			var isDataManager = userManager.IsInRoleAsync(currUser, "DataManager").Result;
 
-			var depList = db.UserDepartments.Where(d => d.UserId == currUser.Id).Select(d => d.Department);
-			var restList = db.DataRestrictions.Where(r => depList.Contains(r.Department));
+			var depList = db.UserDepartments.Where(d => d.UserId == currUser.Id).Select(d => d.DepartmentId);
+			var restList = db.DataRestrictions.Where(r => depList.Contains(r.DepartmentId));
 
 
 			IList<SelectItem> selectList = null;
@@ -140,6 +140,19 @@ namespace kpma_ext.Controllers
 						selectList = list.Select(u => new SelectItem { id = u.Id, text = u.DisplayName }).ToList();
 						break;
 					}
+				case "DocumentGroup":
+					{
+						var list = db.DocumentGroups.AsQueryable();
+						if (!string.IsNullOrWhiteSpace(term))
+						{
+							list = list.Where(u => u.Name.Contains(term));
+						}
+
+						moModel = db.MetaObjects.Single(m => m.TableName == "DocumentGroup");
+
+						selectList = list.Select(u => new SelectItem { id = u.Id, text = u.DisplayName }).ToList();
+						break;
+					}
 				case "DocumentType":
 					{
 						var list = db.DocumentTypes.AsQueryable();
@@ -171,12 +184,13 @@ namespace kpma_ext.Controllers
 
 			if (!isDataManager && moModel != null)
 			{
-				selectList = selectList.Where(m => restList.Where(r => r.MetaObjectId == moModel.Id).Select(r => r.ObjectId).Contains(m.id)).ToList();
+				var restrictList = restList.Where(r => r.MetaObjectId == moModel.Id).Select(r => r.ObjectId).ToList();
+				selectList = selectList.Where(m => restrictList.Contains(m.id)).ToList();
 			}
 
 			if (selectList != null)
 			{
-				return Json(selectList);
+				return Json(selectList.OrderBy(m=>m.text));
 			}
 
 			return null;
@@ -246,6 +260,15 @@ namespace kpma_ext.Controllers
 					if (db.Departments.Any())
 					{
 						return Json(db.Departments.Where(r => r.Id == id).Select(r => new { id = r.Id, text = r.DisplayName }));
+					}
+					else
+					{
+						return null;
+					}
+				case "DocumentGroup":
+					if (db.DocumentGroups.Any())
+					{
+						return Json(db.DocumentGroups.Where(r => r.Id == id).Select(r => new { id = r.Id, text = r.DisplayName }));
 					}
 					else
 					{
