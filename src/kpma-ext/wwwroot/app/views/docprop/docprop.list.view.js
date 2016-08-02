@@ -40,6 +40,9 @@ var DocPropList = (function () {
         this.selectedPropModel = prop;
         this.refreshFieldList();
     };
+    DocPropList.prototype.onDocGroupChange = function () {
+        this.addPropModel.documentTypeId = undefined;
+    };
     DocPropList.prototype.onAddProp = function () {
         var _this = this;
         if (!this.addPropModel.documentGroupId) {

@@ -51,6 +51,10 @@ export class DocPropList implements OnInit {
 		this.refreshFieldList();
 	}
 
+	onDocGroupChange() {
+		this.addPropModel.documentTypeId = undefined;
+	}
+
 	onAddProp() {
 
 		if (!this.addPropModel.documentGroupId) {

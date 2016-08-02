@@ -40,10 +40,21 @@
 							<a (click)="onAddProp()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-save fa-fw"></i></a>
 						</td>
 						<td>
-							<dropdown [ItemType]="'DocumentGroup'" [MinTerm]="0" [(ngModel)]="addPropModel.documentGroupId" class="form-control"></dropdown>
+							<dropdown [ItemType]="'DocumentGroup'" 
+									  [MinTerm]="0" 
+									  [(ngModel)]="addPropModel.documentGroupId" 
+									  (valueChange)="onDocGroupChange()"
+									  class="form-control">
+							</dropdown>
 						</td>
 						<td>
-							<dropdown [ItemType]="'DocumentType'" [MinTerm]="0" [(ngModel)]="addPropModel.documentTypeId" [parentId]="addPropModel.documentGroupId" class="form-control"></dropdown>
+							<dropdown [ItemType]="'DocumentType'" 
+									  [MinTerm]="0" 
+									  [(ngModel)]="addPropModel.documentTypeId" 
+									  [parentId]="addPropModel.documentGroupId" 
+									  [disabled]="!addPropModel.documentGroupId" 
+									  class="form-control">
+							</dropdown>
 						</td>
 					</tr>
 				</tbody>
