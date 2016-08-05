@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace kpma_ext.Tools
 {
-    public static class ExceptionTools
+	public static class ExceptionTools
     {
 		/// <summary>
 		/// Получить самое глубокое вложенное исключение

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace kpmaext.Data.Migrations
 {
-    public partial class fixClientRequestReport : Migration
+	public partial class fixClientRequestReport : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

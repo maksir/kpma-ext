@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace kpmaext.Data.Migrations
 {
-    public partial class ChatRead : Migration
+	public partial class ChatRead : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

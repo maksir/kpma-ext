@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace kpmaext.Data.Migrations
 {
-    public partial class Chat : Migration
+	public partial class Chat : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

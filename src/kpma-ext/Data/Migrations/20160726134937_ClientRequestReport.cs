@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace kpmaext.Data.Migrations
 {
-    public partial class ClientRequestReport : Migration
+	public partial class ClientRequestReport : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

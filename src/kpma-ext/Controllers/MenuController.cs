@@ -1,14 +1,12 @@
 ﻿using kpma_ext.Data;
 using kpma_ext.Models;
 using kpma_ext.Tools;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace kpma_ext.Controllers
 {

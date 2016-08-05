@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +10,7 @@ using kpma_ext.Tools;
 
 namespace kpma_ext.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
 	[Authorize(Roles ="Admin, Programmer, DataManager")]
 	public class DataRestrictionController : Controller
     {

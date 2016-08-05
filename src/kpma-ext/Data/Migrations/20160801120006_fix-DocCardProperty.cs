@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace kpmaext.Data.Migrations
 {
-    public partial class fixDocCardProperty : Migration
+	public partial class fixDocCardProperty : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

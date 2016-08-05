@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace kpmaext.Data.Migrations
 {
-    public partial class DataRestriction : Migration
+	public partial class DataRestriction : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
