@@ -84,6 +84,11 @@ export class DocPropService {
 
 		return this.http.delete('/api/docprop/field' + id).map(res => res.ok);
 	}
+
+
+	getPropFieldList(docTypeId: number): Observable<DocFieldModel[]> {
+		return this.http.get('/api/docprop/proplist/' + docTypeId).map(res => res.json());
+	}
 }
 
 export class DocPropDataModel {

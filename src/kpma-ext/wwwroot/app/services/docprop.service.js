@@ -70,6 +70,9 @@ var DocPropService = (function () {
         }
         return this.http.delete('/api/docprop/field' + id).map(function (res) { return res.ok; });
     };
+    DocPropService.prototype.getPropFieldList = function (docTypeId) {
+        return this.http.get('/api/docprop/proplist/' + docTypeId).map(function (res) { return res.json(); });
+    };
     DocPropService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])

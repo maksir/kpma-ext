@@ -1,8 +1,9 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
-//import {ROUTER_DIRECTIVES} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {DocPropService, DocFieldModel, DocPropDataModel, DocPropViewModel} from '../../services/docprop.service';
+import {Permitions} from '../../services/user.service';
 
 import {DropDown, DropDownVA} from '../../controls/dropdown/dropdown.control';
 
@@ -15,7 +16,6 @@ import {DropDown, DropDownVA} from '../../controls/dropdown/dropdown.control';
 })
 export class DocPropList implements OnInit {
 
-
 	propList: DocPropViewModel[] = [];
 	editPropModel: DocPropViewModel;
 	selectedPropModel: DocPropViewModel;
@@ -23,7 +23,12 @@ export class DocPropList implements OnInit {
 
 	fieldList: DocFieldModel[] = [];
 
-	constructor(private propSrv: DocPropService) { }
+	permitions: Permitions = new Permitions();
+
+	constructor(private propSrv: DocPropService, private route: ActivatedRoute) {
+
+		this.permitions = <Permitions>this.route.snapshot.params["permitions"];
+	}
 
 	ngOnInit() {
 		this.refreshPropList();

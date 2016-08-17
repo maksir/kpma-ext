@@ -1,8 +1,24 @@
-﻿<div class="col-sm-3">
+﻿<div class="col-sm-6">
 	<div class="panel panel-default">
-		<div class="panel-heading">Документы</div>
+		<div class="panel-heading">Новое в документах</div>
 		<div class="panel-body">
-			<tree-view [Nodes]="root" [SelectedNode]="selectedNode" [CanExpand]="true" [isRoot]="true" (onSelectedChanged)="onSelectNode($event)" (onRequestNodes)="onRequestNodes($event)"></tree-view>
+			
+			<ul>
+				У вас 10 новых входящих документов
+				<li>Запрос доп.информации № 13 от 10.10.2016</li>
+				<li>Оповещение об изменениях № 3 от 10.10.2016</li>
+				<li>Запрос доп.информации № 13 от 10.10.2016</li>
+				<li>Запрос доп.информации № 13 от 10.10.2016</li>
+				<li>Запрос доп.информации № 13 от 10.10.2016</li>
+			</ul>
+
+			<ul>
+				В 3-х документах есть новые сообщения в чате
+				<li>Заявка на закупку № 13 от ....</li>
+				<li>ываыва</li>
+				<li>ываываы</li>
+			</ul>
+
 		</div>
 	</div>
 </div>

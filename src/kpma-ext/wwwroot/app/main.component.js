@@ -13,7 +13,6 @@ var router_1 = require('@angular/router');
 var select_service_1 = require('./services/select.service');
 var user_service_1 = require('./services/user.service');
 var attachment_service_1 = require('./services/attachment.service');
-var shadowbox_directive_1 = require('./directives/shadowbox.directive');
 var menu_component_1 = require('./components/menu/menu.component');
 var MainAppComponent = (function () {
     function MainAppComponent(userSrv) {
@@ -32,7 +31,7 @@ var MainAppComponent = (function () {
             moduleId: module.id,
             selector: 'main-app',
             template: "<main-menu></main-menu><router-outlet></router-outlet>",
-            directives: [router_1.ROUTER_DIRECTIVES, shadowbox_directive_1.ShadowBoxDirective, menu_component_1.Menu],
+            directives: [router_1.ROUTER_DIRECTIVES, menu_component_1.Menu],
             providers: [select_service_1.SelectService, attachment_service_1.AttachmentService]
         }), 
         __metadata('design:paramtypes', [user_service_1.UserService])

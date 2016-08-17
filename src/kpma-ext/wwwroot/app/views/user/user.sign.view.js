@@ -13,6 +13,7 @@ var forms_1 = require('@angular/forms');
 //import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators} from '@angular/common';
 //import {RouteData, Router} from '@angular/router-deprecated';
 var user_service_1 = require('../../services/user.service');
+var dropdown_control_1 = require('../../controls/dropdown/dropdown.control');
 var UserSign = (function () {
     function UserSign(userSrv) {
         this.userSrv = userSrv;
@@ -20,7 +21,8 @@ var UserSign = (function () {
             name: new forms_1.FormControl('', [forms_1.Validators.required, forms_1.Validators.minLength(3)]),
             email: new forms_1.FormControl('', forms_1.Validators.required),
             password: new forms_1.FormControl('', [forms_1.Validators.required, forms_1.Validators.minLength(6)]),
-            confirmPassword: new forms_1.FormControl('', [forms_1.Validators.required, forms_1.Validators.minLength(6)])
+            confirmPassword: new forms_1.FormControl('', [forms_1.Validators.required, forms_1.Validators.minLength(6)]),
+            contractorId: new forms_1.FormControl('', forms_1.Validators.required)
         });
     }
     UserSign.prototype.onSubmit = function () {
@@ -38,7 +40,7 @@ var UserSign = (function () {
             moduleId: module.id,
             selector: 'user-sign',
             templateUrl: 'user.sign.html',
-            directives: [forms_1.REACTIVE_FORM_DIRECTIVES]
+            directives: [forms_1.REACTIVE_FORM_DIRECTIVES, dropdown_control_1.DropDown, dropdown_control_1.DropDownVA]
         }), 
         __metadata('design:paramtypes', [user_service_1.UserService])
     ], UserSign);

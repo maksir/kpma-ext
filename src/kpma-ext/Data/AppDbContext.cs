@@ -9,12 +9,18 @@ namespace kpma_ext.Data
 	public class AppDbContext : IdentityDbContext<User, Role, int>
 	{
 
+		public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
+        {
+		}
+
 		public User CurrentUser { get; set; }
 
 		public DbSet<MetaObject> MetaObjects { get; set; }
 		public DbSet<ObjectIntegration> ObjectIntegrations { get; set; }
 		public DbSet<Menu> Menus { get; set; }
 		public DbSet<RoleMenu> RoleMenus { get; set; }
+		public DbSet<RolePermition> RolePermitions { get; set; }
 
 		public DbSet<DataRestriction> DataRestrictions { get; set; }
 
@@ -40,10 +46,10 @@ namespace kpma_ext.Data
 
 		public DbSet<ClientRequestReport> ClientRequestReports { get; set; }
 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			optionsBuilder.UseSqlServer(@"Data Source=SR-SQL\MSSQL2012;Initial Catalog=kpma-ext;Persist Security Info=True;User ID=ext-user;Password=!u$eR-ex7");
-		}
+		//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		//{
+		//	//optionsBuilder.UseSqlServer(@"Data Source=SR-SQL\MSSQL2012;Initial Catalog=kpma-ext;MultipleActiveResultSets=true;Persist Security Info=True;User ID=ext-user;Password=!u$eR-ex7");
+		//}
 
 
 		public override int SaveChanges()
@@ -184,6 +190,12 @@ namespace kpma_ext.Data
 			builder.Entity<RoleMenu>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<RoleMenu>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
 
+			builder.Entity<RolePermition>().HasKey("MetaObjectId", "RoleId");
+			builder.Entity<RolePermition>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<RolePermition>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");
+			builder.Entity<RolePermition>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
+			builder.Entity<RolePermition>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
+
 			// контрагенты
 			builder.Entity<Contractor>().Property(p => p.DisplayName).HasComputedColumnSql("[Name]");
 			builder.Entity<Contractor>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
@@ -199,7 +211,7 @@ namespace kpma_ext.Data
 			builder.Entity<Service>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<Service>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
 
-			// подразделения контрагентов - будут получателями корреспонденции
+			// службы контрагентов - будут получателями корреспонденции
 			builder.Entity<Department>().Property(p => p.DisplayName).HasComputedColumnSql("[Name]");
 			builder.Entity<Department>().Property(p => p.CreatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<Department>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");

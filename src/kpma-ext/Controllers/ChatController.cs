@@ -29,8 +29,8 @@ namespace kpma_ext.Controllers
 		}
 
 
-		[HttpGet("list/{metaObjectId:int}/{objectId:int}/{departmentId:int}")]
-		public IActionResult List(int metaObjectId, int objectId, int departmentId)
+		[HttpGet("list/{metaObjectId:int?}/{objectId:int?}/{departmentId:int?}")]
+		public IActionResult List(int? metaObjectId, int? objectId, int? departmentId)
 		{
 			try
 			{

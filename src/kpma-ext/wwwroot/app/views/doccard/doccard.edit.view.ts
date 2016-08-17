@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {DocCardService, DocCardViewModel, DocCardDataModel} from '../../services/doccard.service';
+import {DocPropService, DocFieldModel} from '../../services/docprop.service';
 
 import {Tabs, Tab} from '../../controls/tabs.control';
 import {DateTimePicker} from '../../controls/datetimepicker';
@@ -17,7 +18,7 @@ import {Chat} from '../../components/chat/chat.component';
 	selector: 'doccard-edit',
 	templateUrl: 'doccard.edit.html',
 	directives: [CORE_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, DropDown, DropDownVA, AttachmentList, Tabs, Tab, DateTimePicker, Chat],
-	providers: [DocCardService]
+	providers: [DocCardService, DocPropService]
 
 })
 export class DocCardEdit implements OnInit {
@@ -29,7 +30,9 @@ export class DocCardEdit implements OnInit {
 
 	private editForm: FormGroup;
 
-	constructor(private dcSrv: DocCardService, private route: ActivatedRoute, private router: Router) {
+	private propDict: {[propName: string]: DocFieldModel};
+
+	constructor(private dcSrv: DocCardService, private propSrv: DocPropService, private route: ActivatedRoute, private router: Router) {
 
 		this.id = +this.route.snapshot.params["id"];
 		this.mode = this.route.snapshot.params["mode"];
@@ -96,9 +99,26 @@ export class DocCardEdit implements OnInit {
 	onRefresh() {
 
 		this.dcSrv.getModel(this.id).subscribe(
-			res => this.model = res,
+			res => {
+				this.model = res;
+				this.refreshProperties(this.model.documentTypeId);
+			},
 			err => console.log(err)
 		);
+	}
+
+	refreshProperties(docType:number) {
+
+		this.propSrv.getPropFieldList(docType).subscribe(
+			res => {
+				res.forEach(p => this.propDict[p.fieldName] = p);	
+			},
+			err => console.log(err)
+		);
+	}
+
+	onChangeDocType(docType: number) {
+		this.refreshProperties(docType);
 	}
 
 	onSubmit() {

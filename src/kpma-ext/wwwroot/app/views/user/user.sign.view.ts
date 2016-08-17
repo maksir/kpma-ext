@@ -6,11 +6,13 @@ import {REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators} from '@ang
 
 import {UserService, UserSignModel} from '../../services/user.service';
 
+import {DropDown, DropDownVA} from '../../controls/dropdown/dropdown.control';
+
 @Component({
 	moduleId: module.id,
 	selector: 'user-sign',
 	templateUrl: 'user.sign.html',
-	directives: [REACTIVE_FORM_DIRECTIVES]
+	directives: [REACTIVE_FORM_DIRECTIVES, DropDown, DropDownVA]
 })
 export class UserSign {
 
@@ -22,7 +24,8 @@ export class UserSign {
 			name: new FormControl('', [Validators.required, Validators.minLength(3)]),
 			email: new FormControl('', Validators.required),
 			password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-			confirmPassword: new FormControl('', [Validators.required, Validators.minLength(6)])
+			confirmPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
+			contractorId: new FormControl('', Validators.required)
 		});
 	}
 

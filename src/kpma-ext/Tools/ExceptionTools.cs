@@ -27,7 +27,7 @@ namespace kpma_ext.Tools
 		}
 
 
-		public static ErrorMessage GetExceptionMessage(Exception ex)
+		public static object GetExceptionMessage(Exception ex)
 		{
 			var exi = GetInnerException(ex);
 

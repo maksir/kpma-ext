@@ -18,40 +18,40 @@
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputContFrom">Фирма отправитель</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'Contractor'" [MinTerm]="0" [(ngModel)]="model.contractorFromId" [disabled]="true" formControlName="contractorFromId" name="contractorFromId" class="form-control" id="inputContFrom"></dropdown>
+						<dropdown [itemType]="'Contractor'" [minTerm]="0" [(ngModel)]="model.contractorFromId" [disabled]="true" formControlName="contractorFromId" name="contractorFromId" class="form-control" id="inputContFrom"></dropdown>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputSrvFrom">Служба отправитель</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'Department'" [MinTerm]="0" [parentId]="editForm.value.contractorFromId" [(ngModel)]="model.departmentFromId" formControlName="departmentFromId" name="departmentFromId" class="form-control" id="inputSrvFrom"></dropdown>
+						<dropdown [itemType]="'Department'" [minTerm]="0" [parentId]="editForm.value.contractorFromId" [(ngModel)]="model.departmentFromId" formControlName="departmentFromId" name="departmentFromId" class="form-control" id="inputSrvFrom"></dropdown>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputContTo">Фирма получатель</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'Contractor'" [MinTerm]="0" [(ngModel)]="model.contractorToId" formControlName="contractorToId" name="contractorToId" class="form-control" id="inputContTo"></dropdown>
+						<dropdown [itemType]="'Contractor'" [minTerm]="0" [(ngModel)]="model.contractorToId" formControlName="contractorToId" name="contractorToId" class="form-control" id="inputContTo"></dropdown>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputSrvTo">Служба получатель</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'Department'" [MinTerm]="0" [parentId]="editForm.value.contractorToId" [(ngModel)]="model.departmentToId" formControlName="departmentToId" name="departmentToId" class="form-control" id="inputSrvTo"></dropdown>
+						<dropdown [itemType]="'Department'" [minTerm]="0" [parentId]="editForm.value.contractorToId" [(ngModel)]="model.departmentToId" formControlName="departmentToId" name="departmentToId" class="form-control" id="inputSrvTo"></dropdown>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputDocType">Тип документа</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'DocumentType'" [MinTerm]="0" [(ngModel)]="model.documentTypeId" formControlName="documentTypeId" name="documentTypeId" class="form-control" id="inputDocType"></dropdown>
+						<dropdown [itemType]="'DocumentType'" [minTerm]="0" [(ngModel)]="model.documentTypeId" (valueChange)="onChangeDocType($event)" formControlName="documentTypeId" name="documentTypeId" class="form-control" id="inputDocType"></dropdown>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputDocType">Статус документа</label>
 					<div class="col-sm-8">
-						<dropdown [ItemType]="'DocumentStatus'" [MinTerm]="0" [parentId]="editForm.value.documentTypeId" [(ngModel)]="model.documentStatusId" formControlName="documentStatusId" name="documentStatusId" class="form-control" id="inputDocType"></dropdown>
+						<dropdown [itemType]="'DocumentStatus'" [minTerm]="0" [parentId]="editForm.value.documentTypeId" [(ngModel)]="model.documentStatusId" formControlName="documentStatusId" name="documentStatusId" class="form-control" id="inputDocType"></dropdown>
 					</div>
 				</div>
 

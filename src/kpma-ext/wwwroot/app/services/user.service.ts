@@ -20,8 +20,23 @@ export class UserService implements CanActivate {
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
 
 		if (this.isLoggetIn()) {
-			route.params['mo'] = 4;
-			return Observable.of(true);
+
+			return Observable.create(observer => {
+				this.http.get('/api/user/permitions?url=' + route.url[0]).subscribe(
+					res => {
+						route.params['permitions'] = <Permitions>res.json();
+						observer.next(true);
+					},
+					err => {
+						route.params['permitions'] = new Permitions();
+						observer.next(false);
+					},
+					() => {
+						observer.complete();
+					}
+				);
+			});
+
 		}
 		else {
 
@@ -70,6 +85,9 @@ export class UserService implements CanActivate {
 		}
 	}
 
+
+	
+
 	sign(model: UserSignModel) {
 
 		let body = JSON.stringify(model);
@@ -100,6 +118,8 @@ export class UserService implements CanActivate {
 	}
 
 	logout(): Observable<boolean> {
+
+		this._currentUser.next(undefined);
 
 		let headers = new Headers({
 			'Content-Type': 'application/json'
@@ -291,4 +311,11 @@ export class UserDepDataModel {
 export class UserDepViewModel extends UserDepDataModel {
 	userName: string;
 	departmentName: string;
+}
+
+export class Permitions {
+	canAdd: boolean;
+	canRead: boolean;
+	canDelete: boolean;
+	canEdit: boolean;
 }

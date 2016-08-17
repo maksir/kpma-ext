@@ -141,7 +141,7 @@ namespace kpma_ext.Controllers
 
 					//db.CurrentUser = userManager.GetUserAsync(User).Result;
 
-					var user = new User { UserName = model.Email, Email = model.Email, Name = model.Name };
+					var user = new User { UserName = model.Email, Email = model.Email, Name = model.Name, ContractorId = model.ContractorId };
 					var result = await userManager.CreateAsync(user, model.Password);
 					if (result.Succeeded)
 					{
@@ -548,6 +548,7 @@ namespace kpma_ext.Controllers
 
 		#endregion
 
+
 		#region методы работы с UserDepartment
 
 		[HttpGet("api/user/dep/{userId:int}")]
@@ -631,6 +632,24 @@ namespace kpma_ext.Controllers
 
 		#endregion
 
+
+		#region Права пользователя
+
+		[HttpGet("api/[controller]/permitions/{url?}")]
+		public IActionResult GetPermition(string url)
+		{
+			try
+			{
+				return Json(new { CanAdd = true, CanDelete = true, CanEdit = true, canRead = true });
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
+		#endregion
+
 		private void AddErrors(IdentityResult result)
 		{
 			foreach (var error in result.Errors)
@@ -664,6 +683,8 @@ namespace kpma_ext.Controllers
 		[DataType(DataType.Password)]
 		[Compare("Password", ErrorMessage = "Пароли не совпадают.")]
 		public string ConfirmPassword { get; set; }
+
+		public int ContractorId { get; set; }
 	}
 	public class UserViewModel
 	{

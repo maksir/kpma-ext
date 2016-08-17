@@ -7,6 +7,7 @@ import {UserLogin} from './user.login.view';
 import {UserSign} from './user.sign.view';
 import {UserEdit} from './user.edit.view';
 import {RoleList} from './role.list.view';
+import {UserProfile} from './user.profile.view';
 
 export const UserRoutes: RouterConfig = [
 	{ path: 'login', component: UserLogin },
@@ -15,7 +16,7 @@ export const UserRoutes: RouterConfig = [
 	{ path: 'user/list', component: UserList, canActivate: [UserService] },
 	{ path: 'role/list', component: RoleList, canActivate: [UserService] },
 	{ path: 'user/edit/:id', component: UserEdit, canActivate: [UserService] },
-	{ path: 'user/profile/:id', component: UserEdit, canActivate: [UserService] }
+	{ path: 'user/profile', component: UserProfile, canActivate: [UserService] }
 ];
 
 

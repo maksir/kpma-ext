@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using kpma_ext.Data;
 
 namespace kpmaext.Data.Migrations
 {
-	[DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -888,6 +889,47 @@ namespace kpmaext.Data.Migrations
                     b.ToTable("RoleMenu","meta");
                 });
 
+            modelBuilder.Entity("kpma_ext.Models.RolePermition", b =>
+                {
+                    b.Property<int>("MetaObjectId");
+
+                    b.Property<int>("RoleId");
+
+                    b.Property<bool>("CanAdd");
+
+                    b.Property<bool>("CanDelete");
+
+                    b.Property<bool>("CanEdit");
+
+                    b.Property<bool>("CanRead");
+
+                    b.Property<string>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("suser_sname()")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<DateTime>("LastUpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("sysdatetime()");
+
+                    b.HasKey("MetaObjectId", "RoleId");
+
+                    b.HasIndex("MetaObjectId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RolePermition","meta");
+                });
+
             modelBuilder.Entity("kpma_ext.Models.Service", b =>
                 {
                     b.Property<int>("Id")
@@ -1265,6 +1307,19 @@ namespace kpmaext.Data.Migrations
                     b.HasOne("kpma_ext.Models.Menu", "Menu")
                         .WithMany()
                         .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("kpma_ext.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("kpma_ext.Models.RolePermition", b =>
+                {
+                    b.HasOne("kpma_ext.Models.MetaObject", "MetaObject")
+                        .WithMany()
+                        .HasForeignKey("MetaObjectId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("kpma_ext.Models.Role", "Role")

@@ -21,7 +21,7 @@ var ChatService = (function () {
         this.http = http;
     }
     ChatService.prototype.getList = function (metaObjectId, objectId, departmentId) {
-        return this.http.get('/api/chat/list/' + metaObjectId + '/' + objectId + '/' + departmentId).map(function (res) { return res.json(); });
+        return this.http.get('/api/chat/list?metaObjectId=' + metaObjectId + '&objectId=' + objectId + '&departmentId=' + departmentId).map(function (res) { return res.json(); });
     };
     ChatService.prototype.getModel = function (id) {
         return this.http.get('/api/chat/' + id).map(function (res) { return res.json(); });

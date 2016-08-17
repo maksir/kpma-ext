@@ -87,7 +87,8 @@ namespace kpma_ext.Controllers
 				var roleList = db.UserRoles.Where(m => m.UserId == db.CurrentUser.Id).Select(m => m.RoleId).ToList();
 				var menuList = db.RoleMenus.Where(m => roleList.Contains(m.RoleId)).Select(m => m.MenuId).ToList();
 
-				var topLevel = db.Menus.Where(m => !m.ParentId.HasValue).OrderBy(m => m.SortOrder).Select(m => new MenuViewModel
+				// выбираем только группы верхнего уровня
+				var topLevel = db.Menus.Where(m => !m.ParentId.HasValue && m.IsGroup).OrderBy(m => m.SortOrder).Select(m => new MenuViewModel
 				{
 					Id = m.Id,
 					Name = m.Name,
@@ -102,7 +103,27 @@ namespace kpma_ext.Controllers
 
 				fillChildren(topLevel, menuList);
 
-				return Json(topLevel);
+				// удаляем группы без вложенных элементов
+				topLevel.RemoveAll(m => m.IsGroup && m.Children.Count == 0);
+
+				// выбираем пункты (не группы) верхнего уровня
+				var tlAdd = db.Menus.Where(m => !m.ParentId.HasValue && !m.IsGroup && menuList.Contains(m.Id)).OrderBy(m => m.SortOrder).Select(m => new MenuViewModel
+				{
+					Id = m.Id,
+					Name = m.Name,
+					ParentId = m.ParentId,
+					Url = m.Url,
+					Command = m.Command,
+					Icon = m.Icon,
+					IsGroup = m.IsGroup,
+					OnRight = m.OnRight,
+					SortOrder = m.SortOrder
+				}).ToList();
+
+				// объединяем группы и пункты
+				topLevel.AddRange(tlAdd);
+
+				return Json(topLevel.OrderBy(t => t.SortOrder));
 			}
 			catch (Exception ex)
 			{

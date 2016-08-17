@@ -30,7 +30,7 @@ var ServiceService = (function () {
             'Content-Type': 'application/json'
         });
         return this.http.post('/api/service', body, { headers: headers }).map(function (res) {
-            if (res.status == 200) {
+            if (res.ok) {
                 return res.json();
             }
             else {

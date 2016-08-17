@@ -10,15 +10,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
-//import {ROUTER_DIRECTIVES} from '@angular/router';
+var router_1 = require('@angular/router');
 var docprop_service_1 = require('../../services/docprop.service');
+var user_service_1 = require('../../services/user.service');
 var dropdown_control_1 = require('../../controls/dropdown/dropdown.control');
 var DocPropList = (function () {
-    function DocPropList(propSrv) {
+    function DocPropList(propSrv, route) {
         this.propSrv = propSrv;
+        this.route = route;
         this.propList = [];
         this.addPropModel = new docprop_service_1.DocPropViewModel();
         this.fieldList = [];
+        this.permitions = new user_service_1.Permitions();
+        this.permitions = this.route.snapshot.params["permitions"];
     }
     DocPropList.prototype.ngOnInit = function () {
         this.refreshPropList();
@@ -103,7 +107,7 @@ var DocPropList = (function () {
             directives: [common_1.CORE_DIRECTIVES, dropdown_control_1.DropDown, dropdown_control_1.DropDownVA],
             providers: [docprop_service_1.DocPropService]
         }), 
-        __metadata('design:paramtypes', [docprop_service_1.DocPropService])
+        __metadata('design:paramtypes', [docprop_service_1.DocPropService, router_1.ActivatedRoute])
     ], DocPropList);
     return DocPropList;
 }());

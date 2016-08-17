@@ -194,6 +194,29 @@ namespace kpma_ext.Controllers
 			}
 		}
 
+		[HttpGet("proplist")]
+		public IActionResult PropFieldList(int docTypeId)
+		{
+			try
+			{
+				var docProp = db.DocCardProperties.FirstOrDefault(m=>m.DocumentTypeId == docTypeId);
+				if (docProp == null)
+				{
+					var dt = db.DocumentTypes.FirstOrDefault(m => m.Id == docTypeId);
+					docProp = db.DocCardProperties.FirstOrDefault(m => m.DocumentGroupId == dt.DocumentGroupId && !m.DocumentTypeId.HasValue);
+				}
+
+				var list = db.DocCardPropertyFields.Where(m => m.DocCardPropertyId == docProp.Id);
+
+				return Json(list);
+
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
+			}
+		}
+
 	}
 
 	public class DocCardPropertyViewModel : DocCardProperty

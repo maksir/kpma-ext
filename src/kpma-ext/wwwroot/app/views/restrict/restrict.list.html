@@ -1,0 +1,99 @@
+﻿<div class="col-sm-12">
+
+	<table class="table table-bordered table-condensed table-hover">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Контрагент</th>
+				<th>Служба</th>
+				<th>Тип объекта</th>
+				<th>Объект</th>
+			</tr>
+			<tr class="warning">
+				<td>
+					<a (click)="refreshList()" class="btn btn-xs btn-primary" title="Обновить список с учетом фильтров"><i class="fa fa-refresh"></i></a>
+				</td>
+				<td>
+					<dropdown [itemType]="'Contractor'"
+							  [minTerm]="3"
+							  [allowClear]="true"
+							  [(ngModel)]="selectedContrId"
+							  class="form-control">
+					</dropdown>
+				</td>
+				<td>
+					<dropdown [itemType]="'Department'"
+							  [minTerm]="0"
+							  [parentId]="selectedContrId"
+							  [disabled]="!selectedContrId"
+							  [allowClear]="true"
+							  [(ngModel)]="selectedDepId"
+							  class="form-control">
+					</dropdown>
+				</td>
+				<td>
+					<dropdown [itemType]="'MetaObject'"
+							  [minTerm]="0"
+							  [allowClear]="true"
+							  [(ngModel)]="selectedMoId"
+							  class="form-control">
+					</dropdown>
+				</td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let item of list">
+				<td>
+					<a (click)="onDelete(item)" class="btn btn-xs btn-danger" title="Удалить запись"><i class="fa fa-trash"></i></a>
+				</td>
+				<td>{{item.contractorName}}</td>
+				<td>{{item.departmentName}}</td>
+				<td>{{item.metaObjectName}}</td>
+				<td>{{item.objectName}}</td>
+			</tr>
+			<tr class="success">
+				<td colspan="5">
+					<strong>Добавление объекта в доступ</strong>
+				</td>
+			</tr>
+			<tr class="success">
+				<td>
+					<a (click)="onAdd()" [class.disabled]="!addRestrictModel.departmentId || !addRestrictModel.metaObjectId || !addRestrictModel.objectId" class="btn btn-xs btn-primary" title="Сохранить новую запись"><i class="fa fa-save"></i></a>
+				</td>
+				<td>
+					<dropdown [itemType]="'Contractor'"
+							  [minTerm]="3"
+							  [(ngModel)]="addRestrictModel.contractorId"
+							  class="form-control">
+					</dropdown>
+				</td>
+				<td>
+					<dropdown [itemType]="'Department'"
+							  [minTerm]="0"
+							  [parentId]="addRestrictModel.contractorId"
+							  [disabled]="!addRestrictModel.contractorId"
+							  [(ngModel)]="addRestrictModel.departmentId"
+							  class="form-control">
+					</dropdown>
+				</td>
+				<td>
+					<dropdown [itemType]="'MetaObject'"
+							  [minTerm]="0"
+							  [(ngModel)]="addRestrictModel.metaObjectId"
+							  (valueChange)="onAddMetaObjectChanged($event)"
+							  class="form-control">
+					</dropdown>
+				</td>
+				<td>
+					<dropdown [itemType]="addMetaObjectModel.tableName"
+							  [minTerm]="3"
+							  [(ngModel)]="addRestrictModel.objectId"
+							  class="form-control">
+					</dropdown>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>

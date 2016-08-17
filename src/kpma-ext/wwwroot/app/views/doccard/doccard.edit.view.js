@@ -13,14 +13,16 @@ var common_1 = require('@angular/common');
 var router_1 = require('@angular/router');
 var forms_1 = require('@angular/forms');
 var doccard_service_1 = require('../../services/doccard.service');
+var docprop_service_1 = require('../../services/docprop.service');
 var tabs_control_1 = require('../../controls/tabs.control');
 var datetimepicker_1 = require('../../controls/datetimepicker');
 var dropdown_control_1 = require('../../controls/dropdown/dropdown.control');
 var attachment_list_view_1 = require('../attachment/attachment.list.view');
 var chat_component_1 = require('../../components/chat/chat.component');
 var DocCardEdit = (function () {
-    function DocCardEdit(dcSrv, route, router) {
+    function DocCardEdit(dcSrv, propSrv, route, router) {
         this.dcSrv = dcSrv;
+        this.propSrv = propSrv;
         this.route = route;
         this.router = router;
         this.model = new doccard_service_1.DocCardDataModel();
@@ -70,7 +72,19 @@ var DocCardEdit = (function () {
     };
     DocCardEdit.prototype.onRefresh = function () {
         var _this = this;
-        this.dcSrv.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+        this.dcSrv.getModel(this.id).subscribe(function (res) {
+            _this.model = res;
+            _this.refreshProperties(_this.model.documentTypeId);
+        }, function (err) { return console.log(err); });
+    };
+    DocCardEdit.prototype.refreshProperties = function (docType) {
+        var _this = this;
+        this.propSrv.getPropFieldList(docType).subscribe(function (res) {
+            res.forEach(function (p) { return _this.propDict[p.fieldName] = p; });
+        }, function (err) { return console.log(err); });
+    };
+    DocCardEdit.prototype.onChangeDocType = function (docType) {
+        this.refreshProperties(docType);
     };
     DocCardEdit.prototype.onSubmit = function () {
         var _this = this;
@@ -92,9 +106,9 @@ var DocCardEdit = (function () {
             selector: 'doccard-edit',
             templateUrl: 'doccard.edit.html',
             directives: [common_1.CORE_DIRECTIVES, forms_1.REACTIVE_FORM_DIRECTIVES, dropdown_control_1.DropDown, dropdown_control_1.DropDownVA, attachment_list_view_1.AttachmentList, tabs_control_1.Tabs, tabs_control_1.Tab, datetimepicker_1.DateTimePicker, chat_component_1.Chat],
-            providers: [doccard_service_1.DocCardService]
+            providers: [doccard_service_1.DocCardService, docprop_service_1.DocPropService]
         }), 
-        __metadata('design:paramtypes', [doccard_service_1.DocCardService, router_1.ActivatedRoute, router_1.Router])
+        __metadata('design:paramtypes', [doccard_service_1.DocCardService, docprop_service_1.DocPropService, router_1.ActivatedRoute, router_1.Router])
     ], DocCardEdit);
     return DocCardEdit;
 }());

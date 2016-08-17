@@ -9,7 +9,7 @@ export class ChatService {
 	}
 
 	getList(metaObjectId: number, objectId: number, departmentId: number): Observable<ChatViewModel[]> {
-		return this.http.get('/api/chat/list/' + metaObjectId + '/' + objectId + '/' + departmentId).map(res => res.json());
+		return this.http.get('/api/chat/list?metaObjectId=' + metaObjectId + '&objectId=' + objectId + '&departmentId=' + departmentId).map(res => res.json());
 	}
 
 	getModel(id: number): Observable<ChatDateModel> {

@@ -32,7 +32,7 @@ export class ServiceService {
 
 		return this.http.post('/api/service', body, { headers: headers }).map(
 			res => {
-				if (res.status == 200) {
+				if (res.ok) {
 					return res.json();
 				}
 				else {

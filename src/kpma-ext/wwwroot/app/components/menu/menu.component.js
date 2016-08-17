@@ -15,9 +15,10 @@ var user_service_1 = require('../../services/user.service');
 var menu_service_1 = require('../../services/menu.service');
 var menu_item_component_1 = require('./menu.item.component');
 var Menu = (function () {
-    function Menu(userSrv, menuSrv) {
+    function Menu(userSrv, menuSrv, router) {
         this.userSrv = userSrv;
         this.menuSrv = menuSrv;
+        this.router = router;
         this.menuList = [];
     }
     Menu.prototype.ngOnInit = function () {
@@ -32,6 +33,10 @@ var Menu = (function () {
         this.menuSrv.getUserMenu().subscribe(function (res) { return _this.menuList = res; }, function (err) { return console.log(err); });
     };
     Menu.prototype.logout = function () {
+        var _this = this;
+        this.userSrv.logout().subscribe(function (res) {
+            _this.router.navigateByUrl('/login');
+        }, function (err) { return console.log(err); });
     };
     Menu = __decorate([
         core_1.Component({
@@ -41,7 +46,7 @@ var Menu = (function () {
             directives: [common_1.CORE_DIRECTIVES, router_1.ROUTER_DIRECTIVES, menu_item_component_1.MenuItem],
             providers: [menu_service_1.MenuService]
         }), 
-        __metadata('design:paramtypes', [user_service_1.UserService, menu_service_1.MenuService])
+        __metadata('design:paramtypes', [user_service_1.UserService, menu_service_1.MenuService, router_1.Router])
     ], Menu);
     return Menu;
 }());

@@ -182,23 +182,32 @@ namespace kpma_ext.Controllers
 
 				var depList = db.UserDepartments.Where(m => m.UserId == currentUser.Id).Select(m => m.DepartmentId);
 
-				IQueryable<DocumentGroup> list = null;
+				IQueryable<DocGroupFolder> list = null;
 
 				DocCardFolder folder = (DocCardFolder)folderId;
 
 				switch (folder)
 				{
 					case DocCardFolder.In:
-						list = db.DocCards.Where(d => depList.Contains(d.DepartmentToId)).Select(d => d.DocumentType.DocumentGroup).Distinct().OrderBy(d => d.DisplayName);
+						var allDocs = db.DocCards.Select(m => new { docGroup = m.DocumentType.DocumentGroup, isNew = (m.DocumentStatus.Value == "1" ? 1 : 0) });
+
+						list = allDocs.GroupBy(m => m.docGroup)
+							.Select(g => new DocGroupFolder { id = g.Key.Id, name = g.Key.DisplayName, badge = g.Sum(s => s.isNew) })
+							.OrderBy(d => d.name);
+
 						break;
 					case DocCardFolder.Out:
-						list = db.DocCards.Where(d => depList.Contains(d.DepartmentFromId)).Select(d => d.DocumentType.DocumentGroup).Distinct().OrderBy(d => d.DisplayName);
+						list = db.DocCards.Where(d => depList.Contains(d.DepartmentFromId))
+							.Select(d => d.DocumentType.DocumentGroup)
+							.Distinct()
+							.Select(d => new DocGroupFolder { id = d.Id, name = d.DisplayName, badge = 0 })
+							.OrderBy(d => d.name);
 						break;
 					default:
 						break;
 				}
 
-				return Json(list.Select(m => new { id = m.Id, name = m.Name, bage = 0 }));
+				return Json(list);
 
 			}
 			catch (Exception ex)
@@ -325,5 +334,12 @@ namespace kpma_ext.Controllers
 	{
 		In = 1,
 		Out = 2
+	}
+
+	public class DocGroupFolder
+	{
+		public int id { get; set; }
+		public string name { get; set; }
+		public int badge { get; set; }
 	}
 }

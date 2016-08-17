@@ -30,8 +30,17 @@ var UserService = (function () {
     UserService.prototype.canActivate = function (route, state) {
         var _this = this;
         if (this.isLoggetIn()) {
-            route.params['mo'] = 4;
-            return Rx_1.Observable.of(true);
+            return Rx_1.Observable.create(function (observer) {
+                _this.http.get('/api/user/permitions?url=' + route.url[0]).subscribe(function (res) {
+                    route.params['permitions'] = res.json();
+                    observer.next(true);
+                }, function (err) {
+                    route.params['permitions'] = new Permitions();
+                    observer.next(false);
+                }, function () {
+                    observer.complete();
+                });
+            });
         }
         else {
             return Rx_1.Observable.create(function (observer) {
@@ -80,6 +89,7 @@ var UserService = (function () {
         });
     };
     UserService.prototype.logout = function () {
+        this._currentUser.next(undefined);
         var headers = new http_1.Headers({
             'Content-Type': 'application/json'
         });
@@ -233,4 +243,10 @@ var UserDepViewModel = (function (_super) {
     return UserDepViewModel;
 }(UserDepDataModel));
 exports.UserDepViewModel = UserDepViewModel;
+var Permitions = (function () {
+    function Permitions() {
+    }
+    return Permitions;
+}());
+exports.Permitions = Permitions;
 //# sourceMappingURL=user.service.js.map

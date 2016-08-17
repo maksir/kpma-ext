@@ -12,14 +12,14 @@
 		<div class="dropdownitems">
 			<span *ngIf="showHelpText()">Введите минимум {{MinTerm}} символа(ов)</span>
 
-			<ul *ngIf="Items" class="itemslist">
-				<li *ngFor="let i of (Items | search:searchValue)" class="item" (click)="onSelectItem(i)" [innerHTML]="getItemText(i)"></li>
+			<ul *ngIf="items" class="itemslist">
+				<li *ngFor="let i of (items | search:searchValue)" class="item" (click)="onSelectItem(i)" [innerHTML]="getItemText(i)"></li>
 			</ul>
 
-			<ul *ngIf="MinTerm === 0 || termFilter(searchValue)" class="itemslist">
+			<ul *ngIf="minTerm === 0 || termFilter(searchValue)" class="itemslist">
 				<li *ngFor="let i of LazyItems" class="item" [class.hover]="i == hoverItem" (click)="onSelectItem(i)" (mouseover)="onHoverItem(i)" [innerHTML]="getItemText(i)"></li>
 			</ul>
-			<span *ngIf="ItemType && LazyItems && LazyItems.length == 0 && MinTerm > 0 && !showHelpText()">Поиск не дал результатов...</span>
+			<span *ngIf="itemType && LazyItems && LazyItems.length == 0 && MinTerm > 0 && !showHelpText()">Поиск не дал результатов...</span>
 		</div>
 	</div>
 </div>

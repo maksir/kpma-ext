@@ -41,9 +41,9 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 
 	@ViewChild('input') input: ElementRef;
 
-	@Input() Items: Array<DropDownItem>;
-	@Input() ItemType: string;
-	@Input() MinTerm: number = 3;
+	@Input() items: Array<DropDownItem>;
+	@Input() itemType: string;
+	@Input() minTerm: number = 3;
 	@Input() disabled: boolean = false;
 	@Input() allowClear: boolean = false;
 	@Input() parentId: any;
@@ -70,32 +70,32 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 			if (this.doEmit) {
 				this.doEmit = false;
 			}
-			else if (this.Items && (!this.selectedItem || this.selectedItem.id != this.value)) {
+			else if (this.items && (!this.selectedItem || this.selectedItem.id != this.value)) {
 				this.selectValue(this.value);
 			}
-			else if (this.ItemType && (!this.selectedItem || this.selectedItem.id != this.value)) {
+			else if (this.itemType && (!this.selectedItem || this.selectedItem.id != this.value)) {
 				this.requestValue(this.value);
 			}
 		}
 
-		if (changes['Items'] && this.Items && this.value) {
+		if (changes['Items'] && this.items && this.value) {
 			this.selectValue(this.value);
 		}
 
-		if (this.ItemType == 'Enum' && this.term) {
+		if (this.itemType == 'Enum' && this.term) {
 
-			this.selSrv.getSelectList(this.ItemType, this.parentId, this.term).subscribe(
+			this.selSrv.getSelectList(this.itemType, this.parentId, this.term).subscribe(
 				result => this.LazyItems = <Array<DropDownItem>>result,
 				error => console.log(error),
 				() => { }
 			);
 		}
-		else if (this.ItemType) {
+		else if (this.itemType) {
 
 			this.LazyQuery = this.termInput.valueChanges
 				.filter((term) => this.termFilter(term))
 				.distinctUntilChanged()
-				.switchMap(term => this.selSrv.getSelectList(this.ItemType, this.parentId, term))
+				.switchMap(term => this.selSrv.getSelectList(this.itemType, this.parentId, term))
 				.subscribe(
 				result => this.LazyItems = <Array<DropDownItem>>result,
 				error => console.log(error),
@@ -107,30 +107,30 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 			}
 		}
 
-		if (this.Items && this.ItemType) {
+		if (this.items && this.itemType) {
 			this.LazyQuery = null;
 			throw ("Нельзя устанавливать одновременно параметр Item и ItemType!");
 		}
 
-		if (this.Items && changes['MinTerm']) {
+		if (this.items && changes['MinTerm']) {
 			throw ("Параметр MinTerm используется только совместно с параметром ItemType!");
 		}
 
 	}
 
 	termFilter(term) {
-		if (this.MinTerm == 0) {
+		if (this.minTerm == 0) {
 			return true;
 		}
-		if (this.ItemType == 'Enum') {
+		if (this.itemType == 'Enum') {
 			return true;
 		}
-		return (!this.Items) && (this.ItemType) && (this.MinTerm > 0) && term.length >= this.MinTerm;
+		return (!this.items) && (this.itemType) && (this.minTerm > 0) && term.length >= this.minTerm;
 	}
 
 	writeValue(val: any) {
 		this.value = val;
-		if (this.Items) {
+		if (this.items) {
 			if (this.value) {
 				this.selectValue(this.value);
 			}
@@ -138,7 +138,7 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 				this.selectedItem = null;
 			}
 		}
-		else if (this.ItemType) {
+		else if (this.itemType) {
 			if (this.value) {
 				this.requestValue(this.value);
 			}
@@ -150,7 +150,7 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 
 	private selectValue(val: any) {
 
-		let f = this.Items.filter(m => m.id == val);
+		let f = this.items.filter(m => m.id == val);
 		if (f[0]) {
 			this.selectedItem = f[0];
 			this.value = val;
@@ -162,7 +162,7 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 
 	private requestValue(val: any) {
 		if (val) {
-			this.selSrv.getSelectItemId(this.ItemType, val).subscribe(
+			this.selSrv.getSelectItemId(this.itemType, val).subscribe(
 				result => {
 					if (result) {
 						this.value = val;
@@ -212,11 +212,11 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 
 	private showHelpText() {
 
-		if (this.Items) {
+		if (this.items) {
 			return false;
 		}
 		
-		if (this.ItemType && this.ItemType != 'Enum' && this.MinTerm > 0 && this.searchValue.length < this.MinTerm) {
+		if (this.itemType && this.itemType != 'Enum' && this.minTerm > 0 && this.searchValue.length < this.minTerm) {
 			return this.showDropDown;
 		}
 
@@ -228,7 +228,7 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 
 		if (!this.showDropDown) {
 			this.searchValue = '';
-			if (this.MinTerm > 0) {
+			if (this.minTerm > 0) {
 				this.LazyItems = [];
 			}
 		}
@@ -281,7 +281,7 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 
 	private hoverUp() {
 
-		if (this.ItemType) {
+		if (this.itemType) {
 
 			if (!this.hoverItem) {
 				return;
@@ -296,7 +296,7 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 
 	private hoverDown() {
 
-		if (this.ItemType) {
+		if (this.itemType) {
 
 			if (!this.hoverItem) {
 				this.hoverItem = this.LazyItems[0];

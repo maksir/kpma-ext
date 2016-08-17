@@ -1,6 +1,6 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {CORE_DIRECTIVES} from '@angular/common';
-import {ROUTER_DIRECTIVES} from '@angular/router';
+import {ROUTER_DIRECTIVES, Router} from '@angular/router';
 
 import {UserService} from '../../services/user.service';
 import {MenuService, MenuViewModel} from '../../services/menu.service';
@@ -20,7 +20,7 @@ export class Menu implements OnInit {
 	private currentUser;
 	menuList: MenuViewModel[] = [];
 
-	constructor(private userSrv: UserService, private menuSrv: MenuService) {
+	constructor(private userSrv: UserService, private menuSrv: MenuService, private router: Router) {
 	}
 
 	ngOnInit() {
@@ -43,6 +43,14 @@ export class Menu implements OnInit {
 	}
 
 	logout() {
+
+		this.userSrv.logout().subscribe(
+			res => {
+				this.router.navigateByUrl('/login');
+			},
+			err => console.log(err)
+		);
+		
 	}
 
 

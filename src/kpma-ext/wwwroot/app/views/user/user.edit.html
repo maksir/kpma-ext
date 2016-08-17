@@ -1,5 +1,8 @@
-﻿<h4>Профиль пользователя</h4>
+﻿<div class="col-lg-12 col-sm-12">
+	<h4>Карточка пользователя</h4>
+</div>
 <div class="col-lg-4 col-sm-12">
+	
 	<div class="panel panel-default">
 		<div class="panel-heading">Параметры пользователя</div>
 		<div class="panel-body">
@@ -31,11 +34,11 @@
 				<div class="form-group">
 					<span class="control-label col-sm-3">Контрагент</span>
 					<div class="col-sm-9">
-						<dropdown [ItemType]="'Contractor'" [MinTerm]="0" [allowClear]="true" [(ngModel)]="model.contractorId" name="contractorToId" class="form-control" id="inputCont"></dropdown>
+						<dropdown [itemType]="'Contractor'" [minTerm]="0" [allowClear]="true" [(ngModel)]="model.contractorId" name="contractorToId" class="form-control" id="inputCont"></dropdown>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-9">
+					<div class="col-sm-offset-3 col-sm-9">
 						<button (click)="onBackBtn()" class="btn btn-primary">Назад</button>
 						<button type="submit" class="btn btn-primary" id="btnSubmit">Сохранить</button>
 					</div>
@@ -57,7 +60,7 @@
 						<thead>
 							<tr>
 								<th></th>
-								<th>Роль</th>
+								<th>Наименование роли</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -77,38 +80,38 @@
 									<a (click)="onClickAddRole()" [class.disabled]="!addRole.roleId" class="btn btn-xs btn-primary" title="Добавить роль пользователю"><i class="fa fa-save"></i></a>
 								</td>
 								<td>
-									<dropdown [ItemType]="'Role'" [MinTerm]="0" [(ngModel)]="addRole.roleId" name="roleId" class="form-control"></dropdown>
+									<dropdown [itemType]="'Role'" [minTerm]="0" [(ngModel)]="addRole.roleId" name="roleId" class="form-control"></dropdown>
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</tab>
-				<tab title="Подразделения">
+				<tab title="Службы пользователя">
 					<table class="table table-hover table-bordered table-condensed">
 						<thead>
 							<tr>
 								<th></th>
-								<th>Подразделение</th>
+								<th>Наименование службы</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr *ngFor="let dep of depList">
 								<td>
-									<a (click)="onDeleteDep(dep)" class="btn btn-xs btn-danger" title="Удалить подразделение пользователя"><i class="fa fa-trash-o"></i></a>
+									<a (click)="onDeleteDep(dep)" class="btn btn-xs btn-danger" title="Удалить службу пользователя"><i class="fa fa-trash-o"></i></a>
 								</td>
 								<td>
 									{{dep.departmentName}}
 								</td>
 							</tr>
 							<tr class="success">
-								<td colspan="2">Добавление подразделения</td>
+								<td colspan="2">Добавление службы</td>
 							</tr>
 							<tr class="success">
 								<td>
-									<a (click)="onAddDep()" [class.disabled]="!addDep.departmentId" class="btn btn-xs btn-primary" title="Добавить подразделение пользователю"><i class="fa fa-save"></i></a>
+									<a (click)="onAddDep()" [class.disabled]="!addDep.departmentId" class="btn btn-xs btn-primary" title="Добавить службу пользователю"><i class="fa fa-save"></i></a>
 								</td>
 								<td>
-									<dropdown [ItemType]="'Department'" [MinTerm]="0" [parentId]="model.contractorId" [(ngModel)]="addDep.departmentId" name="departmentId" class="form-control"></dropdown>
+									<dropdown [itemType]="'Department'" [minTerm]="0" [parentId]="model.contractorId" [(ngModel)]="addDep.departmentId" name="departmentId" class="form-control"></dropdown>
 								</td>
 							</tr>
 						</tbody>

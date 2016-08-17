@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace kpma_ext.Models
 {
-	[Table("ObjectIntegration", Schema = "meta")]
+	[Table("ObjectFavorite", Schema = "meta")]
 	public class ObjectFavorite : ILogModel
 	{
 		public int UserId { get; set; }

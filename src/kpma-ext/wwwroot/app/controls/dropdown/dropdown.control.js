@@ -31,7 +31,7 @@ var DropDown = (function () {
         this.searchValue = '';
         this.termInput = new forms_1.FormControl();
         this.doEmit = false;
-        this.MinTerm = 3;
+        this.minTerm = 3;
         this.disabled = false;
         this.allowClear = false;
         this.valueChange = new core_1.EventEmitter();
@@ -51,49 +51,49 @@ var DropDown = (function () {
             if (this.doEmit) {
                 this.doEmit = false;
             }
-            else if (this.Items && (!this.selectedItem || this.selectedItem.id != this.value)) {
+            else if (this.items && (!this.selectedItem || this.selectedItem.id != this.value)) {
                 this.selectValue(this.value);
             }
-            else if (this.ItemType && (!this.selectedItem || this.selectedItem.id != this.value)) {
+            else if (this.itemType && (!this.selectedItem || this.selectedItem.id != this.value)) {
                 this.requestValue(this.value);
             }
         }
-        if (changes['Items'] && this.Items && this.value) {
+        if (changes['Items'] && this.items && this.value) {
             this.selectValue(this.value);
         }
-        if (this.ItemType == 'Enum' && this.term) {
-            this.selSrv.getSelectList(this.ItemType, this.parentId, this.term).subscribe(function (result) { return _this.LazyItems = result; }, function (error) { return console.log(error); }, function () { });
+        if (this.itemType == 'Enum' && this.term) {
+            this.selSrv.getSelectList(this.itemType, this.parentId, this.term).subscribe(function (result) { return _this.LazyItems = result; }, function (error) { return console.log(error); }, function () { });
         }
-        else if (this.ItemType) {
+        else if (this.itemType) {
             this.LazyQuery = this.termInput.valueChanges
                 .filter(function (term) { return _this.termFilter(term); })
                 .distinctUntilChanged()
-                .switchMap(function (term) { return _this.selSrv.getSelectList(_this.ItemType, _this.parentId, term); })
+                .switchMap(function (term) { return _this.selSrv.getSelectList(_this.itemType, _this.parentId, term); })
                 .subscribe(function (result) { return _this.LazyItems = result; }, function (error) { return console.log(error); }, function () { });
             if (this.value) {
                 this.requestValue(this.value);
             }
         }
-        if (this.Items && this.ItemType) {
+        if (this.items && this.itemType) {
             this.LazyQuery = null;
             throw ("Нельзя устанавливать одновременно параметр Item и ItemType!");
         }
-        if (this.Items && changes['MinTerm']) {
+        if (this.items && changes['MinTerm']) {
             throw ("Параметр MinTerm используется только совместно с параметром ItemType!");
         }
     };
     DropDown.prototype.termFilter = function (term) {
-        if (this.MinTerm == 0) {
+        if (this.minTerm == 0) {
             return true;
         }
-        if (this.ItemType == 'Enum') {
+        if (this.itemType == 'Enum') {
             return true;
         }
-        return (!this.Items) && (this.ItemType) && (this.MinTerm > 0) && term.length >= this.MinTerm;
+        return (!this.items) && (this.itemType) && (this.minTerm > 0) && term.length >= this.minTerm;
     };
     DropDown.prototype.writeValue = function (val) {
         this.value = val;
-        if (this.Items) {
+        if (this.items) {
             if (this.value) {
                 this.selectValue(this.value);
             }
@@ -101,7 +101,7 @@ var DropDown = (function () {
                 this.selectedItem = null;
             }
         }
-        else if (this.ItemType) {
+        else if (this.itemType) {
             if (this.value) {
                 this.requestValue(this.value);
             }
@@ -111,7 +111,7 @@ var DropDown = (function () {
         }
     };
     DropDown.prototype.selectValue = function (val) {
-        var f = this.Items.filter(function (m) { return m.id == val; });
+        var f = this.items.filter(function (m) { return m.id == val; });
         if (f[0]) {
             this.selectedItem = f[0];
             this.value = val;
@@ -123,7 +123,7 @@ var DropDown = (function () {
     DropDown.prototype.requestValue = function (val) {
         var _this = this;
         if (val) {
-            this.selSrv.getSelectItemId(this.ItemType, val).subscribe(function (result) {
+            this.selSrv.getSelectItemId(this.itemType, val).subscribe(function (result) {
                 if (result) {
                     _this.value = val;
                     _this.selectedItem = result[0];
@@ -157,10 +157,10 @@ var DropDown = (function () {
         }
     };
     DropDown.prototype.showHelpText = function () {
-        if (this.Items) {
+        if (this.items) {
             return false;
         }
-        if (this.ItemType && this.ItemType != 'Enum' && this.MinTerm > 0 && this.searchValue.length < this.MinTerm) {
+        if (this.itemType && this.itemType != 'Enum' && this.minTerm > 0 && this.searchValue.length < this.minTerm) {
             return this.showDropDown;
         }
         return false;
@@ -169,7 +169,7 @@ var DropDown = (function () {
         this.showDropDown = !this.showDropDown;
         if (!this.showDropDown) {
             this.searchValue = '';
-            if (this.MinTerm > 0) {
+            if (this.minTerm > 0) {
                 this.LazyItems = [];
             }
         }
@@ -213,7 +213,7 @@ var DropDown = (function () {
         }
     };
     DropDown.prototype.hoverUp = function () {
-        if (this.ItemType) {
+        if (this.itemType) {
             if (!this.hoverItem) {
                 return;
             }
@@ -224,7 +224,7 @@ var DropDown = (function () {
         }
     };
     DropDown.prototype.hoverDown = function () {
-        if (this.ItemType) {
+        if (this.itemType) {
             if (!this.hoverItem) {
                 this.hoverItem = this.LazyItems[0];
             }
@@ -267,15 +267,15 @@ var DropDown = (function () {
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Array)
-    ], DropDown.prototype, "Items", void 0);
+    ], DropDown.prototype, "items", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', String)
-    ], DropDown.prototype, "ItemType", void 0);
+    ], DropDown.prototype, "itemType", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Number)
-    ], DropDown.prototype, "MinTerm", void 0);
+    ], DropDown.prototype, "minTerm", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Boolean)
