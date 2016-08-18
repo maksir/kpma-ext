@@ -5,12 +5,13 @@ import {ServiceService, ServiceModel} from '../../services/service.service';
 
 import {AttachmentService, AttachmentDataModel, AttachmentViewModel} from '../../services/attachment.service';
 
+import {ShadowBox} from '../../components/shadowbox.component';
 
 @Component({
 	moduleId: module.id,
 	selector: 'attachment-list',
 	templateUrl: 'attachment.list.html',
-	directives: [CORE_DIRECTIVES],
+	directives: [CORE_DIRECTIVES, ShadowBox],
 	providers: [ServiceService]
 
 })
@@ -25,6 +26,8 @@ export class AttachmentList implements OnInit {
 	private addModel: AttachmentDataModel = new AttachmentDataModel();
 	private editModel: AttachmentDataModel;
 
+	private freezeAttList = false;
+
 	constructor(private attSrv: AttachmentService) { }
 
 	ngOnInit() {
@@ -36,9 +39,15 @@ export class AttachmentList implements OnInit {
 	}
 
 	refreshList() {
+
+		this.freezeAttList = true;
+
 		this.attSrv.getList(this.metaObjectId, this.objectId).subscribe(
 			res => this.list = res,
-			err => console.log(err)
+			err => console.log(err),
+			() => {
+				this.freezeAttList = false;
+			}
 		);
 	}
 
@@ -58,13 +67,22 @@ export class AttachmentList implements OnInit {
 
 	onAdd() {
 
+		this.freezeAttList = true;
+
 		//this.addModel.file = addFileInput.files[0];
 		this.addModel.metaObjectId = this.metaObjectId;
 		this.addModel.objectId = this.objectId;
 
 		this.attSrv.saveModel(this.addModel).subscribe(
-			res => this.refreshList(),
-			err => console.log(err)
+			res => {
+				this.refreshList();
+				this.addModel.file = undefined;
+				this.addModel.name = undefined;
+			},
+			err => console.log(err),
+			() => {
+				this.freezeAttList = false;
+			}
 		);
 	}
 

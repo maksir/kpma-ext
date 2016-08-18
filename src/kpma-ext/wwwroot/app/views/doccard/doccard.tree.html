@@ -1,5 +1,5 @@
 ﻿<div class="col-sm-3">
-	<div class="panel panel-default">
+	<div shadow-box [show]="freezeFolder[0] || freezeFolder[1]" class="panel panel-default">
 		<div class="panel-heading">
 			Папки документов
 			<div class="pull-right">
@@ -17,7 +17,7 @@
 	</div>
 </div>
 <div class="col-sm-9">
-	<div class="panel panel-default">
+	<div shadow-box [show]="freezeDocList" class="panel panel-default">
 		<div class="panel-heading">
 			Список документов
 			<div class="pull-right">
@@ -29,6 +29,7 @@
 			<table class="table table-bordered table-condensed table-hover">
 				<thead>
 					<tr>
+						<th></th>
 						<th>Номер</th>
 						<th>Статус</th>
 						<th>Контрагент</th>
@@ -37,6 +38,7 @@
 				</thead>
 				<tbody>
 					<tr *ngFor="let item of docList" (click)="onSelectDoc(item)" [class.info]="item === selectedDoc">
+						<td><a [routerLink]="['../edit', item.id]" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></a></td>
 						<td>{{item.displayName}}</td>
 						<td>{{item.documentStatusName}}</td>
 						<td>{{item.contractorToName}}</td>

@@ -189,19 +189,23 @@ namespace kpma_ext.Controllers
 				switch (folder)
 				{
 					case DocCardFolder.In:
-						var allDocs = db.DocCards.Select(m => new { docGroup = m.DocumentType.DocumentGroup, isNew = (m.DocumentStatus.Value == "1" ? 1 : 0) });
+						var allDocs = db.DocCards
+											.Where(d => depList.Contains(d.DepartmentToId))
+											.Select(m => new { docGroup = m.DocumentType.DocumentGroup, isNew = (m.DocumentStatus.Value == "1" ? 1 : 0) });
+											
 
 						list = allDocs.GroupBy(m => m.docGroup)
-							.Select(g => new DocGroupFolder { id = g.Key.Id, name = g.Key.DisplayName, badge = g.Sum(s => s.isNew) })
-							.OrderBy(d => d.name);
+										.Select(g => new DocGroupFolder { id = g.Key.Id, name = g.Key.DisplayName, badge = g.Sum(s => s.isNew) })
+										.OrderBy(d => d.name);
 
 						break;
 					case DocCardFolder.Out:
-						list = db.DocCards.Where(d => depList.Contains(d.DepartmentFromId))
-							.Select(d => d.DocumentType.DocumentGroup)
-							.Distinct()
-							.Select(d => new DocGroupFolder { id = d.Id, name = d.DisplayName, badge = 0 })
-							.OrderBy(d => d.name);
+						list = db.DocCards
+									.Where(d => depList.Contains(d.DepartmentFromId))
+									.Select(d => d.DocumentType.DocumentGroup)
+									.Distinct()
+									.Select(d => new DocGroupFolder { id = d.Id, name = d.DisplayName, badge = 0 })
+									.OrderBy(d => d.name);
 						break;
 					default:
 						break;
@@ -244,6 +248,11 @@ namespace kpma_ext.Controllers
 				if (list == null)
 				{
 					return BadRequest("Ошибка определения списка документов");
+				}
+
+				if (groupId.HasValue)
+				{
+					list = list.Where(m=>m.DocumentType.DocumentGroupId == groupId.Value);
 				}
 
 				var ret = list.Select(d => new DocCardViewModel

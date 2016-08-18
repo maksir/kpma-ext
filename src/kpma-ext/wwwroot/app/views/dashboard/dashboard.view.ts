@@ -3,18 +3,22 @@
 import {DocCardService, DocCardViewModel} from '../../services/doccard.service';
 
 import {ITreeNode, TreeView} from '../../controls/treeview';
+import {ShadowBox} from '../../components/shadowbox.component';
 
 @Component({
 	moduleId: module.id,
 	selector: 'dashboard',
 	templateUrl: 'dashboard.html',
-	directives: [TreeView],
+	directives: [TreeView, ShadowBox],
 	providers: [DocCardService]
 })
 export class Dashboard implements OnInit {
 
 	private root: ITreeNode[] = [];
 	private selectedNode: ITreeNode;
+
+	private freez = false;
+
 
 	constructor(private docSrv: DocCardService) {
 
@@ -52,4 +56,8 @@ export class Dashboard implements OnInit {
 		});
 	}
 
+
+	shadow() {
+		this.freez = !this.freez;
+	}
 }

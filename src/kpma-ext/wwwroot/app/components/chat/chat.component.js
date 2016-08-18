@@ -14,6 +14,7 @@ var common_1 = require('@angular/common');
 var chat_service_1 = require('../../services/chat.service');
 var user_service_1 = require('../../services/user.service');
 var main_component_1 = require('../../main.component');
+var shadowbox_component_1 = require('../shadowbox.component');
 var Chat = (function () {
     function Chat(chatSrv, mainComp) {
         this.chatSrv = chatSrv;
@@ -22,6 +23,7 @@ var Chat = (function () {
         this.list = [];
         this.user = new user_service_1.UserViewModel();
         this.addModel = new chat_service_1.ChatDateModel();
+        this.freezeChat = false;
         this.user = mainComp.currentUser;
     }
     Chat.prototype.ngOnInit = function () {
@@ -42,15 +44,22 @@ var Chat = (function () {
         var _this = this;
         if (!this.metaObjectId || !this.objectId) {
             this.list = [];
+            return;
         }
-        this.chatSrv.getList(this.metaObjectId, this.objectId, this.departmentId).subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); });
+        this.freezeChat = true;
+        this.chatSrv.getList(this.metaObjectId, this.objectId, this.departmentId).subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); }, function () {
+            _this.freezeChat = false;
+        });
     };
     Chat.prototype.allRead = function () {
         var _this = this;
         if (!this.list.length) {
             return;
         }
-        this.chatSrv.markAsReaded(this.metaObjectId, this.objectId, this.departmentId).subscribe(function (res) { return _this.refreshList(); }, function (err) { return console.log(err); });
+        this.freezeChat = true;
+        this.chatSrv.markAsReaded(this.metaObjectId, this.objectId, this.departmentId).subscribe(function (res) { return _this.refreshList(); }, function (err) { return console.log(err); }, function () {
+            _this.freezeChat = false;
+        });
     };
     Chat.prototype.canAdd = function () {
         return this.metaObjectId && this.departmentId && this.objectId;
@@ -82,7 +91,7 @@ var Chat = (function () {
             moduleId: module.id,
             selector: 'chat',
             templateUrl: 'chat.html',
-            directives: [common_1.CORE_DIRECTIVES],
+            directives: [common_1.CORE_DIRECTIVES, shadowbox_component_1.ShadowBox],
             providers: [chat_service_1.ChatService]
         }), 
         __metadata('design:paramtypes', [chat_service_1.ChatService, main_component_1.MainAppComponent])

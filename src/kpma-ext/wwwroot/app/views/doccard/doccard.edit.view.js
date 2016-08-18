@@ -19,6 +19,7 @@ var datetimepicker_1 = require('../../controls/datetimepicker');
 var dropdown_control_1 = require('../../controls/dropdown/dropdown.control');
 var attachment_list_view_1 = require('../attachment/attachment.list.view');
 var chat_component_1 = require('../../components/chat/chat.component');
+var shadowbox_component_1 = require('../../components/shadowbox.component');
 var DocCardEdit = (function () {
     function DocCardEdit(dcSrv, propSrv, route, router) {
         this.dcSrv = dcSrv;
@@ -27,6 +28,7 @@ var DocCardEdit = (function () {
         this.router = router;
         this.model = new doccard_service_1.DocCardDataModel();
         this.isViewOnly = false;
+        this.freezeDocCard = false;
         this.id = +this.route.snapshot.params["id"];
         this.mode = this.route.snapshot.params["mode"];
         if (this.mode) {
@@ -56,26 +58,36 @@ var DocCardEdit = (function () {
             this.onRefresh();
         }
         else {
+            this.freezeDocCard = true;
             switch (this.mode) {
                 case 'new':
-                    this.dcSrv.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+                    this.dcSrv.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); }, function () {
+                        _this.freezeDocCard = false;
+                    });
                     break;
                 case 'copy':
-                    this.dcSrv.copyModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+                    this.dcSrv.copyModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); }, function () {
+                        _this.freezeDocCard = false;
+                    });
                     break;
                 case 'viewonly':
                     this.isViewOnly = true;
-                    this.dcSrv.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+                    this.dcSrv.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); }, function () {
+                        _this.freezeDocCard = false;
+                    });
                     break;
             }
         }
     };
     DocCardEdit.prototype.onRefresh = function () {
         var _this = this;
+        this.freezeDocCard = true;
         this.dcSrv.getModel(this.id).subscribe(function (res) {
             _this.model = res;
             _this.refreshProperties(_this.model.documentTypeId);
-        }, function (err) { return console.log(err); });
+        }, function (err) { return console.log(err); }, function () {
+            _this.freezeDocCard = false;
+        });
     };
     DocCardEdit.prototype.refreshProperties = function (docType) {
         var _this = this;
@@ -105,7 +117,7 @@ var DocCardEdit = (function () {
             moduleId: module.id,
             selector: 'doccard-edit',
             templateUrl: 'doccard.edit.html',
-            directives: [common_1.CORE_DIRECTIVES, forms_1.REACTIVE_FORM_DIRECTIVES, dropdown_control_1.DropDown, dropdown_control_1.DropDownVA, attachment_list_view_1.AttachmentList, tabs_control_1.Tabs, tabs_control_1.Tab, datetimepicker_1.DateTimePicker, chat_component_1.Chat],
+            directives: [common_1.CORE_DIRECTIVES, forms_1.REACTIVE_FORM_DIRECTIVES, dropdown_control_1.DropDown, dropdown_control_1.DropDownVA, attachment_list_view_1.AttachmentList, tabs_control_1.Tabs, tabs_control_1.Tab, datetimepicker_1.DateTimePicker, chat_component_1.Chat, shadowbox_component_1.ShadowBox],
             providers: [doccard_service_1.DocCardService, docprop_service_1.DocPropService]
         }), 
         __metadata('design:paramtypes', [doccard_service_1.DocCardService, docprop_service_1.DocPropService, router_1.ActivatedRoute, router_1.Router])

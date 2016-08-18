@@ -1,5 +1,5 @@
 ﻿<div class="col-sm-4">
-	<div class="panel panel-default">
+	<div shadow-box [show]="freezeDocCard" class="panel panel-default">
 		<div class="panel-heading">Карточка документа</div>
 		<div class="panel-body">
 			<form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="form-horizontal" role="form">
@@ -37,7 +37,7 @@
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputSrvTo">Служба получатель</label>
 					<div class="col-sm-8">
-						<dropdown [itemType]="'Department'" [minTerm]="0" [parentId]="editForm.value.contractorToId" [(ngModel)]="model.departmentToId" formControlName="departmentToId" name="departmentToId" class="form-control" id="inputSrvTo"></dropdown>
+						<dropdown [itemType]="'Department'" [minTerm]="0" [parentId]="editForm.value.contractorToId" [disabled]="!model.contractorToId" [(ngModel)]="model.departmentToId" formControlName="departmentToId" name="departmentToId" class="form-control" id="inputSrvTo"></dropdown>
 					</div>
 				</div>
 
@@ -51,7 +51,7 @@
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="inputDocType">Статус документа</label>
 					<div class="col-sm-8">
-						<dropdown [itemType]="'DocumentStatus'" [minTerm]="0" [parentId]="editForm.value.documentTypeId" [(ngModel)]="model.documentStatusId" formControlName="documentStatusId" name="documentStatusId" class="form-control" id="inputDocType"></dropdown>
+						<dropdown [itemType]="'DocumentStatus'" [minTerm]="0" [parentId]="editForm.value.documentTypeId" [disabled]="!model.documentTypeId" [(ngModel)]="model.documentStatusId" formControlName="documentStatusId" name="documentStatusId" class="form-control" id="inputDocType"></dropdown>
 					</div>
 				</div>
 
@@ -101,7 +101,7 @@
 		</div>
 	</div>
 </div>
-<div class="col-sm-8">
+<div *ngIf="id > 0" class="col-sm-8">
 	<div class="panel panel-default">
 		<div class="panel-heading">Дополнительная информация</div>
 		<div class="panel-body">

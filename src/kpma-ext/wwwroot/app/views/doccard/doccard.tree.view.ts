@@ -10,13 +10,13 @@ import {Tabs, Tab} from '../../controls/tabs.control';
 
 import {AttachmentList} from '../attachment/attachment.list.view';
 import {Chat} from '../../components/chat/chat.component';
-
+import {ShadowBox} from '../../components/shadowbox.component';
 
 @Component({
 	moduleId: module.id,
 	selector: 'doccard-tree',
 	templateUrl: 'doccard.tree.html',
-	directives: [ROUTER_DIRECTIVES, TreeView, Tabs, Tab, AttachmentList, Chat],
+	directives: [ROUTER_DIRECTIVES, TreeView, Tabs, Tab, AttachmentList, Chat, ShadowBox],
 	providers: [DocCardService]
 })
 export class DocCardTree implements OnInit {
@@ -26,6 +26,9 @@ export class DocCardTree implements OnInit {
 	private docList: DocCardViewModel[] = [];
 	private selectedDoc: DocCardViewModel;
 
+	private freezeDocList = false;
+	private freezeFolder: boolean[] = [false, false];
+	
 
 	constructor(private docSrv: DocCardService, private mainCmp: MainAppComponent) {
 		this.root.push({ id: 1, name: 'Входящие', children: [], isExpanded: true, bage: 0, parent: null });
@@ -35,25 +38,30 @@ export class DocCardTree implements OnInit {
 
 	ngOnInit() {
 
-		this.onRequestNodes(this.root[0]);
-		this.onRequestNodes(this.root[1]);
+		this.refreshTree();
 	}
 
-	onRequestNodes(node: ITreeNode) {
+	onRequestNodes(node: ITreeNode, folderI:number) {
 
 		if (!node.parent) {
 
 			this.docSrv.getGroupList(node.id).subscribe(
 				res => this.fillNodes(res, node),
-				err => console.log(err)
+				err => console.log(err),
+				() => {
+					this.freezeFolder[folderI] = false;
+				}
 			);
-
 		}
 	}
 
 	refreshTree() {
-		this.onRequestNodes(this.root[0]);
-		this.onRequestNodes(this.root[1]);
+
+		this.freezeFolder[0] = true;
+		this.freezeFolder[1] = true;
+			
+		this.onRequestNodes(this.root[0], 0);
+		this.onRequestNodes(this.root[1], 1);
 	}
 
 	fillNodes(res: any[], parent: ITreeNode) {
@@ -61,7 +69,15 @@ export class DocCardTree implements OnInit {
 		parent.children = [];
 
 		res.forEach(item => {
-			parent.children.push({ id: item.id, name: item.name, children: [], isExpanded: false, bage: item.bage, parent: parent });
+
+			let node = { id: item.id, name: item.name, children: [], isExpanded: false, bage: item.bage, parent: parent };
+
+			parent.children.push(node);
+
+			if (this.selectedNode && this.selectedNode.parent == parent && this.selectedNode.id == item.id) {
+				this.selectedNode = node;
+				this.refreshDocList();
+			}
 		});
 	}
 
@@ -78,7 +94,10 @@ export class DocCardTree implements OnInit {
 
 		if (!this.selectedNode) {
 			this.docList = [];
+			return;
 		}
+
+		this.freezeDocList = true;
 
 		let folderId = this.selectedNode.id;
 		let groupId = undefined;
@@ -94,7 +113,10 @@ export class DocCardTree implements OnInit {
 					this.selectedDoc = res.find(m => m.id == this.selectedDoc.id);
 				}
 			},
-			err => console.log(err)
+			err => console.log(err),
+			() => {
+				this.freezeDocList = false;
+			}
 		);
 	}
 

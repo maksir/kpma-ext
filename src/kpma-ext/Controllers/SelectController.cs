@@ -154,7 +154,11 @@ namespace kpma_ext.Controllers
 					}
 				case "DocumentType":
 					{
-						var list = db.DocumentTypes.Where(m => m.DocumentGroupId == parentId.Value).AsQueryable();
+						var list = db.DocumentTypes.AsQueryable();
+						if (parentId.HasValue)
+						{
+							list = list.Where(m => m.DocumentGroupId == parentId.Value);
+						}
 						if (!string.IsNullOrWhiteSpace(term))
 						{
 							list = list.Where(u => u.Name.Contains(term));

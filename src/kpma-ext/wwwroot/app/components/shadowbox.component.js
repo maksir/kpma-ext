@@ -21,10 +21,11 @@ var ShadowBox = (function () {
     ], ShadowBox.prototype, "show", void 0);
     ShadowBox = __decorate([
         core_1.Component({
-            selector: 'shadow-box',
-            template: "\n\t\t<div *ngIf=\"show\" class=\"shadow-box\" >\n\t\t\t<div class=\"shadow-box-body\">\n\t\t\t\t<i class=\"fa fa-2x fa-spinner fa-spin\"></i>\n\t\t\t</div>\n\t\t</div>",
-            styles: ["\n\t\t.shadow-box {\n\t\t\tposition: absolute;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tz-index: 1040;\n\t\t\tbackground-color: #000;\n\t\t\topacity: .3;\n\t\t\twidth: 100%;\n\t\t\theight: 100%;\n\t\t\ttext-align: center;\n\t\t}",
-                ".shadow-box-body { \n\t\t\tmargin: auto;\n\t\t\tposition: absolute;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tbottom: 0;\n\t\t\tright: 0;\n\t\t\twidth: 50%;\n\t\t\theight: 50%;\n\t\t\tcolor: white;}"],
+            selector: '[shadow-box]',
+            template: "\n\t\t<div *ngIf=\"show\" class=\"shadow-box\" >\n\t\t\t<i class=\"fa fa-2x fa-spinner fa-pulse\"></i>\n\t\t</div>\n\t\t<ng-content></ng-content>",
+            styles: ["\n\t\t:host {\n\t\t\tposition: relative;\n\t\t}",
+                ".shadow-box {\n\t\t\tposition: absolute;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tz-index: 1040;\n\t\t\tbackground-color: #000;\n\t\t\topacity: .3;\n\t\t\twidth: 100%;\n\t\t\theight: 100%;\n\t\t\ttext-align: center;\n\t\t}",
+                "i { \n\t\t\tposition: absolute;\n\t\t\ttop: 45%;\n\t\t\tleft: 50%;\n\t\t\tcolor: white;}"],
             directives: [common_1.CORE_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [])

@@ -16,34 +16,46 @@ var treeview_1 = require('../../controls/treeview');
 var tabs_control_1 = require('../../controls/tabs.control');
 var attachment_list_view_1 = require('../attachment/attachment.list.view');
 var chat_component_1 = require('../../components/chat/chat.component');
+var shadowbox_component_1 = require('../../components/shadowbox.component');
 var DocCardTree = (function () {
     function DocCardTree(docSrv, mainCmp) {
         this.docSrv = docSrv;
         this.mainCmp = mainCmp;
         this.root = [];
         this.docList = [];
+        this.freezeDocList = false;
+        this.freezeFolder = [false, false];
         this.root.push({ id: 1, name: 'Входящие', children: [], isExpanded: true, bage: 0, parent: null });
         this.root.push({ id: 2, name: 'Исходящие', children: [], isExpanded: true, bage: 0, parent: null });
         //this.root.push({ id: 3, name: 'Избранные', children: [], isExpanded: true, bage: 0, parent: null });
     }
     DocCardTree.prototype.ngOnInit = function () {
-        this.onRequestNodes(this.root[0]);
-        this.onRequestNodes(this.root[1]);
+        this.refreshTree();
     };
-    DocCardTree.prototype.onRequestNodes = function (node) {
+    DocCardTree.prototype.onRequestNodes = function (node, folderI) {
         var _this = this;
         if (!node.parent) {
-            this.docSrv.getGroupList(node.id).subscribe(function (res) { return _this.fillNodes(res, node); }, function (err) { return console.log(err); });
+            this.docSrv.getGroupList(node.id).subscribe(function (res) { return _this.fillNodes(res, node); }, function (err) { return console.log(err); }, function () {
+                _this.freezeFolder[folderI] = false;
+            });
         }
     };
     DocCardTree.prototype.refreshTree = function () {
-        this.onRequestNodes(this.root[0]);
-        this.onRequestNodes(this.root[1]);
+        this.freezeFolder[0] = true;
+        this.freezeFolder[1] = true;
+        this.onRequestNodes(this.root[0], 0);
+        this.onRequestNodes(this.root[1], 1);
     };
     DocCardTree.prototype.fillNodes = function (res, parent) {
+        var _this = this;
         parent.children = [];
         res.forEach(function (item) {
-            parent.children.push({ id: item.id, name: item.name, children: [], isExpanded: false, bage: item.bage, parent: parent });
+            var node = { id: item.id, name: item.name, children: [], isExpanded: false, bage: item.bage, parent: parent };
+            parent.children.push(node);
+            if (_this.selectedNode && _this.selectedNode.parent == parent && _this.selectedNode.id == item.id) {
+                _this.selectedNode = node;
+                _this.refreshDocList();
+            }
         });
     };
     DocCardTree.prototype.onSelectNode = function (node) {
@@ -57,7 +69,9 @@ var DocCardTree = (function () {
         var _this = this;
         if (!this.selectedNode) {
             this.docList = [];
+            return;
         }
+        this.freezeDocList = true;
         var folderId = this.selectedNode.id;
         var groupId = undefined;
         if (this.selectedNode.parent) {
@@ -69,7 +83,9 @@ var DocCardTree = (function () {
             if (_this.selectedDoc) {
                 _this.selectedDoc = res.find(function (m) { return m.id == _this.selectedDoc.id; });
             }
-        }, function (err) { return console.log(err); });
+        }, function (err) { return console.log(err); }, function () {
+            _this.freezeDocList = false;
+        });
     };
     DocCardTree.prototype.getUserDepartment = function () {
         if (!this.selectedDoc) {
@@ -88,7 +104,7 @@ var DocCardTree = (function () {
             moduleId: module.id,
             selector: 'doccard-tree',
             templateUrl: 'doccard.tree.html',
-            directives: [router_1.ROUTER_DIRECTIVES, treeview_1.TreeView, tabs_control_1.Tabs, tabs_control_1.Tab, attachment_list_view_1.AttachmentList, chat_component_1.Chat],
+            directives: [router_1.ROUTER_DIRECTIVES, treeview_1.TreeView, tabs_control_1.Tabs, tabs_control_1.Tab, attachment_list_view_1.AttachmentList, chat_component_1.Chat, shadowbox_component_1.ShadowBox],
             providers: [doccard_service_1.DocCardService]
         }), 
         __metadata('design:paramtypes', [doccard_service_1.DocCardService, main_component_1.MainAppComponent])

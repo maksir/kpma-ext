@@ -12,12 +12,14 @@ var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var service_service_1 = require('../../services/service.service');
 var attachment_service_1 = require('../../services/attachment.service');
+var shadowbox_component_1 = require('../../components/shadowbox.component');
 var AttachmentList = (function () {
     function AttachmentList(attSrv) {
         this.attSrv = attSrv;
         //@ViewChild('file') addFile;
         this.list = [];
         this.addModel = new attachment_service_1.AttachmentDataModel();
+        this.freezeAttList = false;
     }
     AttachmentList.prototype.ngOnInit = function () {
         this.refreshList();
@@ -27,7 +29,10 @@ var AttachmentList = (function () {
     };
     AttachmentList.prototype.refreshList = function () {
         var _this = this;
-        this.attSrv.getList(this.metaObjectId, this.objectId).subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); });
+        this.freezeAttList = true;
+        this.attSrv.getList(this.metaObjectId, this.objectId).subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); }, function () {
+            _this.freezeAttList = false;
+        });
     };
     AttachmentList.prototype.onSelectFile = function (addFileInput, model) {
         if (!model) {
@@ -42,10 +47,17 @@ var AttachmentList = (function () {
     };
     AttachmentList.prototype.onAdd = function () {
         var _this = this;
+        this.freezeAttList = true;
         //this.addModel.file = addFileInput.files[0];
         this.addModel.metaObjectId = this.metaObjectId;
         this.addModel.objectId = this.objectId;
-        this.attSrv.saveModel(this.addModel).subscribe(function (res) { return _this.refreshList(); }, function (err) { return console.log(err); });
+        this.attSrv.saveModel(this.addModel).subscribe(function (res) {
+            _this.refreshList();
+            _this.addModel.file = undefined;
+            _this.addModel.name = undefined;
+        }, function (err) { return console.log(err); }, function () {
+            _this.freezeAttList = false;
+        });
     };
     AttachmentList.prototype.onEdit = function (item) {
         var _this = this;
@@ -81,7 +93,7 @@ var AttachmentList = (function () {
             moduleId: module.id,
             selector: 'attachment-list',
             templateUrl: 'attachment.list.html',
-            directives: [common_1.CORE_DIRECTIVES],
+            directives: [common_1.CORE_DIRECTIVES, shadowbox_component_1.ShadowBox],
             providers: [service_service_1.ServiceService]
         }), 
         __metadata('design:paramtypes', [attachment_service_1.AttachmentService])

@@ -6,11 +6,13 @@ import {ChatService, ChatViewModel, ChatDateModel} from '../../services/chat.ser
 import {UserService, UserViewModel} from '../../services/user.service';
 import {MainAppComponent} from '../../main.component';
 
+import {ShadowBox} from '../shadowbox.component';
+
 @Component({
 	moduleId: module.id,
 	selector: 'chat',
 	templateUrl: 'chat.html',
-	directives: [CORE_DIRECTIVES],
+	directives: [CORE_DIRECTIVES, ShadowBox],
 	providers: [ChatService]
 })
 export class Chat implements OnInit, OnChanges {
@@ -24,6 +26,7 @@ export class Chat implements OnInit, OnChanges {
 	private list: ChatViewModel[] = [];
 	private user: UserViewModel = new UserViewModel();
 	private addModel: ChatDateModel = new ChatDateModel();
+	private freezeChat = false;
 
 	constructor(private chatSrv: ChatService, private mainComp: MainAppComponent) {
 
@@ -53,11 +56,17 @@ export class Chat implements OnInit, OnChanges {
 
 		if (!this.metaObjectId || !this.objectId) {
 			this.list = [];
+			return;
 		}
+
+		this.freezeChat = true;
 
 		this.chatSrv.getList(this.metaObjectId, this.objectId, this.departmentId).subscribe(
 			res => this.list = res,
-			err => console.log(err)
+			err => console.log(err),
+			() => {
+				this.freezeChat = false;
+			}
 		);
 	}
 
@@ -65,10 +74,14 @@ export class Chat implements OnInit, OnChanges {
 		if (!this.list.length) {
 			return;
 		}
+		this.freezeChat = true;
 
 		this.chatSrv.markAsReaded(this.metaObjectId, this.objectId, this.departmentId).subscribe(
 			res => this.refreshList(),
-			err => console.log(err)
+			err => console.log(err),
+			() => {
+				this.freezeChat = false;
+			}
 		);
 	}
 

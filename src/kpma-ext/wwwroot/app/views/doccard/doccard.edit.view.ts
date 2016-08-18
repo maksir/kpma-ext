@@ -12,12 +12,13 @@ import {DropDown, DropDownItem, DropDownVA} from '../../controls/dropdown/dropdo
 
 import {AttachmentList} from '../attachment/attachment.list.view';
 import {Chat} from '../../components/chat/chat.component';
+import {ShadowBox} from '../../components/shadowbox.component';
 
 @Component({
 	moduleId: module.id,
 	selector: 'doccard-edit',
 	templateUrl: 'doccard.edit.html',
-	directives: [CORE_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, DropDown, DropDownVA, AttachmentList, Tabs, Tab, DateTimePicker, Chat],
+	directives: [CORE_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, DropDown, DropDownVA, AttachmentList, Tabs, Tab, DateTimePicker, Chat, ShadowBox],
 	providers: [DocCardService, DocPropService]
 
 })
@@ -30,7 +31,9 @@ export class DocCardEdit implements OnInit {
 
 	private editForm: FormGroup;
 
-	private propDict: {[propName: string]: DocFieldModel};
+	private propDict: { [propName: string]: DocFieldModel };
+
+	private freezeDocCard = false;
 
 	constructor(private dcSrv: DocCardService, private propSrv: DocPropService, private route: ActivatedRoute, private router: Router) {
 
@@ -66,12 +69,18 @@ export class DocCardEdit implements OnInit {
 			this.onRefresh();
 		}
 		else {
+
+			this.freezeDocCard = true;
+
 			switch (this.mode) {
 				case 'new':
 
 					this.dcSrv.getModel(this.id).subscribe(
 						res => this.model = res,
-						err => console.log(err)
+						err => console.log(err),
+						() => {
+							this.freezeDocCard = false;
+						}
 					);
 				
 					break;
@@ -79,16 +88,23 @@ export class DocCardEdit implements OnInit {
 
 					this.dcSrv.copyModel(this.id).subscribe(
 						res => this.model = res,
-						err => console.log(err)
+						err => console.log(err),
+						() => {
+							this.freezeDocCard = false;
+						}
 					);
 
 					break;
 				case 'viewonly':
 
 					this.isViewOnly = true;
+
 					this.dcSrv.getModel(this.id).subscribe(
 						res => this.model = res,
-						err => console.log(err)
+						err => console.log(err),
+						() => {
+							this.freezeDocCard = false;
+						}
 					);
 					break;
 
@@ -98,12 +114,17 @@ export class DocCardEdit implements OnInit {
 
 	onRefresh() {
 
+		this.freezeDocCard = true;
+
 		this.dcSrv.getModel(this.id).subscribe(
 			res => {
 				this.model = res;
 				this.refreshProperties(this.model.documentTypeId);
 			},
-			err => console.log(err)
+			err => console.log(err),
+			() => {
+				this.freezeDocCard = false;
+			}
 		);
 	}
 

@@ -12,24 +12,27 @@ var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var router_1 = require('@angular/router');
 var doccard_service_1 = require('../../services/doccard.service');
+var shadowbox_component_1 = require('../../components/shadowbox.component');
 var DocCardList = (function () {
     function DocCardList(dcSrv) {
         this.dcSrv = dcSrv;
         this.list = [];
+        this.freeze = false;
     }
     DocCardList.prototype.ngOnInit = function () {
         this.refreshList();
     };
     DocCardList.prototype.refreshList = function () {
         var _this = this;
-        this.dcSrv.getList().subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); });
+        this.freeze = true;
+        this.dcSrv.getList().subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); }, function () { _this.freeze = false; });
     };
     DocCardList = __decorate([
         core_1.Component({
             moduleId: module.id,
             selector: 'doccard-list',
             templateUrl: 'doccard.list.html',
-            directives: [common_1.CORE_DIRECTIVES, router_1.ROUTER_DIRECTIVES],
+            directives: [common_1.CORE_DIRECTIVES, router_1.ROUTER_DIRECTIVES, shadowbox_component_1.ShadowBox],
             providers: [doccard_service_1.DocCardService]
         }), 
         __metadata('design:paramtypes', [doccard_service_1.DocCardService])

@@ -1,52 +1,54 @@
-﻿<table class="table table-bordered table-hover table-striped table-condensed">
-	<thead>
-		<tr>
-			<th>
-				<a (click)="refreshList()" [class.disabled]="!metaObjectId || !objectId" class="btn btn-xs btn-primary"><i class="fa fa-refresh"> Обновить</i></a>
-			</th>
-			<th>Описание</th>
-			<th>Файл</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr *ngFor="let item of list">
+﻿<div shadow-box [show]="freezeAttList">
+	<table class="table table-bordered table-hover table-striped table-condensed">
+		<thead>
+			<tr>
+				<th>
+					<a (click)="refreshList()" [class.disabled]="!metaObjectId || !objectId" class="btn btn-xs btn-primary"><i class="fa fa-refresh"> Обновить</i></a>
+				</th>
+				<th>Описание</th>
+				<th>Файл</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let item of list">
 
-			<template [ngIf]="!editModel || item.id != editModel.id">
-				<td style="min-width:60px;">
-					<a (click)="onEdit(item)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-pencil-square-o fa-fw"></i></a>
-					<a (click)="onDelete(item)" class="btn btn-xs btn-danger" title="Удалить"><i class="fa fa-trash fa-fw"></i></a>
-				</td>
-				<td>{{item.name}}</td>
-				<td>
-					<a href="/api/attachment/download/{{item.id}}/{{item.fileName}}" title="Скачать файл">{{item.fileName}}</a>
-				</td>
-			</template>
-			<template [ngIf]="editModel && item.id === editModel.id">
-				<td style="min-width:60px;">
-					<a (click)="onCancel()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
-					<a (click)="onUpdate()" class="btn btn-xs btn-success" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
-				</td>
-				<td><input [(ngModel)]="editModel.name" class="form-control" /></td>
-				<td>
-					<span>Существующий файл: {{item.fileName}}</span>
-					<input type="file" #editfileInput (change)="onSelectFile(editfileInput, editModel)" />
-				</td>
-			</template>
+				<template [ngIf]="!editModel || item.id != editModel.id">
+					<td style="min-width:60px;">
+						<a (click)="onEdit(item)" class="btn btn-xs btn-primary" title="Редактировать"><i class="fa fa-pencil-square-o fa-fw"></i></a>
+						<a (click)="onDelete(item)" class="btn btn-xs btn-danger" title="Удалить"><i class="fa fa-trash fa-fw"></i></a>
+					</td>
+					<td>{{item.name}}</td>
+					<td>
+						<a href="/api/attachment/download/{{item.id}}/{{item.fileName}}" title="Скачать файл">{{item.fileName}}</a>
+					</td>
+				</template>
+				<template [ngIf]="editModel && item.id === editModel.id">
+					<td style="min-width:60px;">
+						<a (click)="onCancel()" class="btn btn-xs btn-primary" title="Отменить"><i class="fa fa-undo fa-fw"></i></a>
+						<a (click)="onUpdate()" class="btn btn-xs btn-success" title="Сохранить"><i class="fa fa-save fa-fw"></i></a>
+					</td>
+					<td><input [(ngModel)]="editModel.name" class="form-control" /></td>
+					<td>
+						<span>Существующий файл: {{item.fileName}}</span>
+						<input type="file" #editfileInput (change)="onSelectFile(editfileInput, editModel)" />
+					</td>
+				</template>
 
-		</tr>
-		<tr class="success">
-			<td colspan="4">Добавление нового воложения</td>
-		</tr>
-		<tr>
-			<td>
-				<a (click)="onAdd()" [class.disabled]="!addModel.name || !addModel.file || !metaObjectId || !objectId" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a>
-			</td>
-			<td>
-				<input [(ngModel)]="addModel.name" [disabled]="!metaObjectId || !objectId" placeholder="Введите описание для файла" class="form-control input-sm" />
-			</td>
-			<td>
-				<input type="file" #addFileInput (change)="onSelectFile(addFileInput, addModel)" [disabled]="!metaObjectId || !objectId" />
-			</td>
-		</tr>
-	</tbody>
-</table>
+			</tr>
+			<tr class="success">
+				<td colspan="4">Добавление нового воложения</td>
+			</tr>
+			<tr>
+				<td>
+					<a (click)="onAdd()" [class.disabled]="!addModel.name || !addModel.file || !metaObjectId || !objectId" class="btn btn-xs btn-primary"><i class="fa fa-save fa-fw"></i></a>
+				</td>
+				<td>
+					<input [(ngModel)]="addModel.name" [disabled]="!metaObjectId || !objectId" placeholder="Введите описание для файла" class="form-control input-sm" />
+				</td>
+				<td>
+					<input type="file" #addFileInput (change)="onSelectFile(addFileInput, addModel)" [disabled]="!metaObjectId || !objectId" />
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

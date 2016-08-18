@@ -2,15 +2,17 @@
 import {CORE_DIRECTIVES} from '@angular/common';
 
 @Component({
-	selector: 'shadow-box',
+	selector: '[shadow-box]',
 	template: `
 		<div *ngIf="show" class="shadow-box" >
-			<div class="shadow-box-body">
-				<i class="fa fa-2x fa-spinner fa-spin"></i>
-			</div>
-		</div>`,
+			<i class="fa fa-2x fa-spinner fa-pulse"></i>
+		</div>
+		<ng-content></ng-content>`,
 	styles: [`
-		.shadow-box {
+		:host {
+			position: relative;
+		}`,
+		`.shadow-box {
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -21,15 +23,10 @@ import {CORE_DIRECTIVES} from '@angular/common';
 			height: 100%;
 			text-align: center;
 		}`,
-		`.shadow-box-body { 
-			margin: auto;
+		`i { 
 			position: absolute;
-			top: 0;
-			left: 0;
-			bottom: 0;
-			right: 0;
-			width: 50%;
-			height: 50%;
+			top: 45%;
+			left: 50%;
 			color: white;}`],
 	directives: [CORE_DIRECTIVES]
 })

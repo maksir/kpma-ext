@@ -31,13 +31,13 @@ namespace kpma_ext.Tools
 		{
 			var exi = GetInnerException(ex);
 
-			if (ex.Message.Contains("Violation of PRIMARY KEY constraint"))
+			if (exi.Message.Contains("Violation of PRIMARY KEY constraint"))
 			{
 				return new ErrorMessage { Show = true, Text = "Запись с такими значениями уже существует." };
 			}
 			else
 			{
-				return new ErrorMessage { Show = true, Text = "Ошибка программы. Обратитесь в службу поддержки." };
+				return new ErrorMessage { Show = true, Text = exi.Message };
 			}
 		}
 
