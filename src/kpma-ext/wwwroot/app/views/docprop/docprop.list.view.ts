@@ -99,15 +99,8 @@ export class DocPropList implements OnInit {
 
 	onUpdateProp() {
 
-		if (this.editPropModel) {
+		this.saveFieldList();
 
-			this.propSrv.savePropModel(this.editPropModel).subscribe(
-				res => {
-					this.saveFieldList();
-				},
-				err => console.log(err)
-			);
-		}
 	}
 
 	saveFieldList() {

@@ -75,12 +75,7 @@ var DocPropList = (function () {
         this.editPropModel = undefined;
     };
     DocPropList.prototype.onUpdateProp = function () {
-        var _this = this;
-        if (this.editPropModel) {
-            this.propSrv.savePropModel(this.editPropModel).subscribe(function (res) {
-                _this.saveFieldList();
-            }, function (err) { return console.log(err); });
-        }
+        this.saveFieldList();
     };
     DocPropList.prototype.saveFieldList = function () {
         var _this = this;
