@@ -109,11 +109,11 @@ export class DropDown implements OnChanges, AfterViewInit, AfterViewChecked {
 
 		if (this.items && this.itemType) {
 			this.LazyQuery = null;
-			throw ("Нельзя устанавливать одновременно параметр Item и ItemType!");
+			throw ("Нельзя устанавливать одновременно параметр items и itemType!");
 		}
 
-		if (this.items && changes['MinTerm']) {
-			throw ("Параметр MinTerm используется только совместно с параметром ItemType!");
+		if (this.items && changes['minTerm']) {
+			throw ("Параметр minTerm используется только совместно с параметром itemType!");
 		}
 
 	}
