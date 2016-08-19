@@ -148,7 +148,13 @@ namespace kpma_ext.Controllers
 			{
 				db.CurrentUser = userManager.GetUserAsync(User).Result;
 
-				var model = db.Attachments.SingleOrDefault(m => m.Id == id);
+				var model = db.Attachments.FirstOrDefault(m => m.Id == id);
+
+				if (model.CreatedBy.ToLower() != db.CurrentUser.UserName.ToLower())
+				{
+					return BadRequest("Вложение может удалять только автор!");
+				}
+
 				if (model != null)
 				{
 					db.Attachments.Remove(model);

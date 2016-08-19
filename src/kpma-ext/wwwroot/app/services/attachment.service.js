@@ -59,7 +59,7 @@ var AttachmentService = (function () {
         if (!id) {
             return Rx_1.Observable.of(false);
         }
-        return this.http.delete('/api/attachment').map(function (res) { return res.ok; });
+        return this.http.delete('/api/attachment/' + id).map(function (res) { return res.ok; });
     };
     AttachmentService.prototype.upload = function (model) {
         return new Promise(function (resolve, reject) {

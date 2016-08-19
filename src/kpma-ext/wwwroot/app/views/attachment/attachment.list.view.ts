@@ -97,7 +97,10 @@ export class AttachmentList implements OnInit {
 
 	onDelete(item: AttachmentViewModel) {
 
-		
+		this.attSrv.deleteModel(item.id).subscribe(
+			res => this.refreshList(),
+			err => console.log(err)
+		);	
 	}
 
 	onCancel() {

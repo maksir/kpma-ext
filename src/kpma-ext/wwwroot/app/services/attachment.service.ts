@@ -71,7 +71,7 @@ export class AttachmentService {
 			return Observable.of(false);
 		}
 
-		return this.http.delete('/api/attachment').map(res => res.ok);
+		return this.http.delete('/api/attachment/' + id).map(res => res.ok);
 
 	}
 

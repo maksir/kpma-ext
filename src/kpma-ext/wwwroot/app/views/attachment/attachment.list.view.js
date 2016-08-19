@@ -64,6 +64,8 @@ var AttachmentList = (function () {
         this.attSrv.getModel(item.id).subscribe(function (res) { return _this.editModel = res; }, function (err) { return console.log(err); });
     };
     AttachmentList.prototype.onDelete = function (item) {
+        var _this = this;
+        this.attSrv.deleteModel(item.id).subscribe(function (res) { return _this.refreshList(); }, function (err) { return console.log(err); });
     };
     AttachmentList.prototype.onCancel = function () {
         this.editModel = undefined;
