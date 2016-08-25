@@ -85,9 +85,6 @@ export class UserService implements CanActivate {
 		}
 	}
 
-
-	
-
 	sign(model: UserSignModel) {
 
 		let body = JSON.stringify(model);

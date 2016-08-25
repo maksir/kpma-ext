@@ -8,8 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+/// <reference path="../../typings/bootstrap/bootstrap.d.ts" />
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
+var Rx_1 = require('rxjs/Rx');
 var select_service_1 = require('./services/select.service');
 var user_service_1 = require('./services/user.service');
 var attachment_service_1 = require('./services/attachment.service');
@@ -19,18 +21,46 @@ var MainAppComponent = (function () {
         var _this = this;
         this.userSrv = userSrv;
         this.currentUser = new user_service_1.UserViewModel();
-        this.freeze = false;
+        this.errorMessage = '';
+        this.messageClass = '';
+        this.messageHeader = '';
+        this.messageBody = '';
+        this._ok = new Rx_1.Subject();
+        this.ok = this._ok.asObservable();
         userSrv.currentUser.subscribe(function (res) { return _this.currentUser = res; }, function (err) { return console.log(err); }, function () { return console.log('done'); });
     }
-    MainAppComponent.prototype.onChange = function () {
-        this.freeze = !this.freeze;
-        return false;
+    MainAppComponent.prototype.showError = function (errorMessage) {
+        this.errorMessage = errorMessage;
+        $('#errorModal').modal('show');
+    };
+    MainAppComponent.prototype.showMessage = function (messageClass, messageHeader, messageBode) {
+        this.messageHeader = messageHeader;
+        this.messageClass = messageClass;
+        this.messageBody = messageBode;
+        $('#messageModal').modal('show');
+    };
+    MainAppComponent.prototype.onQuestCancelClick = function () {
+        if (!this._ok.isUnsubscribed) {
+            this._ok.next(false);
+            this._ok.complete();
+        }
+    };
+    MainAppComponent.prototype.onQuestOkClick = function () {
+        if (!this._ok.isUnsubscribed) {
+            this._ok.next(true);
+            this._ok.complete();
+        }
+    };
+    MainAppComponent.prototype.showQuestion = function (questText) {
+        $('#questModal').modal('show');
+        $('#questModal').on('hide.bs.modal', this.onQuestCancelClick.bind(this));
+        return this.ok;
     };
     MainAppComponent = __decorate([
         core_1.Component({
             moduleId: module.id,
             selector: 'main-app',
-            template: "<main-menu></main-menu><router-outlet></router-outlet>",
+            templateUrl: 'main.html',
             directives: [router_1.ROUTER_DIRECTIVES, menu_component_1.Menu],
             providers: [select_service_1.SelectService, attachment_service_1.AttachmentService]
         }), 

@@ -1,2 +1,51 @@
 ﻿<main-menu></main-menu>
 <router-outlet></router-outlet>
+
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModal-label">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content alert alert-danger">
+			<div class="modal-header">
+				<h4 class="modal-title" id="errorModal-label">Ошибка</h4>
+			</div>
+			<div class="modal-body">
+				<p>{{errorMessage}}</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModal-label">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content alert {{messageClass}}">
+			<div class="modal-header">
+				<h4 class="modal-title" id="errorModal-label">{{messageHeader}}</h4>
+			</div>
+			<div class="modal-body">
+				<p>{{messageBody}}</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="questModal" tabindex="-1" role="dialog" aria-labelledby="questModal-label">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content alert alert-warning">
+			<div class="modal-header">
+				<h4 class="modal-title" id="errorModal-label">Подтверждение пользователя</h4>
+			</div>
+			<div class="modal-body">
+				<p>{{questText}}</p>
+			</div>
+			<div class="modal-footer">
+				<button (click)="onQuestCancelClick()" type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+				<button (click)="onQuestOkClick()" type="button" class="btn btn-primary" data-dismiss="modal">Ок</button>
+			</div>
+		</div>
+	</div>
+</div>

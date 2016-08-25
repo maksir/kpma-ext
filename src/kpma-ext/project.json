@@ -27,7 +27,8 @@
         "jquery.TypeScript.DefinitelyTyped": "3.1.0",
         "moment.TypeScript.DefinitelyTyped": "1.8.1",
         "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
-        "Microsoft.Extensions.Configuration.Json": "1.0.0"
+        "Microsoft.Extensions.Configuration.Json": "1.0.0",
+        "bootstrap.TypeScript.DefinitelyTyped": "0.9.2"
 	}, 
 	"tools": {
 		"Microsoft.AspNetCore.Razor.Tools": {

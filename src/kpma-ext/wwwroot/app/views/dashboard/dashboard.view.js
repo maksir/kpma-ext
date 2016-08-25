@@ -12,9 +12,11 @@ var core_1 = require('@angular/core');
 var doccard_service_1 = require('../../services/doccard.service');
 var treeview_1 = require('../../controls/treeview');
 var shadowbox_component_1 = require('../../components/shadowbox.component');
+var main_component_1 = require('../../main.component');
 var Dashboard = (function () {
-    function Dashboard(docSrv) {
+    function Dashboard(docSrv, mainCmp) {
         this.docSrv = docSrv;
+        this.mainCmp = mainCmp;
         this.root = [];
         this.freez = false;
         this.root.push({ id: 1, name: 'Входящие', children: [], isExpanded: true, bage: 0, parent: null });
@@ -39,7 +41,18 @@ var Dashboard = (function () {
         });
     };
     Dashboard.prototype.shadow = function () {
-        this.freez = !this.freez;
+        //this.freez = !this.freez;
+        var _this = this;
+        this.mainCmp.showQuestion('Вопрос года!').subscribe(function (res) {
+            if (res) {
+                //this.mainCmp.showMessage('alert-success', 'Ura!', 'OK');
+                var r = 0;
+            }
+            else {
+                var r = 0;
+            }
+        }, function (err) { return _this.mainCmp.showError(err); });
+        return false;
     };
     Dashboard = __decorate([
         core_1.Component({
@@ -49,7 +62,7 @@ var Dashboard = (function () {
             directives: [treeview_1.TreeView, shadowbox_component_1.ShadowBox],
             providers: [doccard_service_1.DocCardService]
         }), 
-        __metadata('design:paramtypes', [doccard_service_1.DocCardService])
+        __metadata('design:paramtypes', [doccard_service_1.DocCardService, main_component_1.MainAppComponent])
     ], Dashboard);
     return Dashboard;
 }());
