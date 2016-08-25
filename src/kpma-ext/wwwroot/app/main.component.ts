@@ -78,6 +78,7 @@ export class MainAppComponent {
 
 	showQuestion(questText:string): Observable<boolean> {
 
+		$('#questText').html(questText);
 		$('#questModal').modal('show');
 		$('#questModal').on('hide.bs.modal', this.onQuestCancelClick.bind(this));
 

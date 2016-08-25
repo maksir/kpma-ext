@@ -52,6 +52,7 @@ var MainAppComponent = (function () {
         }
     };
     MainAppComponent.prototype.showQuestion = function (questText) {
+        $('#questText').html(questText);
         $('#questModal').modal('show');
         $('#questModal').on('hide.bs.modal', this.onQuestCancelClick.bind(this));
         return this.ok;
