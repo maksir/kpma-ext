@@ -11,11 +11,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var contractor_service_1 = require('../../services/contractor.service');
+var main_component_1 = require('../../main.component');
+var shadowbox_component_1 = require('../../components/shadowbox.component');
 var DepartmentList = (function () {
-    function DepartmentList(contrSrv) {
+    function DepartmentList(contrSrv, mainCmp) {
         this.contrSrv = contrSrv;
+        this.mainCmp = mainCmp;
         this.list = [];
         this.addModel = new contractor_service_1.DepartmentModel();
+        this.freeze = false;
     }
     DepartmentList.prototype.ngOnInit = function () {
         this.refreshList();
@@ -26,7 +30,14 @@ var DepartmentList = (function () {
             this.list = [];
         }
         else {
-            this.contrSrv.getDepList(this.contId).subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); });
+            this.freeze = true;
+            this.contrSrv.getDepList(this.contId).subscribe(function (res) {
+                _this.list = res;
+            }, function (err) {
+                _this.mainCmp.showError(err);
+            }, function () {
+                _this.freeze = false;
+            });
         }
     };
     DepartmentList.prototype.onEdit = function (s) {
@@ -38,7 +49,18 @@ var DepartmentList = (function () {
             return;
         }
         this.editModel = undefined;
-        this.contrSrv.deleteDepModel(s.id).subscribe(function (res) { return _this.refreshList(); }, function (err) { return console.log(err); });
+        this.mainCmp.showQuestion('Удалить службу: <strong>' + s.name + '</strong> ?').subscribe(function (answer) {
+            if (answer) {
+                _this.contrSrv.deleteDepModel(s.id).subscribe(function (res) {
+                    _this.refreshList();
+                }, function (err) {
+                    _this.mainCmp.showError(err);
+                });
+            }
+            else {
+                return;
+            }
+        });
     };
     DepartmentList.prototype.onCancel = function () {
         this.editModel = undefined;
@@ -48,10 +70,15 @@ var DepartmentList = (function () {
         if (!this.editModel) {
             return;
         }
+        this.freeze = true;
         this.contrSrv.saveDepModel(this.editModel).subscribe(function (res) {
             _this.editModel = undefined;
             _this.refreshList();
-        }, function (err) { return console.log(err); });
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        }, function () {
+            _this.freeze = false;
+        });
     };
     DepartmentList.prototype.onAdd = function () {
         var _this = this;
@@ -63,7 +90,11 @@ var DepartmentList = (function () {
             _this.addModel = new contractor_service_1.DepartmentModel();
             _this.addModel.contractorId = _this.contId;
             _this.refreshList();
-        }, function (err) { return console.log(err); });
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        }, function () {
+            _this.freeze = false;
+        });
     };
     __decorate([
         core_1.Input('contractorId'), 
@@ -74,10 +105,10 @@ var DepartmentList = (function () {
             moduleId: module.id,
             selector: 'department-list',
             templateUrl: 'department.list.html',
-            directives: [common_1.CORE_DIRECTIVES],
+            directives: [common_1.CORE_DIRECTIVES, shadowbox_component_1.ShadowBox],
             providers: [contractor_service_1.ContractorService]
         }), 
-        __metadata('design:paramtypes', [contractor_service_1.ContractorService])
+        __metadata('design:paramtypes', [contractor_service_1.ContractorService, main_component_1.MainAppComponent])
     ], DepartmentList);
     return DepartmentList;
 }());

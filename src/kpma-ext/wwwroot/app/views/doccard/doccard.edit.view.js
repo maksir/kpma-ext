@@ -17,15 +17,17 @@ var docprop_service_1 = require('../../services/docprop.service');
 var tabs_control_1 = require('../../controls/tabs.control');
 var datetimepicker_1 = require('../../controls/datetimepicker');
 var dropdown_control_1 = require('../../controls/dropdown/dropdown.control');
+var main_component_1 = require('../../main.component');
 var attachment_list_view_1 = require('../attachment/attachment.list.view');
 var chat_component_1 = require('../../components/chat/chat.component');
 var shadowbox_component_1 = require('../../components/shadowbox.component');
 var DocCardEdit = (function () {
-    function DocCardEdit(dcSrv, propSrv, route, router) {
+    function DocCardEdit(dcSrv, propSrv, route, router, mainCmp) {
         this.dcSrv = dcSrv;
         this.propSrv = propSrv;
         this.route = route;
         this.router = router;
+        this.mainCmp = mainCmp;
         this.model = new doccard_service_1.DocCardDataModel();
         this.isViewOnly = false;
         this.freezeDocCard = false;
@@ -61,18 +63,30 @@ var DocCardEdit = (function () {
             this.freezeDocCard = true;
             switch (this.mode) {
                 case 'new':
-                    this.dcSrv.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); }, function () {
+                    this.dcSrv.getModel(this.id).subscribe(function (res) {
+                        _this.model = res;
+                    }, function (err) {
+                        _this.mainCmp.showError(err);
+                    }, function () {
                         _this.freezeDocCard = false;
                     });
                     break;
                 case 'copy':
-                    this.dcSrv.copyModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); }, function () {
+                    this.dcSrv.copyModel(this.id).subscribe(function (res) {
+                        _this.model = res;
+                    }, function (err) {
+                        _this.mainCmp.showError(err);
+                    }, function () {
                         _this.freezeDocCard = false;
                     });
                     break;
                 case 'viewonly':
                     this.isViewOnly = true;
-                    this.dcSrv.getModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); }, function () {
+                    this.dcSrv.getModel(this.id).subscribe(function (res) {
+                        _this.model = res;
+                    }, function (err) {
+                        _this.mainCmp.showError(err);
+                    }, function () {
                         _this.freezeDocCard = false;
                     });
                     break;
@@ -85,7 +99,9 @@ var DocCardEdit = (function () {
         this.dcSrv.getModel(this.id).subscribe(function (res) {
             _this.model = res;
             _this.refreshProperties(_this.model.documentTypeId);
-        }, function (err) { return console.log(err); }, function () {
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        }, function () {
             _this.freezeDocCard = false;
         });
     };
@@ -93,7 +109,9 @@ var DocCardEdit = (function () {
         var _this = this;
         this.propSrv.getPropFieldList(docType).subscribe(function (res) {
             res.forEach(function (p) { return _this.propDict[p.fieldName] = p; });
-        }, function (err) { return console.log(err); });
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        });
     };
     DocCardEdit.prototype.onChangeDocType = function (docType) {
         this.refreshProperties(docType);
@@ -105,7 +123,12 @@ var DocCardEdit = (function () {
                 if (!_this.model.id) {
                     _this.router.navigateByUrl('/doccard/edit/' + res.id);
                 }
-            }, function (err) { return console.log(err); });
+                else {
+                    _this.mainCmp.showMessage('alert-success', 'Сообщение', 'Данные сохранены.');
+                }
+            }, function (err) {
+                _this.mainCmp.showError(err);
+            });
         }
     };
     DocCardEdit.prototype.onCancel = function () {
@@ -120,7 +143,7 @@ var DocCardEdit = (function () {
             directives: [common_1.CORE_DIRECTIVES, forms_1.REACTIVE_FORM_DIRECTIVES, dropdown_control_1.DropDown, dropdown_control_1.DropDownVA, attachment_list_view_1.AttachmentList, tabs_control_1.Tabs, tabs_control_1.Tab, datetimepicker_1.DateTimePicker, chat_component_1.Chat, shadowbox_component_1.ShadowBox],
             providers: [doccard_service_1.DocCardService, docprop_service_1.DocPropService]
         }), 
-        __metadata('design:paramtypes', [doccard_service_1.DocCardService, docprop_service_1.DocPropService, router_1.ActivatedRoute, router_1.Router])
+        __metadata('design:paramtypes', [doccard_service_1.DocCardService, docprop_service_1.DocPropService, router_1.ActivatedRoute, router_1.Router, main_component_1.MainAppComponent])
     ], DocCardEdit);
     return DocCardEdit;
 }());

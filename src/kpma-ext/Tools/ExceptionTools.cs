@@ -35,6 +35,10 @@ namespace kpma_ext.Tools
 			{
 				return new ErrorMessage { Show = true, Text = "Запись с такими значениями уже существует." };
 			}
+			else if (exi.Message.Contains("DELETE statement conflicted with the REFERENCE constraint"))
+			{
+				return new ErrorMessage { Show = true, Text = "Удаление невозможно. Существуют зависимые записи." };
+			}
 			else
 			{
 				return new ErrorMessage { Show = true, Text = exi.Message };

@@ -1,5 +1,6 @@
 ﻿using kpma_ext.Data;
 using kpma_ext.Models;
+using kpma_ext.Tools;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +56,7 @@ namespace kpma_ext.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 
@@ -70,7 +71,7 @@ namespace kpma_ext.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 
@@ -103,7 +104,7 @@ namespace kpma_ext.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest(ExceptionTools.GetExceptionMessage(ex));
 			}
 		}
 	}

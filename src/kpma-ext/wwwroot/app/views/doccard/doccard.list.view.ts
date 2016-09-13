@@ -4,6 +4,7 @@ import {ROUTER_DIRECTIVES} from '@angular/router';
 
 import {DocCardService, DocCardViewModel} from '../../services/doccard.service';
 
+import {MainAppComponent} from '../../main.component';
 import {ShadowBox} from '../../components/shadowbox.component';
 
 
@@ -20,7 +21,7 @@ export class DocCardList implements OnInit {
 	private list: DocCardViewModel[] = [];
 	private freeze = false;
 
-	constructor(private dcSrv: DocCardService) { }
+	constructor(private dcSrv: DocCardService, private mainCmp: MainAppComponent) { }
 
 	ngOnInit() {
 		this.refreshList();
@@ -29,9 +30,15 @@ export class DocCardList implements OnInit {
 	refreshList() {
 		this.freeze = true;
 		this.dcSrv.getList().subscribe(
-			res => this.list = res,
-			err => console.log(err),
-			() => { this.freeze = false; }
+			res => {
+				this.list = res;
+			},
+			err => {
+				this.mainCmp.showError(err);
+			},
+			() => {
+				this.freeze = false;
+			}
 		);
 	}
 }

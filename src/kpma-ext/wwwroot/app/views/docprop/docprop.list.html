@@ -1,5 +1,5 @@
 ﻿<div class="col-sm-4">
-	<div class="panel panel-default">
+	<div shadow-box [show]="freezeProps" class="panel panel-default">
 		<div class="panel-heading">Список настроек</div>
 		<div class="panel-body">
 			<table class="table table-bordered table-condensed table-hover">
@@ -63,7 +63,7 @@
 	</div>
 </div>
 <div class="col-sm-8">
-	<div class="panel panel-default">
+	<div shadow-box [show]="freezeFields" class="panel panel-default">
 		<div class="panel-heading">Настройки полей</div>
 		<div class="panel-body">
 			<table class="table table-bordered table-condensed table-hover">

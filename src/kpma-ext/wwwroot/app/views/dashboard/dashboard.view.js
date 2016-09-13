@@ -40,7 +40,7 @@ var Dashboard = (function () {
             parent.children.push({ id: item.id, name: item.name, children: [], isExpanded: false, bage: item.bage, parent: null });
         });
     };
-    Dashboard.prototype.shadow = function () {
+    Dashboard.prototype.showQuest = function () {
         //this.freez = !this.freez;
         var _this = this;
         this.mainCmp.showQuestion('Вопрос года!').subscribe(function (res) {
@@ -53,6 +53,12 @@ var Dashboard = (function () {
             }
         }, function (err) { return _this.mainCmp.showError(err); });
         return false;
+    };
+    Dashboard.prototype.showError = function () {
+        this.mainCmp.showError('Ошибка смертельная');
+    };
+    Dashboard.prototype.showMessage = function () {
+        this.mainCmp.showMessage('alert-warning', 'Предупреждение', 'Последнее китайское предупреждение!');
     };
     Dashboard = __decorate([
         core_1.Component({

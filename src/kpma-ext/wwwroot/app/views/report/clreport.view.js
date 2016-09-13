@@ -10,42 +10,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
-var router_1 = require('@angular/router');
-var contractor_service_1 = require('../../services/contractor.service');
+var report_service_1 = require('../../services/report.service');
 var main_component_1 = require('../../main.component');
 var shadowbox_component_1 = require('../../components/shadowbox.component');
-var ContractorList = (function () {
-    function ContractorList(contrSrv, mainCmp) {
-        this.contrSrv = contrSrv;
+var ClientRequestReport = (function () {
+    function ClientRequestReport(repSrv, mainCmp) {
+        this.repSrv = repSrv;
         this.mainCmp = mainCmp;
         this.list = [];
-        this.freeze = false;
+        this.freezeReport = false;
     }
-    ContractorList.prototype.ngOnInit = function () {
+    ClientRequestReport.prototype.ngOnInit = function () {
         this.refreshList();
     };
-    ContractorList.prototype.refreshList = function () {
+    ClientRequestReport.prototype.refreshList = function () {
         var _this = this;
-        this.freeze = true;
-        this.contrSrv.getContrList().subscribe(function (result) {
-            _this.list = result;
+        this.freezeReport = true;
+        this.repSrv.getList().subscribe(function (res) {
+            _this.list = res;
         }, function (err) {
             _this.mainCmp.showError(err);
         }, function () {
-            _this.freeze = false;
+            _this.freezeReport = false;
         });
     };
-    ContractorList = __decorate([
+    ClientRequestReport = __decorate([
         core_1.Component({
             moduleId: module.id,
-            selector: 'contractor-list',
-            templateUrl: 'contractor.list.html',
-            directives: [common_1.CORE_DIRECTIVES, router_1.ROUTER_DIRECTIVES, shadowbox_component_1.ShadowBox],
-            providers: [contractor_service_1.ContractorService]
+            selector: 'clreport',
+            templateUrl: 'clreport.html',
+            directives: [common_1.CORE_DIRECTIVES, shadowbox_component_1.ShadowBox],
+            pipes: [common_1.DatePipe],
+            providers: [report_service_1.ReportService]
         }), 
-        __metadata('design:paramtypes', [contractor_service_1.ContractorService, main_component_1.MainAppComponent])
-    ], ContractorList);
-    return ContractorList;
+        __metadata('design:paramtypes', [report_service_1.ReportService, main_component_1.MainAppComponent])
+    ], ClientRequestReport);
+    return ClientRequestReport;
 }());
-exports.ContractorList = ContractorList;
-//# sourceMappingURL=contractor.list.view.js.map
+exports.ClientRequestReport = ClientRequestReport;
+//# sourceMappingURL=clreport.view.js.map

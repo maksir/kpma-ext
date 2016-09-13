@@ -2,8 +2,9 @@
 import {CORE_DIRECTIVES} from '@angular/common';
 
 import {ServiceService, ServiceModel} from '../../services/service.service';
-
 import {AttachmentService, AttachmentDataModel, AttachmentViewModel} from '../../services/attachment.service';
+
+import {MainAppComponent} from '../../main.component';
 
 import {ShadowBox} from '../../components/shadowbox.component';
 
@@ -28,7 +29,7 @@ export class AttachmentList implements OnInit {
 
 	private freezeAttList = false;
 
-	constructor(private attSrv: AttachmentService) { }
+	constructor(private attSrv: AttachmentService, private mainCmp: MainAppComponent) { }
 
 	ngOnInit() {
 		this.refreshList();
@@ -43,8 +44,12 @@ export class AttachmentList implements OnInit {
 		this.freezeAttList = true;
 
 		this.attSrv.getList(this.metaObjectId, this.objectId).subscribe(
-			res => this.list = res,
-			err => console.log(err),
+			res => {
+				this.list = res;
+			},
+			err => {
+				this.mainCmp.showError(err);
+			},
 			() => {
 				this.freezeAttList = false;
 			}
@@ -79,7 +84,9 @@ export class AttachmentList implements OnInit {
 				this.addModel.file = undefined;
 				this.addModel.name = undefined;
 			},
-			err => console.log(err),
+			err => {
+				this.mainCmp.showError(err);
+			},
 			() => {
 				this.freezeAttList = false;
 			}
@@ -89,18 +96,41 @@ export class AttachmentList implements OnInit {
 	onEdit(item: AttachmentViewModel) {
 
 		this.attSrv.getModel(item.id).subscribe(
-			res => this.editModel = res,
-			err => console.log(err)
+			res => {
+				this.editModel = res;
+			},
+			err => {
+				this.mainCmp.showError(err);
+			}
 		);
 	}
 
 
 	onDelete(item: AttachmentViewModel) {
 
-		this.attSrv.deleteModel(item.id).subscribe(
-			res => this.refreshList(),
-			err => console.log(err)
-		);	
+		if (!item) {
+			return;
+		}
+
+		this.mainCmp.showQuestion('Удалить файл: <strong>' + item.name + '</strong> ?').subscribe(
+			answer => {
+				if (answer) {
+					this.attSrv.deleteModel(item.id).subscribe(
+						res => {
+							this.refreshList();
+						},
+						err => {
+							this.mainCmp.showError(err);
+						}
+					);	
+				}
+				else {
+					return;
+				}
+			}
+		);
+
+		
 	}
 
 	onCancel() {
@@ -120,7 +150,9 @@ export class AttachmentList implements OnInit {
 				this.editModel = undefined;
 				this.refreshList();
 			},
-			err => console.log(err)
+			err => {
+				this.mainCmp.showError(err);
+			}
 		);
 	}
 }

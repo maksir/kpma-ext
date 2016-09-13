@@ -8,9 +8,10 @@ using kpma_ext.Data;
 namespace kpmaext.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160913105832_ClientReport3")]
+    partial class ClientReport3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -151,48 +152,48 @@ namespace kpmaext.Data.Migrations
                     b.Property<string>("CargoName")
                         .HasAnnotation("MaxLength", 500);
 
-                    b.Property<DateTime?>("CargoReadyDate");
+                    b.Property<DateTime>("CargoReadyDate");
 
-                    b.Property<DateTime?>("ClientDate");
+                    b.Property<DateTime>("ClientDate");
 
-                    b.Property<int?>("ClientId");
+                    b.Property<int>("ClientId");
 
-                    b.Property<int?>("ClientIntId");
+                    b.Property<int>("ClientIntId");
 
                     b.Property<string>("ClientNumber")
                         .HasAnnotation("MaxLength", 200);
 
-                    b.Property<int?>("ContrInId");
+                    b.Property<int>("ContrInId");
 
-                    b.Property<int?>("ContrInIntId");
+                    b.Property<int>("ContrInIntId");
 
-                    b.Property<int?>("ContrOutId");
+                    b.Property<int>("ContrOutId");
 
-                    b.Property<int?>("ContrOutIntId");
+                    b.Property<int>("ContrOutIntId");
 
                     b.Property<string>("CtrExec")
                         .HasAnnotation("MaxLength", 250);
 
-                    b.Property<DateTime?>("DEndFactTre");
+                    b.Property<DateTime>("DEndFactTre");
 
-                    b.Property<DateTime?>("DEndFactTrs");
+                    b.Property<DateTime>("DEndFactTrs");
 
-                    b.Property<DateTime?>("DSert");
+                    b.Property<DateTime>("DSert");
 
-                    b.Property<DateTime?>("DStFactTre");
+                    b.Property<DateTime>("DStFactTre");
 
-                    b.Property<DateTime?>("DStFactTrs");
+                    b.Property<DateTime>("DStFactTrs");
 
-                    b.Property<DateTime?>("DStor");
+                    b.Property<DateTime>("DStor");
 
                     b.Property<string>("DTNumber")
                         .HasAnnotation("MaxLength", 500);
 
-                    b.Property<DateTime?>("DateCustoms");
+                    b.Property<DateTime>("DateCustoms");
 
-                    b.Property<DateTime?>("DateInFact");
+                    b.Property<DateTime>("DateInFact");
 
-                    b.Property<DateTime?>("DateOutFact");
+                    b.Property<DateTime>("DateOutFact");
 
                     b.Property<decimal>("Perc");
 
@@ -232,9 +233,9 @@ namespace kpmaext.Data.Migrations
                     b.Property<string>("StatusTO")
                         .HasAnnotation("MaxLength", 200);
 
-                    b.Property<int?>("SupplierId");
+                    b.Property<int>("SupplierId");
 
-                    b.Property<int?>("SupplierIntId");
+                    b.Property<int>("SupplierIntId");
 
                     b.Property<string>("TTNNumber")
                         .HasAnnotation("MaxLength", 200);

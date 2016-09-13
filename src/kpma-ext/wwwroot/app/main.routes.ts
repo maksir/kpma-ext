@@ -13,6 +13,8 @@ import {DocPropRoutes} from './views/docprop/docprop.routes';
 
 import {RestrictRoutes} from './views/restrict/restrict.routes';
 
+import {ReportRoutes} from './views/report/report.routes';
+
 import {Dashboard} from './views/dashboard/dashboard.view';
 import {SandBox} from './views/sandbox/sandbox.view';
 
@@ -27,6 +29,7 @@ const routes: RouterConfig = [
 	...DocCardRoutes,
 	...DocPropRoutes,
 	...RestrictRoutes,
+	...ReportRoutes,
 	{ path: 'dashboard', component: Dashboard, canActivate: [UserService]},
 	{ path: 'sandbox', component: SandBox, canActivate: [UserService] },
 	{ path: '', redirectTo: '/login', terminal: true }

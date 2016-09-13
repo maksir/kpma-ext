@@ -10,6 +10,7 @@ import {Tabs, Tab} from '../../controls/tabs.control';
 import {DateTimePicker} from '../../controls/datetimepicker';
 import {DropDown, DropDownItem, DropDownVA} from '../../controls/dropdown/dropdown.control';
 
+import {MainAppComponent} from '../../main.component';
 import {AttachmentList} from '../attachment/attachment.list.view';
 import {Chat} from '../../components/chat/chat.component';
 import {ShadowBox} from '../../components/shadowbox.component';
@@ -35,7 +36,7 @@ export class DocCardEdit implements OnInit {
 
 	private freezeDocCard = false;
 
-	constructor(private dcSrv: DocCardService, private propSrv: DocPropService, private route: ActivatedRoute, private router: Router) {
+	constructor(private dcSrv: DocCardService, private propSrv: DocPropService, private route: ActivatedRoute, private router: Router, private mainCmp: MainAppComponent) {
 
 		this.id = +this.route.snapshot.params["id"];
 		this.mode = this.route.snapshot.params["mode"];
@@ -60,7 +61,7 @@ export class DocCardEdit implements OnInit {
 			content4: new FormControl(),
 			content5: new FormControl()
 		});
-		
+
 	}
 
 	ngOnInit() {
@@ -76,19 +77,27 @@ export class DocCardEdit implements OnInit {
 				case 'new':
 
 					this.dcSrv.getModel(this.id).subscribe(
-						res => this.model = res,
-						err => console.log(err),
+						res => {
+							this.model = res;
+						},
+						err => {
+							this.mainCmp.showError(err);
+						},
 						() => {
 							this.freezeDocCard = false;
 						}
 					);
-				
+
 					break;
 				case 'copy':
 
 					this.dcSrv.copyModel(this.id).subscribe(
-						res => this.model = res,
-						err => console.log(err),
+						res => {
+							this.model = res;
+						},
+						err => {
+							this.mainCmp.showError(err);
+						},
 						() => {
 							this.freezeDocCard = false;
 						}
@@ -100,14 +109,17 @@ export class DocCardEdit implements OnInit {
 					this.isViewOnly = true;
 
 					this.dcSrv.getModel(this.id).subscribe(
-						res => this.model = res,
-						err => console.log(err),
+						res => {
+							this.model = res;
+						},
+						err => {
+							this.mainCmp.showError(err);
+						},
 						() => {
 							this.freezeDocCard = false;
 						}
 					);
 					break;
-
 			}
 		}
 	}
@@ -121,20 +133,24 @@ export class DocCardEdit implements OnInit {
 				this.model = res;
 				this.refreshProperties(this.model.documentTypeId);
 			},
-			err => console.log(err),
+			err => {
+				this.mainCmp.showError(err);
+			},
 			() => {
 				this.freezeDocCard = false;
 			}
 		);
 	}
 
-	refreshProperties(docType:number) {
+	refreshProperties(docType: number) {
 
 		this.propSrv.getPropFieldList(docType).subscribe(
 			res => {
-				res.forEach(p => this.propDict[p.fieldName] = p);	
+				res.forEach(p => this.propDict[p.fieldName] = p);
 			},
-			err => console.log(err)
+			err => {
+				this.mainCmp.showError(err);
+			}
 		);
 	}
 
@@ -145,13 +161,19 @@ export class DocCardEdit implements OnInit {
 	onSubmit() {
 
 		if (this.editForm.valid) {
+
 			this.dcSrv.saveModel(this.model).subscribe(
 				res => {
 					if (!this.model.id) {
 						this.router.navigateByUrl('/doccard/edit/' + res.id);
 					}
+					else {
+						this.mainCmp.showMessage('alert-success', 'Сообщение', 'Данные сохранены.');
+					}
 				},
-				err => console.log(err)
+				err => {
+					this.mainCmp.showError(err);
+				}
 			);
 		}
 	}

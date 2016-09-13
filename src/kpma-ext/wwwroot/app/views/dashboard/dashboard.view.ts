@@ -59,7 +59,7 @@ export class Dashboard implements OnInit {
 	}
 
 
-	shadow() {
+	showQuest() {
 		//this.freez = !this.freez;
 
 
@@ -77,5 +77,13 @@ export class Dashboard implements OnInit {
 			err => this.mainCmp.showError(err)
 		);
 		return false;
+	}
+
+	showError() {
+		this.mainCmp.showError('Ошибка смертельная');
+	}
+
+	showMessage() {
+		this.mainCmp.showMessage('alert-warning', 'Предупреждение', 'Последнее китайское предупреждение!');
 	}
 }

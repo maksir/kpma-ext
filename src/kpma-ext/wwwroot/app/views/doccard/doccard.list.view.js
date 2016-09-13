@@ -12,10 +12,12 @@ var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var router_1 = require('@angular/router');
 var doccard_service_1 = require('../../services/doccard.service');
+var main_component_1 = require('../../main.component');
 var shadowbox_component_1 = require('../../components/shadowbox.component');
 var DocCardList = (function () {
-    function DocCardList(dcSrv) {
+    function DocCardList(dcSrv, mainCmp) {
         this.dcSrv = dcSrv;
+        this.mainCmp = mainCmp;
         this.list = [];
         this.freeze = false;
     }
@@ -25,7 +27,13 @@ var DocCardList = (function () {
     DocCardList.prototype.refreshList = function () {
         var _this = this;
         this.freeze = true;
-        this.dcSrv.getList().subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); }, function () { _this.freeze = false; });
+        this.dcSrv.getList().subscribe(function (res) {
+            _this.list = res;
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        }, function () {
+            _this.freeze = false;
+        });
     };
     DocCardList = __decorate([
         core_1.Component({
@@ -35,7 +43,7 @@ var DocCardList = (function () {
             directives: [common_1.CORE_DIRECTIVES, router_1.ROUTER_DIRECTIVES, shadowbox_component_1.ShadowBox],
             providers: [doccard_service_1.DocCardService]
         }), 
-        __metadata('design:paramtypes', [doccard_service_1.DocCardService])
+        __metadata('design:paramtypes', [doccard_service_1.DocCardService, main_component_1.MainAppComponent])
     ], DocCardList);
     return DocCardList;
 }());

@@ -12,10 +12,12 @@ var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var service_service_1 = require('../../services/service.service');
 var attachment_service_1 = require('../../services/attachment.service');
+var main_component_1 = require('../../main.component');
 var shadowbox_component_1 = require('../../components/shadowbox.component');
 var AttachmentList = (function () {
-    function AttachmentList(attSrv) {
+    function AttachmentList(attSrv, mainCmp) {
         this.attSrv = attSrv;
+        this.mainCmp = mainCmp;
         //@ViewChild('file') addFile;
         this.list = [];
         this.addModel = new attachment_service_1.AttachmentDataModel();
@@ -30,7 +32,11 @@ var AttachmentList = (function () {
     AttachmentList.prototype.refreshList = function () {
         var _this = this;
         this.freezeAttList = true;
-        this.attSrv.getList(this.metaObjectId, this.objectId).subscribe(function (res) { return _this.list = res; }, function (err) { return console.log(err); }, function () {
+        this.attSrv.getList(this.metaObjectId, this.objectId).subscribe(function (res) {
+            _this.list = res;
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        }, function () {
             _this.freezeAttList = false;
         });
     };
@@ -55,17 +61,37 @@ var AttachmentList = (function () {
             _this.refreshList();
             _this.addModel.file = undefined;
             _this.addModel.name = undefined;
-        }, function (err) { return console.log(err); }, function () {
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        }, function () {
             _this.freezeAttList = false;
         });
     };
     AttachmentList.prototype.onEdit = function (item) {
         var _this = this;
-        this.attSrv.getModel(item.id).subscribe(function (res) { return _this.editModel = res; }, function (err) { return console.log(err); });
+        this.attSrv.getModel(item.id).subscribe(function (res) {
+            _this.editModel = res;
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        });
     };
     AttachmentList.prototype.onDelete = function (item) {
         var _this = this;
-        this.attSrv.deleteModel(item.id).subscribe(function (res) { return _this.refreshList(); }, function (err) { return console.log(err); });
+        if (!item) {
+            return;
+        }
+        this.mainCmp.showQuestion('Удалить файл: <strong>' + item.name + '</strong> ?').subscribe(function (answer) {
+            if (answer) {
+                _this.attSrv.deleteModel(item.id).subscribe(function (res) {
+                    _this.refreshList();
+                }, function (err) {
+                    _this.mainCmp.showError(err);
+                });
+            }
+            else {
+                return;
+            }
+        });
     };
     AttachmentList.prototype.onCancel = function () {
         this.editModel = undefined;
@@ -80,7 +106,9 @@ var AttachmentList = (function () {
         this.attSrv.saveModel(this.editModel).subscribe(function (res) {
             _this.editModel = undefined;
             _this.refreshList();
-        }, function (err) { return console.log(err); });
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        });
     };
     __decorate([
         core_1.Input(), 
@@ -98,7 +126,7 @@ var AttachmentList = (function () {
             directives: [common_1.CORE_DIRECTIVES, shadowbox_component_1.ShadowBox],
             providers: [service_service_1.ServiceService]
         }), 
-        __metadata('design:paramtypes', [attachment_service_1.AttachmentService])
+        __metadata('design:paramtypes', [attachment_service_1.AttachmentService, main_component_1.MainAppComponent])
     ], AttachmentList);
     return AttachmentList;
 }());

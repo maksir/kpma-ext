@@ -5,11 +5,15 @@ import {DocTypeService, DocGroupModel, DocTypeModel, DocStatusModel} from '../..
 
 import {ITreeNode, TreeView} from '../../controls/treeview';
 
+import {MainAppComponent} from '../../main.component';
+import {ShadowBox} from '../../components/shadowbox.component';
+
+
 @Component({
 	moduleId: module.id,
 	selector: 'doctype-list',
 	templateUrl: 'doctype.list.html',
-	directives: [CORE_DIRECTIVES, TreeView],
+	directives: [CORE_DIRECTIVES, TreeView, ShadowBox],
 	providers: [DocTypeService]
 
 })
@@ -58,8 +62,12 @@ export class DocTypeList implements OnInit {
 	private addStatusModel: DocStatusModel = new DocStatusModel();
 	private editStatusModel: DocStatusModel;
 
+	private freezeGroups = false;
+	private freezeTypes = false;
+	private freezeStatuses = false;
 
-	constructor(private dtSrv: DocTypeService) {
+
+	constructor(private dtSrv: DocTypeService, private mainCmp: MainAppComponent) {
 	}
 
 	ngOnInit() {
@@ -69,6 +77,8 @@ export class DocTypeList implements OnInit {
 	// group
 	refreshGroupList() {
 
+		this.freezeGroups = true;
+		
 		this.dtSrv.getGroupList().subscribe(
 			res => {
 				this.groupList = res;
@@ -83,7 +93,12 @@ export class DocTypeList implements OnInit {
 					}
 				}
 			},
-			err => console.log(err)
+			err => {
+				this.mainCmp.showError(err);
+			},
+			() => {
+				this.freezeTypes = false;
+			}
 		);
 	}
 
@@ -156,25 +171,31 @@ export class DocTypeList implements OnInit {
 	refreshTypeList() {
 		if (!this._selectedGroup) {
 			this.typeList = [];
+			return;
 		}
-		else {
-			this.dtSrv.getTypeList(this._selectedGroup.id).subscribe(
-				res => {
-					this.typeList = res;
-					if (this.selectedType) {
-						let find = this.typeList.filter(g => g.id == this.selectedType.id);
-						if (find.length > 0) {
-							this.selectedType = find[0];
-						}
-						else {
-							this.selectedType = undefined;
-						}
 
+		this.freezeTypes = true;
+		this.dtSrv.getTypeList(this._selectedGroup.id).subscribe(
+			res => {
+				this.typeList = res;
+				if (this.selectedType) {
+					let find = this.typeList.filter(g => g.id == this.selectedType.id);
+					if (find.length > 0) {
+						this.selectedType = find[0];
 					}
-				},
-				err => console.log(err)
-			);
-		}
+					else {
+						this.selectedType = undefined;
+					}
+
+				}
+			},
+			err => {
+				this.mainCmp.showError(err);
+			},
+			() => {
+				this.freezeTypes = false;
+			}
+		);
 	}
 
 	onSelectType(t: DocTypeModel) {
@@ -193,7 +214,9 @@ export class DocTypeList implements OnInit {
 				this.addTypeModel.documentGroupId = this._selectedGroup.id;
 				this.refreshTypeList();
 			},
-			err => console.log(err)
+			err => {
+				this.mainCmp.showError(err);
+			}
 		);
 	}
 
@@ -214,7 +237,9 @@ export class DocTypeList implements OnInit {
 				this.editTypeModel = undefined;
 				this.refreshTypeList();
 			},
-			err => console.log(err)
+			err => {
+				this.mainCmp.showError(err);
+			}
 		);
 	}
 
@@ -232,7 +257,9 @@ export class DocTypeList implements OnInit {
 				res => {
 					this.refreshTypeList();
 				},
-				err => console.log(err)
+				err => {
+					this.mainCmp.showError(err);
+				}
 			);
 		}
 	}
@@ -242,13 +269,20 @@ export class DocTypeList implements OnInit {
 	refreshStatusList() {
 		if (!this._selectedType) {
 			this.statusList = [];
+			return;
 		}
-		else {
-			this.dtSrv.getStatusList(this._selectedType.id).subscribe(
-				res => this.statusList = res,
-				err => console.log(err)
-			);
-		}
+
+		this.freezeStatuses = true;
+		
+		this.dtSrv.getStatusList(this._selectedType.id).subscribe(
+			res => {
+				this.statusList = res;
+			},
+			err => console.log(err),
+			() => {
+				this.freezeStatuses = false;
+			}
+		);
 	}
 
 	onAddStatus() {

@@ -3,11 +3,10 @@ import {ROUTER_DIRECTIVES} from '@angular/router';
 
 import {DocCardService, DocCardViewModel} from '../../services/doccard.service';
 
-import {MainAppComponent} from '../../main.component';
-
 import {ITreeNode, TreeView} from '../../controls/treeview';
 import {Tabs, Tab} from '../../controls/tabs.control';
 
+import {MainAppComponent} from '../../main.component';
 import {AttachmentList} from '../attachment/attachment.list.view';
 import {Chat} from '../../components/chat/chat.component';
 import {ShadowBox} from '../../components/shadowbox.component';
@@ -46,8 +45,12 @@ export class DocCardTree implements OnInit {
 		if (!node.parent) {
 
 			this.docSrv.getGroupList(node.id).subscribe(
-				res => this.fillNodes(res, node),
-				err => console.log(err),
+				res => {
+					this.fillNodes(res, node);
+				},
+				err => {
+					this.mainCmp.showError(err);
+				},
 				() => {
 					this.freezeFolder[folderI] = false;
 				}
@@ -113,7 +116,9 @@ export class DocCardTree implements OnInit {
 					this.selectedDoc = res.find(m => m.id == this.selectedDoc.id);
 				}
 			},
-			err => console.log(err),
+			err => {
+				this.mainCmp.showError(err);
+			},
 			() => {
 				this.freezeDocList = false;
 			}

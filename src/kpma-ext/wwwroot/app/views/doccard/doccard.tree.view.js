@@ -11,9 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var doccard_service_1 = require('../../services/doccard.service');
-var main_component_1 = require('../../main.component');
 var treeview_1 = require('../../controls/treeview');
 var tabs_control_1 = require('../../controls/tabs.control');
+var main_component_1 = require('../../main.component');
 var attachment_list_view_1 = require('../attachment/attachment.list.view');
 var chat_component_1 = require('../../components/chat/chat.component');
 var shadowbox_component_1 = require('../../components/shadowbox.component');
@@ -35,7 +35,11 @@ var DocCardTree = (function () {
     DocCardTree.prototype.onRequestNodes = function (node, folderI) {
         var _this = this;
         if (!node.parent) {
-            this.docSrv.getGroupList(node.id).subscribe(function (res) { return _this.fillNodes(res, node); }, function (err) { return console.log(err); }, function () {
+            this.docSrv.getGroupList(node.id).subscribe(function (res) {
+                _this.fillNodes(res, node);
+            }, function (err) {
+                _this.mainCmp.showError(err);
+            }, function () {
                 _this.freezeFolder[folderI] = false;
             });
         }
@@ -83,7 +87,9 @@ var DocCardTree = (function () {
             if (_this.selectedDoc) {
                 _this.selectedDoc = res.find(function (m) { return m.id == _this.selectedDoc.id; });
             }
-        }, function (err) { return console.log(err); }, function () {
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        }, function () {
             _this.freezeDocList = false;
         });
     };

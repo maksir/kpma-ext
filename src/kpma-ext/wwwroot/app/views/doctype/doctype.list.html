@@ -1,5 +1,5 @@
 ﻿<div class="col-sm-4">
-	<div class="panel panel-default">
+	<div shadow-box [show]="freezeGroups" class="panel panel-default">
 		<div class="panel-heading">Группы документов <a (click)="refreshGroupList()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить</i></a></div>
 		<div class="panel-body">
 			<table class="table table-bordered table-condensed table-hover">
@@ -39,7 +39,7 @@
 	</div>
 </div>
 <div class="col-sm-8">
-	<div class="panel panel-default">
+	<div shadow-box [show]="freezeTypes" class="panel panel-default">
 		<div class="panel-heading">Типы документов <a (click)="refreshTypeList()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить</i></a></div>
 		<div class="panel-body">
 			<table class="table table-bordered table-condensed table-hover">
@@ -78,7 +78,7 @@
 		</div>
 	</div>
 
-	<div class="panel panel-default">
+	<div shadow-box [show]="freezeStatuses" class="panel panel-default">
 		<div class="panel-heading">Список статусов <a (click)="refreshStatusList()" class="btn btn-xs btn-primary pull-right"><i class="fa fa-refresh"> Обновить</i></a></div>
 		<div class="panel-body">
 			<table class="table table-bordered table-condensed table-hover">

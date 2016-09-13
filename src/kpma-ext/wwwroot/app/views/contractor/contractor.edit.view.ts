@@ -5,6 +5,7 @@ import {REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup, Validators} from '@ang
 
 import {ContractorService, ContractorModel} from '../../services/contractor.service';
 
+import {MainAppComponent} from '../../main.component';
 
 import {Tabs, Tab} from '../../controls/tabs.control';
 
@@ -27,7 +28,7 @@ export class ContractorEdit implements OnInit {
 
 	private editForm: FormGroup;
 
-	constructor(private contrSrv: ContractorService, private route: ActivatedRoute, private router: Router) {
+	constructor(private contrSrv: ContractorService, private route: ActivatedRoute, private router: Router, private mainCmp: MainAppComponent) {
 
 		this.id = +this.route.snapshot.params["id"];
 		this.mode = this.route.snapshot.params["mode"];
@@ -55,7 +56,10 @@ export class ContractorEdit implements OnInit {
 		if (this.id) {
 			this.contrSrv.getContrModel(this.id).subscribe(
 				res => this.model = res,
-				err => console.log(err)
+				err => {
+					this.mainCmp.showError(err);
+					console.log(err);
+				}
 			);
 		}
 		return false;
@@ -74,8 +78,11 @@ export class ContractorEdit implements OnInit {
 					if (!this.model.id) {
 						this.router.navigateByUrl('/contractor/edit/' + res.id);
 					}
+					else {
+						this.mainCmp.showMessage('alert-success', 'Сообщение', 'Данные сохранены.');
+					}
 				},
-				err => console.log(err)
+				err => this.mainCmp.showError(err)
 			);
 		}
 	}

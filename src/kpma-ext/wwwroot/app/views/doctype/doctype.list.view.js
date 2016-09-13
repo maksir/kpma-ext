@@ -12,15 +12,21 @@ var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
 var doctype_service_1 = require('../../services/doctype.service');
 var treeview_1 = require('../../controls/treeview');
+var main_component_1 = require('../../main.component');
+var shadowbox_component_1 = require('../../components/shadowbox.component');
 var DocTypeList = (function () {
-    function DocTypeList(dtSrv) {
+    function DocTypeList(dtSrv, mainCmp) {
         this.dtSrv = dtSrv;
+        this.mainCmp = mainCmp;
         this.groupList = [];
         this.typeList = [];
         this.statusList = [];
         this.addGroupModel = new doctype_service_1.DocGroupModel();
         this.addTypeModel = new doctype_service_1.DocTypeModel();
         this.addStatusModel = new doctype_service_1.DocStatusModel();
+        this.freezeGroups = false;
+        this.freezeTypes = false;
+        this.freezeStatuses = false;
     }
     Object.defineProperty(DocTypeList.prototype, "selectedGroup", {
         get: function () {
@@ -63,6 +69,7 @@ var DocTypeList = (function () {
     // group
     DocTypeList.prototype.refreshGroupList = function () {
         var _this = this;
+        this.freezeGroups = true;
         this.dtSrv.getGroupList().subscribe(function (res) {
             _this.groupList = res;
             if (_this.selectedGroup) {
@@ -74,7 +81,11 @@ var DocTypeList = (function () {
                     _this.selectedGroup = undefined;
                 }
             }
-        }, function (err) { return console.log(err); });
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        }, function () {
+            _this.freezeTypes = false;
+        });
     };
     DocTypeList.prototype.onSelectGroup = function (g) {
         this.selectedGroup = g;
@@ -126,21 +137,25 @@ var DocTypeList = (function () {
         var _this = this;
         if (!this._selectedGroup) {
             this.typeList = [];
+            return;
         }
-        else {
-            this.dtSrv.getTypeList(this._selectedGroup.id).subscribe(function (res) {
-                _this.typeList = res;
-                if (_this.selectedType) {
-                    var find = _this.typeList.filter(function (g) { return g.id == _this.selectedType.id; });
-                    if (find.length > 0) {
-                        _this.selectedType = find[0];
-                    }
-                    else {
-                        _this.selectedType = undefined;
-                    }
+        this.freezeTypes = true;
+        this.dtSrv.getTypeList(this._selectedGroup.id).subscribe(function (res) {
+            _this.typeList = res;
+            if (_this.selectedType) {
+                var find = _this.typeList.filter(function (g) { return g.id == _this.selectedType.id; });
+                if (find.length > 0) {
+                    _this.selectedType = find[0];
                 }
-            }, function (err) { return console.log(err); });
-        }
+                else {
+                    _this.selectedType = undefined;
+                }
+            }
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        }, function () {
+            _this.freezeTypes = false;
+        });
     };
     DocTypeList.prototype.onSelectType = function (t) {
         this.selectedType = t;
@@ -154,7 +169,9 @@ var DocTypeList = (function () {
             _this.addTypeModel = new doctype_service_1.DocTypeModel();
             _this.addTypeModel.documentGroupId = _this._selectedGroup.id;
             _this.refreshTypeList();
-        }, function (err) { return console.log(err); });
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        });
     };
     DocTypeList.prototype.onEditType = function (t) {
         this.editTypeModel = t;
@@ -167,7 +184,9 @@ var DocTypeList = (function () {
         this.dtSrv.saveTypeModel(this.editTypeModel).subscribe(function (res) {
             _this.editTypeModel = undefined;
             _this.refreshTypeList();
-        }, function (err) { return console.log(err); });
+        }, function (err) {
+            _this.mainCmp.showError(err);
+        });
     };
     DocTypeList.prototype.onCancelType = function () {
         this.editTypeModel = undefined;
@@ -180,7 +199,9 @@ var DocTypeList = (function () {
         if (confirm('Удалить тип "' + t.name + '" ?')) {
             this.dtSrv.deleteTypeModel(t.id).subscribe(function (res) {
                 _this.refreshTypeList();
-            }, function (err) { return console.log(err); });
+            }, function (err) {
+                _this.mainCmp.showError(err);
+            });
         }
     };
     // status
@@ -188,10 +209,14 @@ var DocTypeList = (function () {
         var _this = this;
         if (!this._selectedType) {
             this.statusList = [];
+            return;
         }
-        else {
-            this.dtSrv.getStatusList(this._selectedType.id).subscribe(function (res) { return _this.statusList = res; }, function (err) { return console.log(err); });
-        }
+        this.freezeStatuses = true;
+        this.dtSrv.getStatusList(this._selectedType.id).subscribe(function (res) {
+            _this.statusList = res;
+        }, function (err) { return console.log(err); }, function () {
+            _this.freezeStatuses = false;
+        });
     };
     DocTypeList.prototype.onAddStatus = function () {
         var _this = this;
@@ -234,10 +259,10 @@ var DocTypeList = (function () {
             moduleId: module.id,
             selector: 'doctype-list',
             templateUrl: 'doctype.list.html',
-            directives: [common_1.CORE_DIRECTIVES, treeview_1.TreeView],
+            directives: [common_1.CORE_DIRECTIVES, treeview_1.TreeView, shadowbox_component_1.ShadowBox],
             providers: [doctype_service_1.DocTypeService]
         }), 
-        __metadata('design:paramtypes', [doctype_service_1.DocTypeService])
+        __metadata('design:paramtypes', [doctype_service_1.DocTypeService, main_component_1.MainAppComponent])
     ], DocTypeList);
     return DocTypeList;
 }());

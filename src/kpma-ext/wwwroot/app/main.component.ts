@@ -24,14 +24,7 @@ export class MainAppComponent {
 
 	currentUser = new UserViewModel();
 
-	errorMessage = '';
-
-	messageClass = '';
-	messageHeader = '';
-	messageBody = '';
-
 	private _ok = new Subject<boolean>();
-	ok = this._ok.asObservable();
 
 	constructor(private userSrv: UserService) {
 
@@ -43,17 +36,36 @@ export class MainAppComponent {
 	}
 
 
-	showError(errorMessage: string) {
+	showError(errorMessage:any) {
 
-		this.errorMessage = errorMessage;
-		$('#errorModal').modal('show');
+		if (!errorMessage) {
+			return;
+		}
+
+		if (typeof(errorMessage) == 'string') {
+			$('#errorText').html(<string>errorMessage);
+			$('#errorModal').modal('show');
+		}
+		else {
+
+			if (errorMessage._body) {
+				let err = <error>JSON.parse(errorMessage._body);
+				if (err.show) {
+					$('#errorText').html(err.text);
+					$('#errorModal').modal('show');
+				}
+			}
+			
+		}
+
 	}
 
 	showMessage(messageClass: string, messageHeader: string, messageBode:string) {
 
-		this.messageHeader = messageHeader;
-		this.messageClass = messageClass;
-		this.messageBody = messageBode;
+
+		$('#messageModal-label').html(messageHeader);
+		$('#messageText').html(messageBode);
+		$('#messageContent').addClass(messageClass);
 
 		$('#messageModal').modal('show');
 		
@@ -78,11 +90,19 @@ export class MainAppComponent {
 
 	showQuestion(questText:string): Observable<boolean> {
 
+		this._ok = new Subject<boolean>();
+
 		$('#questText').html(questText);
 		$('#questModal').modal('show');
 		$('#questModal').on('hide.bs.modal', this.onQuestCancelClick.bind(this));
 
-		return this.ok;
+		return this._ok.asObservable();
+		
 	}
 
+}
+
+export class error {
+	show: boolean;
+	text: string;
 }

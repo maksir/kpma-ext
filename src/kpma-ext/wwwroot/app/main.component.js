@@ -21,22 +21,31 @@ var MainAppComponent = (function () {
         var _this = this;
         this.userSrv = userSrv;
         this.currentUser = new user_service_1.UserViewModel();
-        this.errorMessage = '';
-        this.messageClass = '';
-        this.messageHeader = '';
-        this.messageBody = '';
         this._ok = new Rx_1.Subject();
-        this.ok = this._ok.asObservable();
         userSrv.currentUser.subscribe(function (res) { return _this.currentUser = res; }, function (err) { return console.log(err); }, function () { return console.log('done'); });
     }
     MainAppComponent.prototype.showError = function (errorMessage) {
-        this.errorMessage = errorMessage;
-        $('#errorModal').modal('show');
+        if (!errorMessage) {
+            return;
+        }
+        if (typeof (errorMessage) == 'string') {
+            $('#errorText').html(errorMessage);
+            $('#errorModal').modal('show');
+        }
+        else {
+            if (errorMessage._body) {
+                var err = JSON.parse(errorMessage._body);
+                if (err.show) {
+                    $('#errorText').html(err.text);
+                    $('#errorModal').modal('show');
+                }
+            }
+        }
     };
     MainAppComponent.prototype.showMessage = function (messageClass, messageHeader, messageBode) {
-        this.messageHeader = messageHeader;
-        this.messageClass = messageClass;
-        this.messageBody = messageBode;
+        $('#messageModal-label').html(messageHeader);
+        $('#messageText').html(messageBode);
+        $('#messageContent').addClass(messageClass);
         $('#messageModal').modal('show');
     };
     MainAppComponent.prototype.onQuestCancelClick = function () {
@@ -52,10 +61,11 @@ var MainAppComponent = (function () {
         }
     };
     MainAppComponent.prototype.showQuestion = function (questText) {
+        this._ok = new Rx_1.Subject();
         $('#questText').html(questText);
         $('#questModal').modal('show');
         $('#questModal').on('hide.bs.modal', this.onQuestCancelClick.bind(this));
-        return this.ok;
+        return this._ok.asObservable();
     };
     MainAppComponent = __decorate([
         core_1.Component({
@@ -70,4 +80,10 @@ var MainAppComponent = (function () {
     return MainAppComponent;
 }());
 exports.MainAppComponent = MainAppComponent;
+var error = (function () {
+    function error() {
+    }
+    return error;
+}());
+exports.error = error;
 //# sourceMappingURL=main.component.js.map

@@ -13,14 +13,16 @@ var common_1 = require('@angular/common');
 var router_1 = require('@angular/router');
 var forms_1 = require('@angular/forms');
 var contractor_service_1 = require('../../services/contractor.service');
+var main_component_1 = require('../../main.component');
 var tabs_control_1 = require('../../controls/tabs.control');
 var department_list_view_1 = require('./department.list.view');
 var attachment_list_view_1 = require('../attachment/attachment.list.view');
 var ContractorEdit = (function () {
-    function ContractorEdit(contrSrv, route, router) {
+    function ContractorEdit(contrSrv, route, router, mainCmp) {
         this.contrSrv = contrSrv;
         this.route = route;
         this.router = router;
+        this.mainCmp = mainCmp;
         this.model = new contractor_service_1.ContractorModel();
         this.id = +this.route.snapshot.params["id"];
         this.mode = this.route.snapshot.params["mode"];
@@ -42,7 +44,10 @@ var ContractorEdit = (function () {
     ContractorEdit.prototype.onRefresh = function () {
         var _this = this;
         if (this.id) {
-            this.contrSrv.getContrModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) { return console.log(err); });
+            this.contrSrv.getContrModel(this.id).subscribe(function (res) { return _this.model = res; }, function (err) {
+                _this.mainCmp.showError(err);
+                console.log(err);
+            });
         }
         return false;
     };
@@ -57,7 +62,10 @@ var ContractorEdit = (function () {
                 if (!_this.model.id) {
                     _this.router.navigateByUrl('/contractor/edit/' + res.id);
                 }
-            }, function (err) { return console.log(err); });
+                else {
+                    _this.mainCmp.showMessage('alert-success', 'Сообщение', 'Данные сохранены.');
+                }
+            }, function (err) { return _this.mainCmp.showError(err); });
         }
     };
     ContractorEdit = __decorate([
@@ -68,7 +76,7 @@ var ContractorEdit = (function () {
             directives: [common_1.CORE_DIRECTIVES, tabs_control_1.Tabs, tabs_control_1.Tab, forms_1.REACTIVE_FORM_DIRECTIVES, department_list_view_1.DepartmentList, attachment_list_view_1.AttachmentList],
             providers: [contractor_service_1.ContractorService]
         }), 
-        __metadata('design:paramtypes', [contractor_service_1.ContractorService, router_1.ActivatedRoute, router_1.Router])
+        __metadata('design:paramtypes', [contractor_service_1.ContractorService, router_1.ActivatedRoute, router_1.Router, main_component_1.MainAppComponent])
     ], ContractorEdit);
     return ContractorEdit;
 }());

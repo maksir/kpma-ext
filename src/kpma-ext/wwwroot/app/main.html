@@ -8,7 +8,7 @@
 				<h4 class="modal-title" id="errorModal-label">Ошибка</h4>
 			</div>
 			<div class="modal-body">
-				<p>{{errorMessage}}</p>
+				<p id="errorText"></p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
@@ -19,12 +19,12 @@
 
 <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModal-label">
 	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content alert {{messageClass}}">
+		<div id="messageContent" class="modal-content alert">
 			<div class="modal-header">
-				<h4 class="modal-title" id="errorModal-label">{{messageHeader}}</h4>
+				<h4 class="modal-title" id="messageModal-label"></h4>
 			</div>
 			<div class="modal-body">
-				<p>{{messageBody}}</p>
+				<p id="messageText"></p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>

@@ -7,11 +7,14 @@ import {Permitions} from '../../services/user.service';
 
 import {DropDown, DropDownVA} from '../../controls/dropdown/dropdown.control';
 
+import {MainAppComponent} from '../../main.component';
+import {ShadowBox} from '../../components/shadowbox.component';
+
 @Component({
 	moduleId: module.id,
 	selector: 'docprop-list',
 	templateUrl: 'docprop.list.html',
-	directives: [CORE_DIRECTIVES, DropDown, DropDownVA],
+	directives: [CORE_DIRECTIVES, DropDown, DropDownVA, ShadowBox],
 	providers: [DocPropService]
 })
 export class DocPropList implements OnInit {
@@ -25,7 +28,10 @@ export class DocPropList implements OnInit {
 
 	permitions: Permitions = new Permitions();
 
-	constructor(private propSrv: DocPropService, private route: ActivatedRoute) {
+	freezeProps = false;
+	freezeFields = false;
+
+	constructor(private propSrv: DocPropService, private route: ActivatedRoute, private mainCmp: MainAppComponent) {
 
 		this.permitions = <Permitions>this.route.snapshot.params["permitions"];
 	}
@@ -35,6 +41,9 @@ export class DocPropList implements OnInit {
 	}
 
 	refreshPropList() {
+
+		this.freezeProps = true;
+
 		this.propSrv.getPropList().subscribe(
 			res => {
 				this.propList = res;
@@ -47,7 +56,12 @@ export class DocPropList implements OnInit {
 					}
 				}
 			},
-			err => console.log(err)
+			err => {
+				this.mainCmp.showError(err);
+			},
+			() => {
+				this.freezeProps = false;
+			}
 		);
 	}
 
@@ -71,7 +85,9 @@ export class DocPropList implements OnInit {
 				this.selectedPropModel = <DocPropViewModel>res;
 				this.refreshPropList();
 			},
-			err => console.log(err)
+			err => {
+				this.mainCmp.showError(err);
+			}
 		);
 	}
 
@@ -82,15 +98,25 @@ export class DocPropList implements OnInit {
 	}
 
 	onDeleteProp(prop) {
-		if (confirm('Удалить настройку?')) {
-			this.propSrv.deletePropModel(prop.id).subscribe(
-				res => {
-					this.selectedPropModel = undefined;
-					this.refreshPropList();
-				},
-				err => console.log(err)
-			);
-		}
+
+		this.mainCmp.showQuestion('Удалить настройку?').subscribe(
+			answer => {
+				if (answer) {
+					this.propSrv.deletePropModel(prop.id).subscribe(
+						res => {
+							this.selectedPropModel = undefined;
+							this.refreshPropList();
+						},
+						err => {
+							this.mainCmp.showError(err);
+						}
+					);					
+				}
+			},
+			err => {
+				this.mainCmp.showError(err);
+			}
+		);
 	}
 
 	onCancelProp() {
@@ -109,7 +135,9 @@ export class DocPropList implements OnInit {
 				this.editPropModel = undefined;
 				this.refreshFieldList();
 			},
-			err => console.log(err)
+			err => {
+				this.mainCmp.showError(err);
+			}
 		);
 	}
 
@@ -120,11 +148,18 @@ export class DocPropList implements OnInit {
 			return;
 		}
 
+		this.freezeFields = true;
+
 		this.propSrv.getFieldList(this.selectedPropModel.id).subscribe(
 			res => {
 				this.fieldList = res;
 			},
-			err => console.log(err)
+			err => {
+				this.mainCmp.showError(err);
+			},
+			() => {
+				this.freezeFields = false;
+			}
 		);
 	}
 }

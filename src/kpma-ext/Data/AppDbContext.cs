@@ -273,6 +273,10 @@ namespace kpma_ext.Data
 			builder.Entity<DocCardPropertyField>().Property(p => p.CreatedDate).HasDefaultValueSql("sysdatetime()");
 			builder.Entity<DocCardPropertyField>().Property(p => p.LastUpdatedBy).HasDefaultValueSql("suser_sname()");
 			builder.Entity<DocCardPropertyField>().Property(p => p.LastUpdatedDate).HasDefaultValueSql("sysdatetime()");
+
+
+			// ClientRequestReport
+			builder.Entity<ClientRequestReport>().HasKey("ClientRequestId");
 		}
 	}
 }

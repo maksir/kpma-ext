@@ -1,0 +1,81 @@
+﻿<div class="col-sm-12">
+	<div shadow-box [show]="freezeReport" class="panel panel-default">
+		<div class="panel-heading">Отчет клиента</div>
+		<div class="panel-body">
+			<table class="table table-bordered table-condensed table-hover">
+				<thead>
+					<tr>
+						<th>Номер</th>
+						<th>Дата</th>
+						<th>Ответственный</th>
+						<th>Поставщик</th>
+						<th>Грузоотправитель</th>
+						<th>Грузополучатель</th>
+						<th>Груз</th>
+						<th>Статус груза до ТО</th>
+						<th>Ответственный до ТО</th>
+						<th>Дата готовности груза</th>
+						<th>Дата отгрузки (факт)</th>
+						<th>Накладная №</th>
+						<th>Дата доставки до СВХ</th>
+						<th>Дата поступления на СВХ</th>
+						<th>Место ТО</th>
+						<th>Процедура ТО</th>
+						<th>Статус груза ТО</th>
+						<th>Ответственный ТО</th>
+						<th>Дата подачи ДТ</th>
+						<th>Дата выпуск ДТ</th>
+						<th>Стату груза после ТО</th>
+						<th>Ответственный после ТО</th>
+						<th>Дата отгрузки (факт)</th>
+						<th>Дата доставки (факт)</th>
+						<th>Номер ДТ</th>
+						<th>%</th>
+						<th>Статус сертификации</th>
+						<th>Ответств. сертификации</th>
+						<th>Дата сертификации</th>
+						<th>Статус хранения</th>
+						<th>Ответств. хранения</th>
+						<th>Дата хранения</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let item of list">
+						<td>{{item.clientNumber}}</td>
+						<td>{{item.clientDate}}</td>
+						<td>{{item.personCl}}</td>
+						<td>{{item.supplierName}}</td>
+						<td>{{item.contrOutName}}</td>
+						<td>{{item.contrInName}}</td>
+						<td>{{item.cargoName}}</td>
+						<td>{{item.statusBeginTO}}</td>
+						<td>{{item.personBeginTO}}</td>
+						<td>{{item.cargoReadyDate}}</td>
+						<td>{{item.dStFactTrs}}</td>
+						<td>{{item.tTNNumber}}</td>
+						<td>{{item.dEndFactTrs}}</td>
+						<td>{{item.dateInFact}}</td>
+						<td>{{item.ctrExec}}</td>
+						<td>{{item.procName}}</td>
+						<td>{{item.statusTO}}</td>
+						<td>{{item.personTO}}</td>
+						<td>{{item.dateCustoms}}</td>
+						<td>{{item.dateOutFact}}</td>
+						<td>{{item.statusEndTO}}</td>
+						<td>{{item.personEndTO}}</td>
+						<td>{{item.dStFactTre}}</td>
+						<td>{{item.dEndFactTre}}</td>
+						<td>{{item.dTNumber}}</td>
+						<td>{{item.perc}}</td>
+						<td>{{item.statusSert}}</td>
+						<td>{{item.personSert}}</td>
+						<td>{{item.dSert}}</td>
+						<td>{{item.statusStor}}</td>
+						<td>{{item.personStor}}</td>
+						<td>{{item.dStor}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
